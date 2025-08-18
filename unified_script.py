@@ -542,6 +542,7 @@ MANUAL_TIME_SHIFTS = {
 
     'ME_MTSHIFT': [
         {"start": "2018-01-11 08:07:00", "end": "2018-01-15 05:19:00", "offset_hours": 4.204861 },
+        # {"start": "2018-05-15 08:07:00", "end": "2018-05-18 19:05:00", "offset_hours": 4.68},
         # {"start": "2018-05-29 23:48:00", "end": "2018-06-01 23:45:00", "offset_hours": 81.72 },
         # {"start": "2019-11-24 23:51:00", "end": "2019-11-28 06:59:00", "offset_hours": 5.45 }, #2019-11-25T05:18:00
         # {"start": "2018-01-11 08:07:00", "end": "2018-01-15 05:19:00", "offset_hours": 4.204861 },
@@ -2484,7 +2485,7 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
     source_path_for_block = None
     original_start_row_index = None
 
-    micro_jump_limit = pd.Timedelta(minutes=45)
+    micro_jump_limit = pd.Timedelta(minutes=240)
 
     def finalize_block(end_index: int):
         nonlocal in_block, block_start_index, block_original_start_ts, block_corrected_start_ts, source_path_for_block, original_start_row_index
@@ -2547,10 +2548,11 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
             if i + 1 < len(corrected):
                 next_orig = pd.to_datetime(original[i+1])
                 # 4) Zakończ jeśli różnica (next_orig - corrected[i]) == 1 interwał (z tolerancją)
-                if abs((next_orig - pd.to_datetime(corrected[i])) - interval_td) <= pd.Timedelta(seconds=1):
+                # if abs((next_orig - pd.to_datetime(corrected[i])) - interval_td) <= pd.Timedelta(seconds=1):
+                if abs(diff_from_prev_orig) > micro_jump_limit:    
                     finalize_block(i)
                 # 5) Zakończ jeśli TIMESTAMP w następnej linii jest nowszy niż ostatnia skorygowana wartość
-                elif next_orig > pd.to_datetime(corrected[i]):
+                elif next_orig > pd.to_datetime(corrected[i]) - interval_td/2:
                     finalize_block(i)
         i += 1
 
@@ -3618,7 +3620,7 @@ def main():
             
             if 'TIMESTAMP' in batch_df.columns:
                 initial_rows = len(batch_df)
-                metadata_cols = ['source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
+                metadata_cols = ['TIMESTAMP', 'source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
                 cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
                 
                 if cols_to_check:
