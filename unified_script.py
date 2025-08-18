@@ -2634,6 +2634,101 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
 
     # return df_corrected
 
+def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
+    """
+    Ostateczna wersja korygująca chronologię, która inteligentnie obsługuje przerwy
+    wewnątrz błędnych bloków i generuje szczegółowy log zdarzeń.
+    Wersja 7.73 FINAL: Ostateczna, kompletna logika użytkownika.
+    """
+    if df.empty or len(df) < 2 or timestamp_col not in df.columns:
+        return df
+
+    try:
+        interval_td = pd.to_timedelta(known_interval)
+    except ValueError:
+        logging.error(f"Nieprawidłowy format interwału '{known_interval}'.")
+        return df
+
+    df_corrected = df.copy()
+    df_corrected.reset_index(drop=True, inplace=True)
+
+    original_timestamps = df_corrected[timestamp_col].to_numpy()
+    corrected_timestamps = original_timestamps.copy()
+    
+    is_in_block = False
+    time_jump_found = False
+    
+    # Zmiana logowania - nagłówek z nowymi kolumnami
+    if chronology_logger and chronology_logger.handlers[0].stream.tell() == 0:
+        chronology_logger.info("LogDate;EventType;SourceFilePath;OriginalIndex;OriginalTimestamp;CorrectedTimestamp;ShiftHours;Details")
+
+    for i in range(1, len(corrected_timestamps)):
+        last_original_ts = pd.to_datetime(original_timestamps[i-1])
+        current_original_ts = pd.to_datetime(original_timestamps[i])
+        diff = current_original_ts - last_original_ts
+
+        last_corrected_ts = pd.to_datetime(corrected_timestamps[i-1])
+
+        row_info = df_corrected.loc[i]
+        log_time = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
+        shift_hours = -diff.total_seconds() / 3600
+
+        if not is_in_block:
+            # Punkt 1: Znajdź "prawdziwy początek" nowego bloku
+            if diff < pd.Timedelta(0):
+                is_in_block = True
+                time_jump_found = True
+                log_entry = (f"{log_time};POCZATEK_BLOKU;"
+                             f"{row_info.get('source_filepath', 'N/A')};"
+                             f"{row_info.get('original_row_index', 'N/A')};"
+                             f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};;"
+                             f"{shift_hours:.2f};"
+                             f"Wykryto cofnięcie czasu z {last_original_ts.strftime('%Y-%m-%dT%H:%M:%S')}")
+                if chronology_logger: chronology_logger.info(log_entry)
+                
+                corrected_timestamps[i] = last_corrected_ts + interval_td
+        else:
+            # Jesteśmy wewnątrz bloku
+            
+            # Punkt 3: Znajdź "właściwy koniec" bloku (duży skok w przód)
+            if diff > pd.Timedelta(hours=4):
+                is_in_block = False
+                
+                end_info = df_corrected.loc[i-1] # Koniec był na poprzednim wierszu
+                log_entry = (f"{log_time};KONIEC_BLOKU;"
+                             f"{row_info.get('source_filepath', 'N/A')};"
+                             f"{end_info.get('original_row_index', 'N/A')};"
+                             f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};;"
+                             f"{shift_hours:.2f};"
+                             f"Wykryto duży skok w przód, kończący blok")
+                if chronology_logger: chronology_logger.info(log_entry)
+                # Ufaj oryginalnemu znacznikowi czasu, bo to nowy, poprawny blok
+                corrected_timestamps[i] = original_timestamps[i]
+            else:
+                # Punkt 2: Obsługa wnętrza bloku ("mikropoprawki")
+                # Sprawdź, czy nastąpiła krótka przerwa w działaniu loggera (skok w przód)
+                if diff > (interval_td * 1.5):
+                    # Zachowaj przerwę, dodając ją do ostatniego POPRAWNEGO czasu
+                    corrected_timestamps[i] = last_corrected_ts + diff
+                    
+                    log_entry = (f"{log_time};PRZERWA_W_BLOKU;"
+                                 f"{row_info.get('source_filepath', 'N/A')};"
+                                 f"{row_info.get('original_row_index', 'N/A')};"
+                                 f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};"
+                                 f"{pd.to_datetime(corrected_timestamps[i]).strftime('%Y-%m-%dT%H:%M:%S')};"
+                                 f"{shift_hours:.2f};"
+                                 f"Zachowano przerwę {diff} wewnątrz bloku")
+                    if chronology_logger: chronology_logger.info(log_entry)
+                else:
+                    # To jest wewnętrzny błąd (np. cofnięcie), który należy nadpisać, ale już bez logowania
+                    corrected_timestamps[i] = last_corrected_ts + interval_td
+    
+    if time_jump_found:
+        df_corrected[timestamp_col] = corrected_timestamps
+        logging.info(f"Zakończono pomyślnie korektę chronologii dla '{context_name}'.")
+
+    return df_corrected
+
 def diagnose_chronology_blocks(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
     """
     WERSJA DIAGNOSTYCZNA: Nie modyfikuje danych. Skanuje i loguje bloki z błędną chronologią
