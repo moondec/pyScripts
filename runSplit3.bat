@@ -33,7 +33,7 @@ set "BRODY_FIDS=BR_CSI_30 BR_SpectralData_1m BR_Spec_Veg_Ind_30m"
 :: --- KONIEC KONFIGURACJI ---
 
 
-:: --- GŁÓWNE WYKONANIE SKRYPTU ---
+REM :: --- GŁÓWNE WYKONANIE SKRYPTU ---
 
 REM :: #####################################################################
 REM echo.
@@ -61,7 +61,7 @@ REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji SARBIA n
     REM )
 REM )
 
-:: #####################################################################
+REM REM :: #####################################################################
 REM echo.
 REM echo ### Przetwarzanie dla stacji: RZECIN ###
 REM echo #####################################################################
@@ -139,10 +139,10 @@ REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN2 ni
     REM )
 REM )
 
-:: #####################################################################
-echo.
-echo ### Przetwarzanie dla stacji: MEZYK (struktura specjalna) ###
-echo #####################################################################
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: MEZYK (struktura specjalna) ###
+REM echo #####################################################################
 set "MEZYK_BASE_INPUT=D:\sites\ME\dT_ME\ThermoFisher"
 
 REM :: --- MEZYK TOP ---
