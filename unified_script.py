@@ -1506,9 +1506,9 @@ def setup_chronology_logger():
         handler.setFormatter(formatter)
         chronology_logger.addHandler(handler)
         
-        # Jeśli plik jest nowy, dodaj nagłówek
+        # Jeśli plik jest nowy, dodaj nagłówek (nowy, rozszerzony format)
         if handler.stream.tell() == 0:
-            chronology_logger.info("CorrectionDate;SourceFile;OriginalStartIndex;OriginalEndIndex;CorrectedStartTimestamp;CorrectedEndTimestamp")
+            chronology_logger.info("LogDate;SourceFilePth;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS")
             
 def parse_header_line(line):
     # function to parse a header line from a TOA5/TOB1 file
@@ -2452,125 +2452,117 @@ def filter_by_realistic_date_range(df: pd.DataFrame, file_path: Path) -> pd.Data
 
     # return df_corrected
 
-# def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
-    # """
-    # Koryguje chronologię, używając udoskonalonej, trójwarunkowej logiki wyjścia z trybu korekty.
-    # Wersja 7.76 FINAL: Ostateczna logika wyjścia z trybu korekty.
-    # """
-    # if df.empty or len(df) < 2 or timestamp_col not in df.columns:
-        # return df
+def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
+    """
+    Koryguje chronologię zgodnie ze specyfikacją:
+    1) Skan od drugiego wiersza; na cofnięciu czasu wchodzi w tryb korekty i nadpisuje TIMESTAMP wg interwału z ciągłością.
+    2) Uwzględnia mikroskoki czasu w przód do 45 minut wewnątrz bloku.
+    3) Kończy korektę, gdy skorygowany czas i następna linia różnią się o 1 interwał.
+    4) Kończy korektę, gdy następny oryginalny znacznik czasu jest nowszy od ostatniego skorygowanego.
+    5) Generuje jeden wpis logu per blok z polami: LogDate;SourceFilePth;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS.
+    """
+    if df.empty or len(df) < 2 or timestamp_col not in df.columns:
+        return df
 
-    # try:
-        # interval_td = pd.to_timedelta(known_interval)
-    # except ValueError:
-        # logging.error(f"Nieprawidłowy format interwału '{known_interval}'.")
-        # return df
+    try:
+        interval_td = pd.to_timedelta(known_interval)
+    except ValueError:
+        logging.error(f"Nieprawidłowy format interwału '{known_interval}'.")
+        return df
 
-    # df_corrected = df.copy()
-    # df_corrected.reset_index(drop=True, inplace=True)
+    df_corrected = df.copy()
+    df_corrected.reset_index(drop=True, inplace=True)
 
-    # original_timestamps = df_corrected[timestamp_col].to_numpy()
-    # corrected_timestamps = original_timestamps.copy()
-    
-    # is_in_block = False
-    # time_jump_found = False
-    # anchor_ts = None # Zmienna do przechowywania ostatniego poprawnego czasu przed blokiem
-    
-    # if chronology_logger and chronology_logger.handlers[0].stream.tell() == 0:
-        # chronology_logger.info("LogDate;EventType;SourceFilePath;OriginalIndex;OriginalTimestamp;CorrectedTimestamp;ShiftHours;Details")
+    original = pd.to_datetime(df_corrected[timestamp_col]).to_numpy()
+    corrected = original.copy()
 
-    # for i in range(1, len(corrected_timestamps)):
-        # last_original_ts = pd.to_datetime(original_timestamps[i-1])
-        # current_original_ts = pd.to_datetime(original_timestamps[i])
-        # diff = current_original_ts - last_original_ts
+    in_block = False
+    any_fix = False
+    block_start_index = None
+    block_original_start_ts = None
+    block_corrected_start_ts = None
+    source_path_for_block = None
+    original_start_row_index = None
 
-        # last_corrected_ts = pd.to_datetime(corrected_timestamps[i-1])
+    micro_jump_limit = pd.Timedelta(minutes=45)
 
-        # row_info = df_corrected.loc[i]
-        # log_time = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
-        # shift_hours = -diff.total_seconds() / 3600
+    def finalize_block(end_index: int):
+        nonlocal in_block, block_start_index, block_original_start_ts, block_corrected_start_ts, source_path_for_block, original_start_row_index
+        if block_start_index is None:
+            return
+        log_time = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
+        start_row = df_corrected.loc[block_start_index]
+        end_row = df_corrected.loc[end_index]
+        src = source_path_for_block or start_row.get('source_filepath', start_row.get('source_file', start_row.get('source_filename', 'N/A')))
+        start_idx_str = start_row.get('original_row_index', 'N/A')
+        end_idx_str = end_row.get('original_row_index', 'N/A')
+        original_end_ts = pd.to_datetime(original[end_index]).strftime('%Y-%m-%dT%H:%M:%S')
+        corrected_end_ts = pd.to_datetime(corrected[end_index]).strftime('%Y-%m-%dT%H:%M:%S')
+        original_start_ts_str = pd.to_datetime(block_original_start_ts).strftime('%Y-%m-%dT%H:%M:%S')
+        corrected_start_ts_str = pd.to_datetime(block_corrected_start_ts).strftime('%Y-%m-%dT%H:%M:%S')
+        log_line = (
+            f"{log_time};{src};{start_idx_str};{end_idx_str};"
+            f"{original_start_ts_str};{original_end_ts};{corrected_start_ts_str};{corrected_end_ts}"
+        )
+        if chronology_logger:
+            chronology_logger.info(log_line)
+        # reset block state
+        in_block = False
+        block_start_index = None
+        block_original_start_ts = None
+        block_corrected_start_ts = None
+        source_path_for_block = None
+        original_start_row_index = None
 
-        # if not is_in_block:
-            # # Warunek wejścia w tryb korekty
-            # if diff < pd.Timedelta(0):
-                # is_in_block = True
-                # time_jump_found = True
-                # anchor_ts = last_corrected_ts # Zapamiętaj ostatni poprawny czas
-                
-                # log_entry = (f"{log_time};POCZATEK_BLOKU;"
-                             # f"{row_info.get('source_filepath', 'N/A')};"
-                             # f"{row_info.get('original_row_index', 'N/A')};"
-                             # f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};;"
-                             # f"{shift_hours:.2f};"
-                             # f"Wykryto cofnięcie czasu z {last_original_ts.strftime('%Y-%m-%dT%H:%M:%S')}")
-                # if chronology_logger: chronology_logger.info(log_entry)
-                
-                # corrected_timestamps[i] = last_corrected_ts + interval_td
-        # else:
-            # # Jesteśmy wewnątrz bloku - sprawdzamy warunki wyjścia
-            
-            # # --- POCZĄTEK NOWEJ LOGIKI WYJŚCIA ---
-            # # Warunek 1: Skok w przód jest duży (o ponad 4h względem punktu wejścia)
-            # cond1_large_jump = (current_original_ts - anchor_ts) > pd.Timedelta(hours=24)
-            # cond1a_large_jump = (current_original_ts - last_original_ts) > pd.Timedelta(hours=2.9) #pd.Timedelta(hours=4.2)
-            # # Warunek 2: Różnica czasu nie jest równa jednemu interwałowi (z tolerancją)
-            # # cond2_is_not_interval = abs(diff - interval_td) > interval_td/60 # pd.Timedelta('1s') # interval_td * 1.1 #
-            # cond2_is_not_interval = diff - interval_td > pd.Timedelta('1s') # interval_td * 1.1 #
-            
-            # # Warunek Wyjścia 1: Duży skok, który NIE JEST idealnym interwałem
-            # exit_on_large_gap = (cond1_large_jump and cond2_is_not_interval) or (cond1a_large_jump and cond2_is_not_interval)
-            # # exit_on_large_gap = cond2_is_not_interval and cond1a_large_jump
-            # # Warunek Wyjścia 2: Skorygowany czas "dogonił" oryginalny
-            # # exit_on_resync = last_corrected_ts >= (current_original_ts - interval_td)
-            # exit_on_resync = current_original_ts >= (last_corrected_ts - interval_td)
+    i = 1
+    while i < len(corrected):
+        prev_orig = pd.to_datetime(original[i-1])
+        curr_orig = pd.to_datetime(original[i])
+        prev_corr = pd.to_datetime(corrected[i-1])
 
-            # if exit_on_large_gap or exit_on_resync:
-                # is_in_block = False
-                # anchor_ts = None
-                
-                # reason = "duży skok w przód" if exit_on_large_gap else "resynchronizacja"
-                # end_info = df_corrected.loc[i-1]
-                # log_entry = (f"{log_time};KONIEC_BLOKU;"
-                             # f"{row_info.get('source_filepath', 'N/A')};"
-                             # f"{end_info.get('original_row_index', 'N/A')};"
-                             # f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};;"
-                             # f"{shift_hours:.2f};"
-                             # f"Wykryto {reason}, kończący blok")
-                # if chronology_logger: chronology_logger.info(log_entry)
-                
-                # corrected_timestamps[i] = original_timestamps[i]
-            # # --- KONIEC NOWEJ LOGIKI WYJŚCIA ---
-            # else:
-                # # Twoja logika "mikropoprawek" pozostaje bez zmian
-                # if diff > (interval_td * 1.5):
-                    # corrected_timestamps[i] = last_corrected_ts + diff
-                    
-                    # log_entry = (f"{log_time};PRZERWA_W_BLOKU;"
-                                 # f"{row_info.get('source_filepath', 'N/A')};"
-                                 # f"{row_info.get('original_row_index', 'N/A')};"
-                                 # f"{current_original_ts.strftime('%Y-%m-%dT%H:%M:%S')};"
-                                 # f"{pd.to_datetime(corrected_timestamps[i]).strftime('%Y-%m-%dT%H:%M:%S')};"
-                                 # f"{shift_hours:.2f};"
-                                 # f"Zachowano przerwę {diff} wewnątrz bloku")
-                    # if chronology_logger: chronology_logger.info(log_entry)
-                # else:
-                    # corrected_timestamps[i] = last_corrected_ts + interval_td
-    
-    # if time_jump_found:
-        # df_corrected[timestamp_col] = corrected_timestamps
-        # logging.info(f"Zakończono pomyślnie korektę chronologii dla '{context_name}'.")
-    
-    # # # --- DEBUG: Zapisz ramkę danych po korekcie chronologii ---
-    # # try:
-        # # debug_filename = f"debug_after_correction_{context_name.replace(' ', '_').replace(':', '')}.csv"
-        # # debug_path_after_correction = BASE_DIR / debug_filename
-        # # logging.info(f"DEBUG: Zapisywanie stanu danych po korekcie chronologii do: {debug_path_after_correction.name}")
-        # # df_corrected.to_csv(debug_path_after_correction, index=False)
-    # # except Exception as e:
-        # # logging.error(f"DEBUG: Nie udało się zapisać pliku po korekcie: {e}")
-    # # # --- KONIEC DEBUG ---
+        if not in_block:
+            # Wejście w tryb korekty, gdy wykryto cofnięcie czasu (ściśle <) od drugiego wiersza
+            if curr_orig < prev_orig:
+                in_block = True
+                any_fix = True
+                block_start_index = i
+                block_original_start_ts = curr_orig
+                block_corrected_start_ts = prev_corr + interval_td
+                corrected[i] = block_corrected_start_ts
+                # zapamiętaj ścieżkę i indeksy do logu
+                row = df_corrected.loc[i]
+                source_path_for_block = row.get('source_filepath', row.get('source_file', row.get('source_filename', 'N/A')))
+                original_start_row_index = row.get('original_row_index', 'N/A')
+            # w przeciwnym razie nic nie robimy w trybie normalnym
+        else:
+            # Mikroskoki w przód do 45 min: zachowaj tę przerwę
+            diff_from_prev_orig = curr_orig - prev_orig
+            if diff_from_prev_orig > interval_td and diff_from_prev_orig <= micro_jump_limit:
+                corrected[i] = prev_corr + diff_from_prev_orig
+            else:
+                # Standardowa korekta o 1 interwał
+                corrected[i] = prev_corr + interval_td
 
-    # return df_corrected
+            # Sprawdź warunki zakończenia korekty na podstawie następnej linii
+            if i + 1 < len(corrected):
+                next_orig = pd.to_datetime(original[i+1])
+                # 4) Zakończ jeśli różnica (next_orig - corrected[i]) == 1 interwał (z tolerancją)
+                if abs((next_orig - pd.to_datetime(corrected[i])) - interval_td) <= pd.Timedelta(seconds=1):
+                    finalize_block(i)
+                # 5) Zakończ jeśli TIMESTAMP w następnej linii jest nowszy niż ostatnia skorygowana wartość
+                elif next_orig > pd.to_datetime(corrected[i]):
+                    finalize_block(i)
+        i += 1
+
+    # Jeżeli dotarliśmy do końca w trybie korekty, zamknij blok na ostatnim wierszu
+    if in_block:
+        finalize_block(len(corrected) - 1)
+
+    if any_fix:
+        df_corrected[timestamp_col] = corrected
+        logging.info(f"Zakończono pomyślnie korektę chronologii dla '{context_name}'.")
+
+    return df_corrected
 
 # def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
     # """
@@ -2634,85 +2626,85 @@ def filter_by_realistic_date_range(df: pd.DataFrame, file_path: Path) -> pd.Data
 
     # return df_corrected
 
-def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
-    """
-    Ostateczna wersja korygująca chronologię, która ignoruje pierwszy wiersz
-    i generuje udoskonalony, zwięzły log.
-    Wersja 7.77 FINAL: Ostateczna, niezawodna logika.
-    """
-    if df.empty or len(df) < 2 or timestamp_col not in df.columns:
-        return df
+# def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
+    # """
+    # Ostateczna wersja korygująca chronologię, która ignoruje pierwszy wiersz
+    # i generuje udoskonalony, zwięzły log.
+    # Wersja 7.77 FINAL: Ostateczna, niezawodna logika.
+    # """
+    # if df.empty or len(df) < 2 or timestamp_col not in df.columns:
+        # return df
 
-    try:
-        interval_td = pd.to_timedelta(known_interval)
-    except ValueError:
-        logging.error(f"Nieprawidłowy format interwału '{known_interval}'.")
-        return df
+    # try:
+        # interval_td = pd.to_timedelta(known_interval)
+    # except ValueError:
+        # logging.error(f"Nieprawidłowy format interwału '{known_interval}'.")
+        # return df
 
-    df_corrected = df.copy()
-    df_corrected.reset_index(drop=True, inplace=True)
+    # df_corrected = df.copy()
+    # df_corrected.reset_index(drop=True, inplace=True)
 
-    timestamps = df_corrected[timestamp_col].to_numpy()
-    original_timestamps = timestamps.copy() 
-    time_jump_found = False
+    # timestamps = df_corrected[timestamp_col].to_numpy()
+    # original_timestamps = timestamps.copy() 
+    # time_jump_found = False
     
-    # Upewnij się, że nagłówek logu ma nowy format
-    if chronology_logger and chronology_logger.handlers[0].stream.tell() == 0:
-        chronology_logger.info("LogDate;SourceFile;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS")
+    # # Upewnij się, że nagłówek logu ma nowy format
+    # if chronology_logger and chronology_logger.handlers[0].stream.tell() == 0:
+        # chronology_logger.info("LogDate;SourceFile;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS")
 
-    i = 1
-    while i < len(timestamps):
-        # Porównanie zaczyna się od drugiego wiersza (i=1)
-        if timestamps[i] <= timestamps[i-1]:
-            if not time_jump_found:
-                time_jump_found = True
-                logging.warning(f"Wykryto błąd chronologii w '{context_name}'. Rozpoczynanie korekty blokowej.")
+    # i = 1
+    # while i < len(timestamps):
+        # # Porównanie zaczyna się od drugiego wiersza (i=1)
+        # if timestamps[i] <= timestamps[i-1]:
+            # if not time_jump_found:
+                # time_jump_found = True
+                # logging.warning(f"Wykryto błąd chronologii w '{context_name}'. Rozpoczynanie korekty blokowej.")
 
-            start_index = i
-            last_good_ts = timestamps[i-1]
+            # start_index = i
+            # last_good_ts = timestamps[i-1]
             
-            logging.info(f"  -> Błędny blok danych rozpoczyna się przy wierszu {start_index}.")
+            # logging.info(f"  -> Błędny blok danych rozpoczyna się przy wierszu {start_index}.")
 
-            # Skanuj w przód, aby znaleźć koniec błędnego bloku
-            end_index = -1
-            for j in range(start_index, len(original_timestamps)):
-                if original_timestamps[j] > last_good_ts:
-                    end_index = j
-                    break
+            # # Skanuj w przód, aby znaleźć koniec błędnego bloku
+            # end_index = -1
+            # for j in range(start_index, len(original_timestamps)):
+                # if original_timestamps[j] > last_good_ts:
+                    # end_index = j
+                    # break
             
-            if end_index == -1:
-                end_index = len(timestamps) # Korekta do końca paczki
+            # if end_index == -1:
+                # end_index = len(timestamps) # Korekta do końca paczki
 
-            num_points_to_correct = end_index - start_index
-            new_timestamps = pd.date_range(
-                start=last_good_ts + interval_td,
-                periods=num_points_to_correct,
-                freq=interval_td
-            )
+            # num_points_to_correct = end_index - start_index
+            # new_timestamps = pd.date_range(
+                # start=last_good_ts + interval_td,
+                # periods=num_points_to_correct,
+                # freq=interval_td
+            # )
             
-            # --- Udoskonalone logowanie ---
-            start_info = df_corrected.loc[start_index]
-            end_info = df_corrected.loc[end_index - 1]
-            log_entry = (f"{pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')};"
-                         f"{start_info.get('source_filename', 'N/A')};"
-                         f"{start_info.get('original_row_index', 'N/A')};{end_info.get('original_row_index', 'N/A')};"
-                         f"{pd.to_datetime(original_timestamps[start_index]).strftime('%Y-%m-%dT%H:%M:%S')};"
-                         f"{pd.to_datetime(original_timestamps[end_index-1]).strftime('%Y-%m-%dT%H:%M:%S')};"
-                         f"{pd.to_datetime(new_timestamps[0]).strftime('%Y-%m-%dT%H:%M:%S')};"
-                         f"{pd.to_datetime(new_timestamps[-1]).strftime('%Y-%m-%dT%H:%M:%S')}")
-            if chronology_logger: chronology_logger.info(log_entry)
-            # --- Koniec logowania ---
+            # # --- Udoskonalone logowanie ---
+            # start_info = df_corrected.loc[start_index]
+            # end_info = df_corrected.loc[end_index - 1]
+            # log_entry = (f"{pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')};"
+                         # f"{start_info.get('source_filename', 'N/A')};"
+                         # f"{start_info.get('original_row_index', 'N/A')};{end_info.get('original_row_index', 'N/A')};"
+                         # f"{pd.to_datetime(original_timestamps[start_index]).strftime('%Y-%m-%dT%H:%M:%S')};"
+                         # f"{pd.to_datetime(original_timestamps[end_index-1]).strftime('%Y-%m-%dT%H:%M:%S')};"
+                         # f"{pd.to_datetime(new_timestamps[0]).strftime('%Y-%m-%dT%H:%M:%S')};"
+                         # f"{pd.to_datetime(new_timestamps[-1]).strftime('%Y-%m-%dT%H:%M:%S')}")
+            # if chronology_logger: chronology_logger.info(log_entry)
+            # # --- Koniec logowania ---
 
-            timestamps[start_index:end_index] = new_timestamps
-            i = end_index 
-        else:
-            i += 1 
+            # timestamps[start_index:end_index] = new_timestamps
+            # i = end_index 
+        # else:
+            # i += 1 
     
-    if time_jump_found:
-        df_corrected[timestamp_col] = timestamps
-        logging.info(f"Zakończono pomyślnie korektę chronologii dla '{context_name}'.")
+    # if time_jump_found:
+        # df_corrected[timestamp_col] = timestamps
+        # logging.info(f"Zakończono pomyślnie korektę chronologii dla '{context_name}'.")
 
-    return df_corrected
+    # return df_corrected
 
 def diagnose_chronology_blocks(df: pd.DataFrame, context_name: str, known_interval: str, timestamp_col: str = 'TIMESTAMP') -> pd.DataFrame:
     """
@@ -3052,7 +3044,7 @@ def _ensure_flag_columns_exist(df: pd.DataFrame) -> pd.DataFrame:
     cols_to_skip = [
         'TIMESTAMP', 'group_id', 'source_file', 'interval', 
         'latitude', 'longitude', 'source_filepath', 
-        'source_filename', 'original_row_index'
+        'source_filename', 'original_row_index', 'RECORD'
     ]
     
     # Słownik do przechowania danych dla nowych kolumn flag
