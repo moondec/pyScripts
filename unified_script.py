@@ -2457,8 +2457,8 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
     """
     Koryguje chronologię zgodnie ze specyfikacją:
     1) Skan od drugiego wiersza; na cofnięciu czasu wchodzi w tryb korekty i nadpisuje TIMESTAMP wg interwału z ciągłością.
-    2) Uwzględnia mikroskoki czasu w przód do 45 minut wewnątrz bloku.
-    3) Kończy korektę, gdy skorygowany czas i następna linia różnią się o 1 interwał.
+    2) Uwzględnia mikroskoki czasu w przód do 240 minut wewnątrz bloku.
+    3) Kończy korektę, gdy skorygowany czas i następna linia różnią się o 1/2 interwał.
     4) Kończy korektę, gdy następny oryginalny znacznik czasu jest nowszy od ostatniego skorygowanego.
     5) Generuje jeden wpis logu per blok z polami: LogDate;SourceFilePth;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS.
     """
@@ -2514,6 +2514,7 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
         block_corrected_start_ts = None
         source_path_for_block = None
         original_start_row_index = None
+        anchor = None
 
     i = 1
     while i < len(corrected):
@@ -2530,13 +2531,14 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
                 block_original_start_ts = curr_orig
                 block_corrected_start_ts = prev_corr + interval_td
                 corrected[i] = block_corrected_start_ts
+                anchor = prev_orig
                 # zapamiętaj ścieżkę i indeksy do logu
                 row = df_corrected.loc[i]
                 source_path_for_block = row.get('source_filepath', row.get('source_file', row.get('source_filename', 'N/A')))
                 original_start_row_index = row.get('original_row_index', 'N/A')
             # w przeciwnym razie nic nie robimy w trybie normalnym
         else:
-            # Mikroskoki w przód do 45 min: zachowaj tę przerwę
+            # Mikroskoki w przód do 240 min: zachowaj tę przerwę
             diff_from_prev_orig = curr_orig - prev_orig
             if diff_from_prev_orig > interval_td and diff_from_prev_orig <= micro_jump_limit:
                 corrected[i] = prev_corr + diff_from_prev_orig
@@ -2549,10 +2551,12 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
                 next_orig = pd.to_datetime(original[i+1])
                 # 4) Zakończ jeśli różnica (next_orig - corrected[i]) == 1 interwał (z tolerancją)
                 # if abs((next_orig - pd.to_datetime(corrected[i])) - interval_td) <= pd.Timedelta(seconds=1):
-                if abs(diff_from_prev_orig) > micro_jump_limit:    
+                # 4) Zakończ jeśli różnica pomiędzy liniami jest większa niż dpuszczalny limit na przerwę w pomiarach
+                if diff_from_prev_orig > micro_jump_limit * 2 and anchor < curr_orig:    
                     finalize_block(i)
                 # 5) Zakończ jeśli TIMESTAMP w następnej linii jest nowszy niż ostatnia skorygowana wartość
-                elif next_orig > pd.to_datetime(corrected[i]) - interval_td/2:
+                # odjąć pół interwału
+                elif next_orig > pd.to_datetime(corrected[i]) - interval_td / 2:
                     finalize_block(i)
         i += 1
 
@@ -3591,11 +3595,12 @@ def main():
     
     # Pipeline 2: Process ALL CSV files at once, sorted by modification time
     if csv_files:
-        # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
-        logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-        csv_files.sort(key=lambda p: p.stat().st_mtime)
-        # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
-        # csv_files.sort(key=lambda p: p.name)
+        # # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
+        # logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
+        # csv_files.sort(key=lambda p: p.stat().st_mtime)
+        # # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
+        logging.info(f"Sortowanie {len(csv_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
+        csv_files.sort(key=lambda p: p.name.casefold())
         
         logging.info(f"Wczytywanie wszystkich {len(csv_files)} posortowanych plików CSV do pamięci...")
         
