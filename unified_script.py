@@ -554,16 +554,17 @@ MANUAL_TIME_SHIFTS = {
         # {"start": "2021-08-01 04:12:00", "end": "2021-08-04 08:59:00", "offset_hours": 37 },
         # {"start": "2021-08-07 19:30:00", "end": "2021-08-08 19:42:00", "offset_hours": 111.45 },
         # {"start": "2021-11-10 10:58:00", "end": "2021-11-12 00:42:00", "offset_hours": 14 },
-        # {"start": "2022-05-30 08:21:00", "end": "2022-06-03 22:04:00", "offset_hours": 220 },
-        # {"start": "2022-06-11 08:42:00", "end": "2022-06-13 00:03:00", "offset_hours": 7.5 }, #
-        # {"start": "2023-02-06 12:17:00", "end": "2023-02-06 13:18:00", "offset_hours": 2.75 },
-        # {"start": "2023-02-12 10:13:00", "end": "2023-02-12 11:12:00", "offset_hours": 6.4666667 },
-        {'start': '2024-09-10T08:36:00', 'end': '2024-09-10T12:20:00', "offset_hours": 333.85 },
-        {'start': '2024-11-10T03:20:00', 'end': '2024-11-10T03:27:00', "offset_hours": 52.35 },
-        {'start': '2024-11-19T13:41:00', 'end': '2024-11-20T17:01:00', "offset_hours": 50.73 },
-        {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
-        {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
-        {'start': '2025-05-15T05:26:00', 'end': '2025-05-20T08:53:00', "offset_hours": 28.4 },
+        {"start": "2021-11-10 10:58:00", "end": "2021-11-12 01:13:00", "offset_hours": 14.5 },
+        {"start": "2021-11-24 11:23:00", "end": "2021-11-25 05:49:00", "offset_hours": 28.52 }, #
+        {"start": "2021-12-06 12:16:00", "end": "2021-12-08 07:55:00", "offset_hours": 25.63 },
+        {"start": "2022-06-13 15:28:00", "end": "2022-07-12 23:46:00", "offset_hours": -1.73 },
+        {"start": "2023-02-12 10:13:00", "end": "2023-02-12 11:12:00", "offset_hours": 6.4666667 },
+        {'start': '2024-09-10 08:36:00', 'end': '2024-09-10 12:20:00', "offset_hours": 333.85 },
+        {'start': '2024-11-10 03:19:00', 'end': '2024-11-10 03:27:00', "offset_hours": 52.35 },
+        {'start': '2024-11-19 13:41:00', 'end': '2024-11-20 17:01:00', "offset_hours": 50.73 },
+        {'start': '2024-12-10 04:08:00', 'end': '2024-12-10 05:08:00', "offset_hours": 9.42 },
+        {'start': '2025-01-08 02:46:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
+        {'start': '2025-05-15 05:26:00', 'end': '2025-05-20 08:53:00', "offset_hours": 28.4 },
     ],
     'ME_DOWN_MET_30min' : 'ME_MTSHIFT', 'ME_DOWN_MET_1min' : 'ME_MTSHIFT',
     'ME_Rain_down' : 'ME_MTSHIFT', 'ME_CalPlates' : 'ME_MTSHIFT',
@@ -2456,7 +2457,7 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
     """
     Koryguje chronologię zgodnie ze specyfikacją:
     1) Skan od drugiego wiersza; na cofnięciu czasu wchodzi w tryb korekty i nadpisuje TIMESTAMP wg interwału z ciągłością.
-    2) Uwzględnia mikroskoki czasu w przód do 240 minut wewnątrz bloku.
+    2) Uwzględnia mikroskoki czasu w przód do 180 minut wewnątrz bloku.
     3) Kończy korektę, gdy skorygowany czas i następna linia różnią się o 1/2 interwał.
     4) Kończy korektę, gdy następny oryginalny znacznik czasu jest nowszy od ostatniego skorygowanego.
     5) Generuje jeden wpis logu per blok z polami: LogDate;SourceFilePth;BlockStartIndex;BlockEndIndex;OriginalStartTS;OriginalEndTS;CorrectedStartTS;CorrectedEndTS.
@@ -2484,7 +2485,7 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
     source_path_for_block = None
     original_start_row_index = None
 
-    micro_jump_limit = pd.Timedelta(minutes=240)
+    micro_jump_limit = pd.Timedelta(minutes=180)
 
     def finalize_block(end_index: int):
         nonlocal in_block, block_start_index, block_original_start_ts, block_corrected_start_ts, source_path_for_block, original_start_row_index
@@ -2537,7 +2538,7 @@ def correct_and_report_chronology(df: pd.DataFrame, context_name: str, known_int
                 original_start_row_index = row.get('original_row_index', 'N/A')
             # w przeciwnym razie nic nie robimy w trybie normalnym
         else:
-            # Mikroskoki w przód do 240 min: zachowaj tę przerwę
+            # Mikroskoki w przód do 180 min: zachowaj tę przerwę
             diff_from_prev_orig = curr_orig - prev_orig
             if diff_from_prev_orig > interval_td and diff_from_prev_orig <= micro_jump_limit:
                 corrected[i] = prev_corr + diff_from_prev_orig
@@ -3194,6 +3195,9 @@ def scan_for_files(input_dirs: List[str], source_ids: List[str]) -> List[Path]:
             if "tmp" in p_file.name: continue
             if "checkpoint" in p_file.name: continue
             if "pom1m_20210629T234501" in p_file.name: continue
+            if "pom1m_20230614T234500" in p_file.name: continue
+            if "pom1m_20210813T234500" in p_file.name: continue
+            if "pom1m_20210822T234501" in p_file.name: continue
             if p_file.is_file():
                 if any((sid.endswith('$') and p_file.stem.endswith(sid.rstrip('$'))) or (sid in p_file.name) for sid in source_ids):
                     all_file_paths.append(p_file.resolve())
@@ -3665,9 +3669,9 @@ def main():
                 
                 if cols_to_check:
                     df_for_dedup = batch_df.copy()
-                    # numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
-                    # df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
-                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='last').index
+                    numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
+                    df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
+                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
                     batch_df = batch_df.loc[indices_to_keep]
                 
                 rows_removed = initial_rows - len(batch_df)
