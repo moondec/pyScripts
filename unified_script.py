@@ -542,11 +542,8 @@ MANUAL_TIME_SHIFTS = {
 
     'ME_MTSHIFT': [
         {"start": "2018-01-11 08:07:00", "end": "2018-01-15 05:19:00", "offset_hours": 4.204861 },
-        # {"start": "2018-05-15 08:07:00", "end": "2018-05-18 19:05:00", "offset_hours": 4.68},
-        # {"start": "2018-05-29 23:48:00", "end": "2018-06-01 23:45:00", "offset_hours": 81.72 },
-        # {"start": "2019-11-24 23:51:00", "end": "2019-11-28 06:59:00", "offset_hours": 5.45 }, #2019-11-25T05:18:00
-        # {"start": "2018-01-11 08:07:00", "end": "2018-01-15 05:19:00", "offset_hours": 4.204861 },
         # {"start": "2018-05-30 16:03:00", "end": "2018-06-02 21:40:00", "offset_hours": 59 },
+        # {"start": "2018-09-03 16:03:00", "end": "2018-09-05 01:00:00", "offset_hours": -5 },
         # {"start": "2019-07-04 23:46:00", "end": "2019-07-08 20:21:00", "offset_hours": 18.43 },
         # {"start": "2019-11-22 16:04:00", "end": "2019-11-28 06:59:00", "offset_hours": 5.7 },
         # {"start": "2019-12-09 11:51:00", "end": "2019-12-31 23:59:00", "offset_hours": 2.62 },
@@ -561,10 +558,12 @@ MANUAL_TIME_SHIFTS = {
         # {"start": "2022-06-11 08:42:00", "end": "2022-06-13 00:03:00", "offset_hours": 7.5 }, #
         # {"start": "2023-02-06 12:17:00", "end": "2023-02-06 13:18:00", "offset_hours": 2.75 },
         # {"start": "2023-02-12 10:13:00", "end": "2023-02-12 11:12:00", "offset_hours": 6.4666667 },
-        # {'start': '2024-11-19 13:41:00', 'end': '2024-11-20 07:35:00', "offset_hours": 60.15 },
-        # {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 11:50:00', "offset_hours": 45.4 },
-        # {'start': '2025-01-30 16:57:00', 'end': '2025-02-17 10:18:00', "offset_hours": 25.2 },
-        # {'start': '2025-05-15 05:26:00', 'end': '2025-05-18 14:52:00', "offset_hours": 18 },
+        {'start': '2024-09-10T08:36:00', 'end': '2024-09-10T12:20:00', "offset_hours": 333.85 },
+        {'start': '2024-11-10T03:20:00', 'end': '2024-11-10T03:27:00', "offset_hours": 52.35 },
+        {'start': '2024-11-19T13:41:00', 'end': '2024-11-20T17:01:00', "offset_hours": 50.73 },
+        {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
+        {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
+        {'start': '2025-05-15T05:26:00', 'end': '2025-05-20T08:53:00', "offset_hours": 28.4 },
     ],
     'ME_DOWN_MET_30min' : 'ME_MTSHIFT', 'ME_DOWN_MET_1min' : 'ME_MTSHIFT',
     'ME_Rain_down' : 'ME_MTSHIFT', 'ME_CalPlates' : 'ME_MTSHIFT',
@@ -3191,6 +3190,10 @@ def scan_for_files(input_dirs: List[str], source_ids: List[str]) -> List[Path]:
         if not p_input.is_dir(): continue
         for p_file in p_input.rglob('*'):
             if "sync-conflict" in p_file.name: continue
+            if "CONFIG" in p_file.name: continue
+            if "tmp" in p_file.name: continue
+            if "checkpoint" in p_file.name: continue
+            if "pom1m_20210629T234501" in p_file.name: continue
             if p_file.is_file():
                 if any((sid.endswith('$') and p_file.stem.endswith(sid.rstrip('$'))) or (sid in p_file.name) for sid in source_ids):
                     all_file_paths.append(p_file.resolve())
@@ -3595,44 +3598,76 @@ def main():
     
     # Pipeline 2: Process ALL CSV files at once, sorted by modification time
     if csv_files:
-        # # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
+        # # --- DEBUG: Zapisz listę plików PRZED sortowaniem ---
+        # try:
+            # debug_before_path = BASE_DIR / "debug_files_before_sort.txt"
+            # logging.info(f"DEBUG: Zapisywanie listy plików PRZED sortowaniem do: {debug_before_path.name}")
+            # with open(debug_before_path, 'w', encoding='utf-8') as f:
+                # for p in csv_files:
+                    # f.write(f"{p.name}\n")
+        # except Exception as e:
+            # logging.error(f"DEBUG: Nie udało się zapisać pliku listy przed sortowaniem: {e}")
+        # --- KONIEC DEBUG ---
+        unique_files = []
+        seen_names = set() # A set for fast lookups of filenames we've already added.
+
+        for p in csv_files:
+            # Check if a file with this name has already been seen.
+            if p.name not in seen_names:
+                # If not, add the full path object to our unique list.
+                unique_files.append(p)
+                # And record the name so we can ignore its future duplicates.
+                seen_names.add(p.name)
+        # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
         # logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-        # csv_files.sort(key=lambda p: p.stat().st_mtime)
-        # # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
-        logging.info(f"Sortowanie {len(csv_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
-        csv_files.sort(key=lambda p: p.name.casefold())
         
-        logging.info(f"Wczytywanie wszystkich {len(csv_files)} posortowanych plików CSV do pamięci...")
+        # csv_files.sort(key=lambda p: p.stat().st_mtime)
+        # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
+        logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
+        unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
+        
+        # --- DEBUG: Zapisz listę plików PO sortowaniu ---
+        try:
+            debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
+            logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
+            with open(debug_after_path, 'w', encoding='utf-8') as f:
+                for p in unique_files:
+                    f.write(f"{str(p.resolve())}\n")
+        except Exception as e:
+            logging.error(f"DEBUG: Nie udało się zapisać pliku listy po sortowaniu: {e}")
+        # --- KONIEC DEBUG ---
+        
+        logging.info(f"Wczytywanie wszystkich {len(unique_files)} posortowanych plików CSV do pamięci...")
         
         # Serial loading of all CSV files
-        # all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(csv_files, desc="Wczytywanie plików CSV")]
-        # non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
-        
-        # Parallel loading of all CSV files
-        logging.info(f"Wczytywanie wszystkich {len(csv_files)} plików CSV do pamięci (równolegle)...")
-        all_csv_dfs = []
-        with multiprocessing.Pool(processes=args.jobs) as pool:
-            # Użyj imap_unordered dla wydajności i owiń w tqdm dla paska postępu
-            results_iterator = pool.imap_unordered(read_simple_csv_data, csv_files)
-            
-            for df in tqdm(results_iterator, total=len(csv_files), desc="Wczytywanie plików CSV"):
-                all_csv_dfs.append(df)
-
+        all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(unique_files, desc="Wczytywanie plików CSV")]
         non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
+        
+        # # Parallel loading of all CSV files
+        # logging.info(f"Wczytywanie wszystkich {len(csv_files)} plików CSV do pamięci (równolegle)...")
+        # all_csv_dfs = []
+        # with multiprocessing.Pool(processes=args.jobs) as pool:
+            # # Użyj imap_unordered dla wydajności i owiń w tqdm dla paska postępu
+            # results_iterator = pool.imap_unordered(read_simple_csv_data, csv_files)
+            
+            # for df in tqdm(results_iterator, total=len(csv_files), desc="Wczytywanie plików CSV"):
+                # all_csv_dfs.append(df)
+
+        # non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
         
         if non_empty_dfs:
             batch_df = pd.concat(non_empty_dfs, ignore_index=True)
             
             if 'TIMESTAMP' in batch_df.columns:
                 initial_rows = len(batch_df)
-                metadata_cols = ['TIMESTAMP', 'source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
+                metadata_cols = ['source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
                 cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
                 
                 if cols_to_check:
                     df_for_dedup = batch_df.copy()
                     # numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
                     # df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
-                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
+                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='last').index
                     batch_df = batch_df.loc[indices_to_keep]
                 
                 rows_removed = initial_rows - len(batch_df)
