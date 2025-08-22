@@ -2501,7 +2501,7 @@ def correct_and_report_chronology(
     source_path_for_block = None
     original_start_row_index = None
 
-    micro_jump_limit = pd.Timedelta(minutes=360)
+    micro_jump_limit = pd.Timedelta(minutes=5)
     big_forward_threshold = pd.to_timedelta(f"{big_forward_hours}h")
     # micro_jump_limit = big_forward_hours
 
@@ -3472,6 +3472,61 @@ def _run_tests(config: dict):
 
     logging.info("="*20 + " ZAKOŃCZONO TRYB TESTOWY " + "="*20)
 
+import pandas as pd
+import logging
+from pathlib import Path
+
+def is_approx_24h_monotonic(filename, col='Timestamp', tolerance_hours=1):
+    """
+    Sprawdza, czy zakres serii czasowej to ok. 24h (+/- tolerancja)
+    oraz czy czas jest monotonnie rosnący (nie cofa się).
+    Jeśli czas w pliku się cofnął – loguje błąd i zwraca False.
+    """
+    try:
+        times = pd.read_csv(filename, usecols=[col])[col]
+        times = pd.to_datetime(times, errors='coerce')
+        times = times.dropna()
+        if len(times) < 2:
+            return False
+        # # Sprawdź monotoniczność
+        # if not times.is_monotonic_increasing:
+            # logging.warning(f"W pliku {filename} czas się cofa – plik pominięty.")
+            # return False
+        # Policz zakres czasowy w godzinach
+        dt_hours = (times.max() - times.min()).total_seconds() / 3600
+        return abs(dt_hours - 24) <= tolerance_hours
+    except Exception as e:
+        logging.error(f"Nie udało się sprawdzić {filename}: {e}")
+        return False
+
+import pandas as pd
+import logging
+from pathlib import Path
+
+def is_over_24h_monotonic(filename, col='TIMESTAMP', min_hours=25):
+    """
+    Zwraca True, jeśli czas w pliku jest monotonnie rosnący
+    i zakres czasowy przekracza min_hours (domyślnie 24h).
+    Jeśli czas się cofa – loguje ostrzeżenie i zwraca False.
+    """
+    try:
+        times = pd.read_csv(filename, usecols=[col])[col]
+        times = pd.to_datetime(times, errors='coerce')
+        times = times.dropna()
+        if len(times) < 2:
+            return False
+        # # Sprawdź monotoniczność czasów
+        # if not times.is_monotonic_increasing:
+            # logging.warning(f"W pliku {filename} czas się cofa – plik pominięty.")
+            # return False
+        # Zakres czasowy w godzinach
+        dt_hours = (times.max() - times.min()).total_seconds() / 3600
+        return dt_hours > min_hours
+    except Exception as e:
+        logging.error(f"Nie udało się sprawdzić {filename}: {e}")
+        return False
+
+
 def main():
     """Główna funkcja orkiestrująca."""
     parser = argparse.ArgumentParser(description="Uniwersalny skrypt do przetwarzania danych pomiarowych.")
@@ -3658,23 +3713,34 @@ def main():
         # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
         logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
         unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
-        # --- FILTRACJA: usuń pliki puste oraz większe niż 0.4 MB ---
+        
         filtered_files = []
         for p in unique_files:
-            try:
-                st = p.stat()
-                if 0 < st.st_size <= int(0.4 * 1024 * 1024):  # od 1 bajta do 0.4 MB
-                    filtered_files.append(p)
-            except Exception:
-                # jeżeli nie udało się odczytać metadanych, pomijamy plik
-                continue
+            if is_approx_24h_monotonic(p):
+                filtered_files.append(p)
+                
+        filtered_files_24 = []
+        for p in unique_files:
+            if is_over_24h_monotonic(p):
+                filtered_files_24.append(p)
+        
+        # # --- FILTRACJA: usuń pliki puste oraz większe niż 0.4 MB ---
+        # filtered_files = []
+        # for p in unique_files:
+            # try:
+                # st = p.stat()
+                # if 0 < st.st_size: # <= int(0.4 * 1024 * 1024):  # od 1 bajta do 0.4 MB
+                    # filtered_files.append(p)
+            # except Exception:
+                # # jeżeli nie udało się odczytać metadanych, pomijamy plik
+                # continue
         # --- DEBUG: Zapisz listę plików PO sortowaniu ---
         try:
             debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
             logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
             with open(debug_after_path, 'w', encoding='utf-8') as f:
                 f.write("filename;fullpath;modified_utc;size_mb\n")
-                for p in filtered_files:
+                for p in unique_files: # tu zapisuje wszystkie pliki do przerobienia
                     try:
                         st = p.stat()
                         modified_utc = datetime.utcfromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
@@ -3713,28 +3779,40 @@ def main():
                 metadata_cols = ['source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
                 cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
                 
+                # # --- DEBUG: Zapisz ramkę danych PRZED deduplikacją ---
+                # try:
+                    # debug_path_before_dedup = Path(group_config.get('output_dir')) / f"debug_before_deduplication_{group_config['file_id']}.csv"
+                    # debug_path_before_dedup.parent.mkdir(parents=True, exist_ok=True)
+                    # logging.info(f"DEBUG: Zapisywanie stanu danych PRZED deduplikacją do: {debug_path_before_dedup.name}")
+                    # batch_df.to_csv(debug_path_before_dedup, index=False)
+                    # # zapis tylko pierwszych 70k wierszy
+                    # # batch_df.head(70000).to_csv(debug_path_before_dedup, index=False)
+                # except Exception as e:
+                    # logging.error(f"DEBUG: Nie udało się zapisać pliku PRZED deduplikacji: {e}")
+                # # --- KONIEC DEBUG ---
+                
                 if cols_to_check:
                     df_for_dedup = batch_df.copy()
                     # numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
                     # df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
-                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='last').index
+                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
                     batch_df = batch_df.loc[indices_to_keep]
                 
                 rows_removed = initial_rows - len(batch_df)
                 if rows_removed > 0:
                     logging.info(f"Usunięto {rows_removed} zduplikowanych wierszy (na podstawie wartości pomiarowych, z uwzględnieniem precyzji).")
                     
-                # --- DEBUG: Zapisz ramkę danych po deduplikacji ---
-                try:
-                    debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
-                    debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
-                    logging.info(f"DEBUG: Zapisywanie stanu danych po deduplikacji do: {debug_path_after_dedup.name}")
+                # # --- DEBUG: Zapisz ramkę danych PO deduplikacji ---
+                # try:
+                    # debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
+                    # debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
+                    # logging.info(f"DEBUG: Zapisywanie stanu danych PO deduplikacji do: {debug_path_after_dedup.name}")
                     # batch_df.to_csv(debug_path_after_dedup, index=False)
-                    # zapis tylko pierwszych 70k wierszy
-                    batch_df.head(70000).to_csv(debug_path_after_dedup, index=False)
-                except Exception as e:
-                    logging.error(f"DEBUG: Nie udało się zapisać pliku po deduplikacji: {e}")
-                # --- KONIEC DEBUG ---
+                    # # zapis tylko pierwszych 70k wierszy
+                    # # batch_df.head(70000).to_csv(debug_path_after_dedup, index=False)
+                # except Exception as e:
+                    # logging.error(f"DEBUG: Nie udało się zapisać pliku PO deduplikacji: {e}")
+                # # --- KONIEC DEBUG ---
 
             known_interval = group_config.get('interval')
             # corrected_batch = diagnose_chronology_scan(batch_df, f"Wszystkie pliki CSV", known_interval)

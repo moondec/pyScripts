@@ -144,7 +144,7 @@ REM :: #####################################################################
 REM echo.
 REM echo ### Przetwarzanie dla stacji: MEZYK (struktura specjalna) ###
 REM echo #####################################################################
-set "MEZYK_BASE_INPUT=D:\sites\ME\dT_ME\ThermoFisher"
+set "MEZYK_BASE_INPUT=D:\sites\ME\dT_MEkopia2\ThermoFisher"
 
 REM :: --- MEZYK TOP ---
 REM set "TOP_DIRS_LIST="
