@@ -123,11 +123,11 @@ COLUMNS_TO_EXCLUDE_FROM_CSV = [
     'Temp (degC)',
     'Humidity (%)',
     'RTD_1 (degC)', 
-    'RTD_1_AV (degC)', 
+    # 'RTD_1_AV (degC)', 
     'RTD_2 (degC)', 
-    'RTD_2_AV (degC)',
+    # 'RTD_2_AV (degC)',
     'RTD_3 (degC)',
-    'RTD_3_AV (degC)',
+    # 'RTD_3_AV (degC)',
     'Prom_1 (mV)',
     'Prom_1_AV (mV)', 
     'Prom_1_SD (mV)',
@@ -135,15 +135,15 @@ COLUMNS_TO_EXCLUDE_FROM_CSV = [
     'Prom_2_AV (mV)',
     'Prom_2_SD (mV)',
     'RTD_4 (degC)',
-    'RTD_4_AV (degC)',
+    # 'RTD_4_AV (degC)',
     'RTD_5 (degC)',
-    'RTD_5_AV (degC)',
+    # 'RTD_5_AV (degC)',
     'RTD_6 (degC)',
-    'RTD_6_AV (degC)',
+    # 'RTD_6_AV (degC)',
     'RTD_7 (degC)',
-    'RTD_7_AV (degC)',
+    # 'RTD_7_AV (degC)',
     'RTD_8 (degC)',
-    'RTD_8_AV (degC)',
+    # 'RTD_8_AV (degC)',
     'TA_1_1_1 (degC)',
     'RH_1_1_1 (%)',
     'PPFD_BC_IN_2_1_1 (mV)',
@@ -554,18 +554,16 @@ MANUAL_TIME_SHIFTS = {
         # {"start": "2021-08-01 04:12:00", "end": "2021-08-04 08:59:00", "offset_hours": 37 },
         # {"start": "2021-08-07 19:30:00", "end": "2021-08-08 19:42:00", "offset_hours": 111.45 },
         # {"start": "2021-11-10 10:58:00", "end": "2021-11-12 00:42:00", "offset_hours": 14 },
-        
-        # {"start": "2021-11-10 10:58:00", "end": "2021-11-12 01:13:00", "offset_hours": 14.5 },
-        # {"start": "2021-11-24 11:23:00", "end": "2021-11-25 05:49:00", "offset_hours": 28.52 }, #
-        # {"start": "2021-12-06 12:16:00", "end": "2021-12-08 07:55:00", "offset_hours": 25.63 },
-        # {"start": "2022-06-13 15:28:00", "end": "2022-07-12 23:46:00", "offset_hours": -1.73 },
+        # {"start": "2022-05-30 08:21:00", "end": "2022-06-03 22:04:00", "offset_hours": 220 },
+        # {"start": "2022-06-11 08:42:00", "end": "2022-06-13 00:03:00", "offset_hours": 7.5 }, #
+        # {"start": "2023-02-06 12:17:00", "end": "2023-02-06 13:18:00", "offset_hours": 2.75 },
         # {"start": "2023-02-12 10:13:00", "end": "2023-02-12 11:12:00", "offset_hours": 6.4666667 },
-        # {'start': '2024-09-10 08:36:00', 'end': '2024-09-10 12:20:00', "offset_hours": 333.85 },
-        # {'start': '2024-11-10 03:19:00', 'end': '2024-11-10 03:27:00', "offset_hours": 52.35 },
-        # {'start': '2024-11-19 13:41:00', 'end': '2024-11-20 17:01:00', "offset_hours": 50.73 },
-        # {'start': '2024-12-10 04:08:00', 'end': '2024-12-10 05:08:00', "offset_hours": 9.42 },
-        # {'start': '2025-01-08 02:46:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
-        # {'start': '2025-05-15 05:26:00', 'end': '2025-05-20 08:53:00', "offset_hours": 28.4 },
+        {'start': '2024-09-10T08:36:00', 'end': '2024-09-10T12:20:00', "offset_hours": 333.85 },
+        {'start': '2024-11-10T03:20:00', 'end': '2024-11-10T03:27:00', "offset_hours": 52.35 },
+        {'start': '2024-11-19T13:41:00', 'end': '2024-11-20T17:01:00', "offset_hours": 50.73 },
+        {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
+        {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
+        {'start': '2025-05-15T05:26:00', 'end': '2025-05-20T08:53:00', "offset_hours": 28.4 },
     ],
     'ME_DOWN_MET_30min' : 'ME_MTSHIFT', 'ME_DOWN_MET_1min' : 'ME_MTSHIFT',
     'ME_Rain_down' : 'ME_MTSHIFT', 'ME_CalPlates' : 'ME_MTSHIFT',
@@ -1192,7 +1190,16 @@ COLUMN_MAPPING_RULES = {
         'TA_2_2_1': 'TA_1_1_2', # CNR4
         'P_1_1_1': 'P_1_2_1', # Dolny
         'P_2_1_1': 'P_1_1_1', # Górny
-        # 'TS_6_1_1 (degC)'
+        'RTD_1_AV (degC)': 'TS_6_1_1',
+        'RTD_2_AV (degC)': 'TS_6_2_1',
+        'RTD_3_AV (degC)': 'TS_7_1_1',
+        'RTD_4_AV (degC)': 'TS_7_2_1',
+        'RTD_5_AV (degC)': 'TS_8_1_1',
+        'RTD_6_AV (degC)': 'TS_8_2_1',
+        'RTD_7_AV (degC)': 'TS_9_1_1',
+        'RTD_8_AV (degC)': 'TS_9_2_1',
+        'RTD_9_AV (degC)': 'TS_10_1_1',
+        'RTD_10_AV (degC)': 'TS_10_2_1',
         # SWC, G i TS zdefiniowane poprawnie w loggerze - bez mapowania nazw
     },
     'SARBIA_MAP': {
@@ -1929,8 +1936,6 @@ def read_simple_csv_data(file_path: Path) -> pd.DataFrame:
     except Exception as e:
         logging.error(f"Krytyczny błąd odczytu SimpleCSV z {file_path.name}: {e}")
         return pd.DataFrame()
-
-# (usunięto) _csv_has_backward_time – logika przeniesiona do correct_and_report_chronology
         
 def matlab_to_datetime(matlab_datenum: float) -> datetime:
     """Konwertuje numer seryjny daty z MATLABa na obiekt datetime Pythona."""
@@ -2461,7 +2466,7 @@ def correct_and_report_chronology(
     context_name: str,
     known_interval: str,
     timestamp_col: str = 'TIMESTAMP',
-    big_forward_hours: float = 3.0,
+    big_forward_hours: float = 10000.0,
 ) -> pd.DataFrame:
     """
     Koryguje chronologię zgodnie ze specyfikacją:
@@ -2496,8 +2501,9 @@ def correct_and_report_chronology(
     source_path_for_block = None
     original_start_row_index = None
 
-    micro_jump_limit = pd.Timedelta(minutes=180)
+    micro_jump_limit = pd.Timedelta(minutes=360)
     big_forward_threshold = pd.to_timedelta(f"{big_forward_hours}h")
+    # micro_jump_limit = big_forward_hours
 
     def finalize_block(end_index: int):
         nonlocal in_block, block_start_index, block_original_start_ts, block_corrected_start_ts, source_path_for_block, original_start_row_index
@@ -2571,7 +2577,7 @@ def correct_and_report_chronology(
                 # Dodatkowy warunek zakończenia gdy następny oryginalny jest nowszy od ostatnio skorygowanego
                 if i + 1 < len(corrected):
                     next_orig = pd.to_datetime(original[i+1])
-                    if next_orig > pd.to_datetime(corrected[i]) - interval_td / 2:
+                    if next_orig > pd.to_datetime(corrected[i]) - interval_td * 2:
                         finalize_block(i)
         i += 1
 
@@ -2932,8 +2938,6 @@ def diagnose_chronology(df: pd.DataFrame, context_name: str, known_interval: str
     logging.info(f"--- ZAKOŃCZONO TRYB DIAGNOSTYCZNY DLA CHRONOLOGII ---")
     # Zwróć oryginalną, niezmodyfikowaną ramkę danych
     return df
-
-# detect_good_chronology_mask: usunięta – logika przeniesiona do correct_and_report_chronology
     
 def apply_column_mapping(df: pd.DataFrame, config: dict) -> pd.DataFrame:
     # rename columns based on mapping rules
@@ -3291,19 +3295,7 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
             if logger_data_raw.empty:
                 continue
             
-            # Priorytetyzacja: 0 (GOOD_ORIGINAL), 1 (CORRECTED), 2 (brak tagu)
-            try:
-                tmp_df = logger_data_raw.copy()
-                if 'chronology_tag' in tmp_df.columns:
-                    prio = pd.to_numeric(tmp_df['chronology_tag'], errors='coerce')
-                    tmp_df['_prio'] = prio.where(prio.isin([0, 1]), other=2).fillna(2).astype(int)
-                else:
-                    tmp_df['_prio'] = 2
-                tmp_df = tmp_df.sort_values(['TIMESTAMP', '_prio'], kind='stable')
-                logger_data_df = tmp_df.drop_duplicates(subset=['TIMESTAMP'], keep='first').drop(columns=['_prio'], errors='ignore')
-            except Exception:
-                # Fallback na poprzednie zachowanie
-                logger_data_df = logger_data_raw.groupby('TIMESTAMP').first()
+            logger_data_df = logger_data_raw.groupby('TIMESTAMP').first()
 
             if group_id in GROUP_IDS_FOR_MATLAB_FILL:
                 matlab_df = load_matlab_data(int(year), config)
@@ -3343,18 +3335,6 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
             corrected_df = apply_manual_overrides(corrected_df, config)
             corrected_df = align_timestamp(corrected_df, config.get('interval'))
             corrected_df = _ensure_flag_columns_exist(corrected_df)
-            # Po zapewnieniu kolumn flag: ustaw 5 dla wszystkich *_flag dla wierszy skorygowanych czasowo
-            if 'chronology_tag' in corrected_df.columns:
-                try:
-                    # chronology_tag: 0 = bez korekty, 1 = skorygowane
-                    mask_corr = pd.to_numeric(corrected_df['chronology_tag'], errors='coerce').fillna(0).astype(int) == 1
-                    if mask_corr.any():
-                        flag_cols = [c for c in corrected_df.columns if c.endswith('_flag')]
-                        if flag_cols:
-                            corrected_df.loc[mask_corr, flag_cols] = 5
-                            logging.info(f"[CHRONOLOGY] Ustawiono flagę=5 dla {int(mask_corr.sum())} wierszy skorygowanych.")
-                except Exception as e:
-                    logging.warning(f"[CHRONOLOGY] Nie udało się oznaczyć flagą=5 wierszy skorygowanych: {e}")
             corrected_df = _enforce_numeric_types(corrected_df)
             corrected_df = corrected_df.copy()
             corrected_df = _filter_future_timestamps(corrected_df)
@@ -3505,7 +3485,6 @@ def main():
     parser.add_argument("--no-cache", action='store_true', help="Wyłącza użycie cache.")
     parser.add_argument("--run-tests", action='store_true', help="Uruchamia tryb testowy.")
     parser.add_argument("--overwrite", action='store_true', help="Wymusza ponowne przetworzenie i nadpisanie istniejących danych w plikach CSV.")
-    parser.add_argument("--csv-debug-good-only", action='store_true', help="W trybie CSV: zapisuj tylko dobre (monotoniczne) sektory, bez łączenia ze skorygowanymi.")
     
     args = parser.parse_args()
     setup_logging(args.log_level)
@@ -3652,15 +3631,15 @@ def main():
     
     # Pipeline 2: Process ALL CSV files at once, sorted by modification time
     if csv_files:
-        # --- DEBUG: Zapisz listę plików PRZED sortowaniem ---
-        try:
-            debug_before_path = BASE_DIR / "debug_files_before_sort.txt"
-            logging.info(f"DEBUG: Zapisywanie listy plików PRZED sortowaniem do: {debug_before_path.name}")
-            with open(debug_before_path, 'w', encoding='utf-8') as f:
-                for p in csv_files:
-                    f.write(f"{p.name}\n")
-        except Exception as e:
-            logging.error(f"DEBUG: Nie udało się zapisać pliku listy przed sortowaniem: {e}")
+        # # --- DEBUG: Zapisz listę plików PRZED sortowaniem ---
+        # try:
+            # debug_before_path = BASE_DIR / "debug_files_before_sort.txt"
+            # logging.info(f"DEBUG: Zapisywanie listy plików PRZED sortowaniem do: {debug_before_path.name}")
+            # with open(debug_before_path, 'w', encoding='utf-8') as f:
+                # for p in csv_files:
+                    # f.write(f"{p.name}\n")
+        # except Exception as e:
+            # logging.error(f"DEBUG: Nie udało się zapisać pliku listy przed sortowaniem: {e}")
         # --- KONIEC DEBUG ---
         unique_files = []
         seen_names = set() # A set for fast lookups of filenames we've already added.
@@ -3679,14 +3658,23 @@ def main():
         # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
         logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
         unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
-        
+        # --- FILTRACJA: usuń pliki puste oraz większe niż 0.4 MB ---
+        filtered_files = []
+        for p in unique_files:
+            try:
+                st = p.stat()
+                if 0 < st.st_size <= int(0.4 * 1024 * 1024):  # od 1 bajta do 0.4 MB
+                    filtered_files.append(p)
+            except Exception:
+                # jeżeli nie udało się odczytać metadanych, pomijamy plik
+                continue
         # --- DEBUG: Zapisz listę plików PO sortowaniu ---
         try:
             debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
             logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
             with open(debug_after_path, 'w', encoding='utf-8') as f:
                 f.write("filename;fullpath;modified_utc;size_mb\n")
-                for p in unique_files:
+                for p in filtered_files:
                     try:
                         st = p.stat()
                         modified_utc = datetime.utcfromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
@@ -3699,15 +3687,11 @@ def main():
             logging.error(f"DEBUG: Nie udało się zapisać pliku listy po sortowaniu: {e}")
         # --- KONIEC DEBUG ---
         
-        logging.info(f"Wczytywanie wszystkich {len(unique_files)} posortowanych plików CSV do pamięci...")
+        logging.info(f"Wczytywanie wszystkich {len(filtered_files)} posortowanych plików CSV do pamięci...")
         
         # Serial loading of all CSV files
-        per_file_dfs = []
-        for p in tqdm(unique_files, desc="Wczytywanie plików CSV"):
-            df = read_simple_csv_data(p)
-            if df is None or df.empty:
-                continue
-            per_file_dfs.append(df)
+        all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(filtered_files, desc="Wczytywanie plików CSV")]
+        non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
         
         # # Parallel loading of all CSV files
         # logging.info(f"Wczytywanie wszystkich {len(csv_files)} plików CSV do pamięci (równolegle)...")
@@ -3721,35 +3705,19 @@ def main():
 
         # non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
         
-        if per_file_dfs:
-            batch_df = pd.concat(per_file_dfs, ignore_index=True)
+        if non_empty_dfs:
+            batch_df = pd.concat(non_empty_dfs, ignore_index=True)
             
             if 'TIMESTAMP' in batch_df.columns:
-                # Sortuj po czasie, aby 'keep="first"' zachował najwcześniejszy rekord w ramach grupy duplikatów
-                batch_df = batch_df.sort_values('TIMESTAMP', kind='stable').reset_index(drop=True)
                 initial_rows = len(batch_df)
-                # Ważne: wyłączamy TIMESTAMP, metadane, RECORD oraz wszystkie kolumny *_flag z deduplikacji
-                metadata_cols = ['source_filename', 'original_row_index', 'source_filepath'] # 'TIMESTAMP', 
-                if 'RECORD' in batch_df.columns:
-                    metadata_cols.append('RECORD')
-                metadata_cols.extend([c for c in batch_df.columns if str(c).endswith('_flag')])
+                metadata_cols = ['source_filename', 'original_row_index', 'source_filepath'] #'TIMESTAMP',
                 cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
                 
                 if cols_to_check:
                     df_for_dedup = batch_df.copy()
-                    # Lekka normalizacja wartości tekstowych, aby wyeliminować różnice białych znaków
-                    object_cols = [c for c in df_for_dedup[cols_to_check].select_dtypes(include='object').columns]
-                    if object_cols:
-                        df_for_dedup[object_cols] = df_for_dedup[object_cols].apply(lambda s: s.astype(str).str.strip())
-                    numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
-                    df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
-                    # Diagnostyka: policz potencjalne duplikaty wg podzbioru kolumn
-                    try:
-                        potential_dups = int(df_for_dedup.duplicated(subset=cols_to_check, keep='first').sum())
-                        logging.info(f"[DEDUP] Wykryte potencjalne duplikaty (wg kolumn pomiarowych): {potential_dups}")
-                    except Exception:
-                        pass
-                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
+                    # numeric_cols_to_round = [col for col in df_for_dedup.select_dtypes(include=np.number).columns if col not in metadata_cols]
+                    # df_for_dedup[numeric_cols_to_round] = df_for_dedup[numeric_cols_to_round].round(4)
+                    indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='last').index
                     batch_df = batch_df.loc[indices_to_keep]
                 
                 rows_removed = initial_rows - len(batch_df)
@@ -3761,54 +3729,18 @@ def main():
                     debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
                     debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
                     logging.info(f"DEBUG: Zapisywanie stanu danych po deduplikacji do: {debug_path_after_dedup.name}")
-                    batch_df.to_csv(debug_path_after_dedup, index=False)
+                    # batch_df.to_csv(debug_path_after_dedup, index=False)
+                    # zapis tylko pierwszych 70k wierszy
+                    batch_df.head(70000).to_csv(debug_path_after_dedup, index=False)
                 except Exception as e:
                     logging.error(f"DEBUG: Nie udało się zapisać pliku po deduplikacji: {e}")
                 # --- KONIEC DEBUG ---
 
-            # 1) Uruchom korektę na całym zbiorze – funkcja ustawia chronology_tag (0/1)
             known_interval = group_config.get('interval')
-            corrected_batch = correct_and_report_chronology(batch_df, f"Wszystkie pliki CSV", known_interval, big_forward_hours=3.0)
-
-            # 2) Podziel na dobre i skorygowane wg chronology_tag
-            if 'chronology_tag' in corrected_batch.columns:
-                tag_series = pd.to_numeric(corrected_batch['chronology_tag'], errors='coerce').fillna(0).astype(int)
-            else:
-                tag_series = pd.Series(0, index=corrected_batch.index, dtype=int)
-            good_original = corrected_batch.loc[tag_series == 0].copy()
-            corrected_only = corrected_batch.loc[tag_series == 1].copy()
-            if not corrected_only.empty:
-                # Ustaw flagi = 5 na wszystkich *_flag
-                flag_cols = [c for c in corrected_only.columns if c.endswith('_flag')]
-                if flag_cols:
-                    corrected_only.loc[:, flag_cols] = 5
-
-            # 3) Złóż wynik: w trybie debug zwróć tylko dobre; inaczej dobre + skorygowane (z priorytetem)
-            combined = []
-            if not good_original.empty:
-                combined.append(good_original)
-            if not args.csv_debug_good_only and not corrected_only.empty:
-                combined.append(corrected_only)
-            # Gdy debug-good-only i brak dobrych: zwróć pusty; inaczej fallback do corrected_batch
-            final_csv_df = (pd.concat(combined, ignore_index=True)
-                            if combined else (pd.DataFrame() if args.csv_debug_good_only else corrected_batch))
-            if 'TIMESTAMP' in final_csv_df.columns and 'chronology_tag' in final_csv_df.columns and not final_csv_df.empty:
-                try:
-                    # priority: 0 (good) first, 1 (corrected) later
-                    final_csv_df['_priority'] = pd.to_numeric(final_csv_df['chronology_tag'], errors='coerce').fillna(1).astype(int)
-                    final_csv_df = final_csv_df.sort_values(['TIMESTAMP','_priority'], kind='stable')
-                    # keep the first occurrence per TIMESTAMP (good wins)
-                    final_csv_df = final_csv_df.drop_duplicates(subset=['TIMESTAMP'], keep='first')
-                    final_csv_df.drop(columns=['_priority'], inplace=True, errors='ignore')
-                except Exception as e:
-                    logging.warning(f"[CHRONOLOGY] Priorytetyzacja sektorów nie powiodła się: {e}")
-
-            # 5) Porządkowanie kolumn pomocniczych przed dalszym potokiem
-            for helper_col in ['chronology_needs_correction']:
-                if helper_col in final_csv_df.columns:
-                    final_csv_df.drop(columns=[helper_col], inplace=True, errors='ignore')
-
-            all_raw_results.append(final_csv_df)
+            # corrected_batch = diagnose_chronology_scan(batch_df, f"Wszystkie pliki CSV", known_interval)
+            # corrected_batch = diagnose_chronology_blocks(batch_df, f"Wszystkie pliki CSV", known_interval)
+            corrected_batch = correct_and_report_chronology(batch_df, f"Wszystkie pliki CSV", known_interval)
+            all_raw_results.append(corrected_batch)
     
     # # Pipeline 2: Process ALL CSV files using the new two-stage logic
     # if csv_files:
