@@ -90,7 +90,7 @@ import sqlalchemy
 import struct
 import tempfile
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -619,12 +619,12 @@ CALIBRATION_RULES_BY_STATION = {
     'MEZYK_DOWN_CAL': {
         # Wszystkie reguły dla JEDNEJ kolumny muszą być w JEDNEJ liście
         'PPFD_BC_IN_1_1_1': [
-            {'start': '2018-11-13 23:00:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3397.547, 'addend': 0, 'reason': 'LQA3027, (data in umol/m2/s1)'},
+            {'start': '2018-11-16 19:09:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3397.547, 'addend': 0, 'reason': 'LQA3027, (data in umol/m2/s1)'}, # '2018-11-13 23:00:00' -> '2018-11-16 19:09:00'
             {'start': '2019-09-01 19:30:00', 'end': '2019-09-13 06:00:00', 'multiplier': 1, 'addend': -230, 'reason': 'LQA3028 - korekta'},
         ],
         'PPFD_BC_IN_1_1_2': [
             {'start': '2018-08-08 13:30:00', 'end': '2018-11-17 12:00:00', 'multiplier': 1, 'addend': -650, 'reason': 'LQA3028 - stara korekta'},
-            {'start': '2018-11-13 23:00:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3288.716, 'addend': 0, 'reason': 'LQA3028, (data in umol/m2/s1)'},
+            {'start': '2018-11-16 19:09:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3288.716, 'addend': 0, 'reason': 'LQA3028, (data in umol/m2/s1)'},
             {'start': '2019-09-01 19:30:00', 'end': '2019-09-13 06:00:00', 'multiplier': 1, 'addend': -230, 'reason': 'LQA3028 - korekta'},
         ],
         'G_1_1_1': [
@@ -2298,7 +2298,7 @@ def filter_by_realistic_date_range(df: pd.DataFrame, file_path: Path) -> pd.Data
     # source_path_for_block = None
     # original_start_row_index = None
 
-    # micro_jump_limit = pd.Timedelta(minutes=5)
+    # micro_jump_limit = pd.Timedelta(minutes=3.9)
     # big_forward_threshold = pd.to_timedelta(f"{big_forward_hours}h")
     # # micro_jump_limit = big_forward_hours
 
@@ -2354,22 +2354,22 @@ def filter_by_realistic_date_range(df: pd.DataFrame, file_path: Path) -> pd.Data
                 # original_start_row_index = row.get('original_row_index', 'N/A')
             # # w przeciwnym razie nic nie robimy w trybie normalnym
         # else:
-            # # # Najpierw oceń warunek zakończenia bloku wg dużego skoku do przodu
-            # # diff_from_prev_orig = curr_orig - prev_orig
-            # # if diff_from_prev_orig >= big_forward_threshold: # and (anchor is None or curr_orig > anchor):
-                # # # Koniec złego sektora nastąpił w poprzednim wierszu
-                # # finalize_block(i-1)
-            # # # Obecny wiersz traktujemy jako powrót do dobrego sektora
-                # # corrected[i] = curr_orig
-                # # chronology_tag[i] = 0
-            # # else:
-                # # # Mikroskoki w przód do 180 min: zachowaj tę przerwę
-                # # if diff_from_prev_orig > 2 * interval_td and diff_from_prev_orig <= micro_jump_limit:
-                    # # corrected[i] = prev_corr + diff_from_prev_orig
-                # # else:
-                    # # # Standardowa korekta o 1 interwał
-                    # # corrected[i] = prev_corr + interval_td
-                # # chronology_tag[i] = 1
+            # # Najpierw oceń warunek zakończenia bloku wg dużego skoku do przodu
+            # diff_from_prev_orig = curr_orig - prev_orig
+            # if diff_from_prev_orig >= big_forward_threshold: # and (anchor is None or curr_orig > anchor):
+                # # Koniec złego sektora nastąpił w poprzednim wierszu
+                # finalize_block(i-1)
+            # # Obecny wiersz traktujemy jako powrót do dobrego sektora
+                # corrected[i] = curr_orig
+                # chronology_tag[i] = 0
+            # else:
+                # # Mikroskoki w przód do 180 min: zachowaj tę przerwę
+                # if diff_from_prev_orig > 2 * interval_td and diff_from_prev_orig <= micro_jump_limit:
+                    # corrected[i] = prev_corr + diff_from_prev_orig
+                # else:
+                    # # Standardowa korekta o 1 interwał
+                    # corrected[i] = prev_corr + interval_td
+                # chronology_tag[i] = 1
 
             # # Dodatkowy warunek zakończenia gdy następny oryginalny jest nowszy od ostatnio skorygowanego
             # if i + 1 < len(corrected):
@@ -3967,15 +3967,22 @@ def main():
                 unique_files.append(p)
                 # And record the name so we can ignore its future duplicates.
                 seen_names.add(p.name)
-        # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
+        # KROK KRYTYCZNY: 
+        # Wersja 1: (Sortuj pliki CSV według czasu ich modyfikacji)
         # logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-        # csv_files.sort(key=lambda p: p.stat().st_mtime)
+        # unique_files.sort(key=lambda p: p.stat().st_mtime)
         
-        # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
+        # # --- DEBUG: filtruj dane po latach wg nazwy plików
+        # unique_files = [
+            # p for p in unique_files if p.name.startswith('pom1m_2018')
+        # ]
+        # # --- KONIEC DEBUG ---
+        
+        # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
         logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
         unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
-        
-        # --- FILTRACJA: usuń pliki puste # oraz większe niż 0.4 MB ---
+                
+        # --- FILTRACJA: usuń pliki puste # oraz większe niż 0.4 MB --- (opcjonalne)
         filtered_files = []
         for p in unique_files:
             try:
@@ -3985,6 +3992,7 @@ def main():
             except Exception:
                 # jeżeli nie udało się odczytać metadanych, pomijamy plik
                 continue
+        
         # --- DEBUG: Zapisz listę plików PO sortowaniu ---
         try:
             debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
@@ -3994,8 +4002,7 @@ def main():
                 for p in unique_files: # tu zapisuje wszystkie pliki do przerobienia
                     try:
                         st = p.stat()
-                        modified_utc = datetime.utcfromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
-                        # modified_utc = datetime.datetime.fromtimestamp(st.st_mtime, datetime.UTC)
+                        modified_utc = datetime.fromtimestamp(st.st_mtime, UTC).strftime('%Y-%m-%d %H:%M:%S')
                         size_mb = round(st.st_size / (1024*1024), 3)
                     except Exception:
                         modified_utc = "N/A"
@@ -4007,66 +4014,23 @@ def main():
         
         logging.info(f"Wczytywanie wszystkich {len(unique_files)} posortowanych plików CSV do pamięci...")
 
-        def drop_duplicates_in_df(df):
-            metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']
-            cols_to_check = [col for col in df.columns if col not in metadata_cols]
-            return df.drop_duplicates(subset=cols_to_check, keep='first', ignore_index=True)
-
-        def drop_duplicates_against_existing(new_df, existing_dfs):
-            if not existing_dfs:
-                return new_df
-            metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']
-            combined_existing = pd.concat(existing_dfs, ignore_index=True)
-            cols_to_check = [col for col in combined_existing.columns if col not in metadata_cols]
-            new_cols_to_check = [col for col in new_df.columns if col not in metadata_cols]
-
-            merged = new_df.merge(
-                combined_existing[cols_to_check].drop_duplicates(keep='first'),
-                on=new_cols_to_check,
-                how='inner',
-                indicator=False
-            )
-            indices_to_drop = merged.index
-            cleaned_df = new_df.drop(index=indices_to_drop, errors='ignore').reset_index(drop=True)
-            return cleaned_df
-
-        # Podziel pliki na dwie grupy
-        # files_approx_24h = [p for p in unique_files if is_approx_24h_monotonic(p)]
-        # files_over_24h = [p for p in unique_files if is_over_24h_monotonic(p)]
-
         def process_files_group(file_list, group_name, group_config, all_raw_results):
             logging.info(f"Przetwarzanie grupy: {group_name}, liczba plików: {len(file_list)}")
             
             # Wczytanie plików (serialne)
             all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}")]
             non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
-            
-            # Usuwa duplikaty w locie po wczytaniu pliku
-            # all_csv_dfs = []
-            # for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}"):
-                # df = read_simple_csv_data(p)
-                # if df is None or df.empty:
-                    # continue
-                # # Usuwamy duplikaty wewnątrz pliku
-                # df = drop_duplicates_in_df(df)
-                # # Usuwamy duplikaty względem już wczytanych danych
-                # df = drop_duplicates_against_existing(df, all_csv_dfs)
-                # if not df.empty:
-                    # all_csv_dfs.append(df)
-
-            non_empty_dfs = all_csv_dfs  # lista ramek już bez duplikatów
-            
-            # # --- DEBUG: Zapisz ramkę danych PO deduplikacji ---
+            # # --- DEBUG: Zapisz ramkę danych PRZED deduplikacją ---
             # try:
                 # combined_df = pd.concat(non_empty_dfs, ignore_index=True)
-                # debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
-                # debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
-                # logging.info(f"DEBUG: Zapisywanie stanu danych PO deduplikacji do: {debug_path_after_dedup.name}")
-                # combined_df.to_csv(debug_path_after_dedup, index=False)
+                # debug_path_before_dedup = Path(group_config.get('output_dir')) / f"debug_before_deduplication_{group_config['file_id']}.csv"
+                # debug_path_before_dedup.parent.mkdir(parents=True, exist_ok=True)
+                # logging.info(f"DEBUG: Zapisywanie stanu danych PRZED deduplikacją do: {debug_path_before_dedup.name}")
+                # combined_df.to_csv(debug_path_before_dedup, index=False)
                 # # zapis tylko pierwszych 70k wierszy
-                # # combined_df.head(70000).to_csv(debug_path_after_dedup, index=False)
+                # # combined_df.head(70000).to_csv(debug_path_before_dedup, index=False)
             # except Exception as e:
-                # logging.error(f"DEBUG: Nie udało się zapisać pliku PO deduplikacji: {e}")
+                # logging.error(f"DEBUG: Nie udało się zapisać pliku PRZED deduplikacji: {e}")
             # # --- KONIEC DEBUG ---
             
             # Usuwa duplikaty
@@ -4080,7 +4044,7 @@ def main():
 
                     if cols_to_check:
                         df_for_dedup = batch_df.copy()
-                        indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
+                        indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='last').index # tu musi być 'last' bo pliki duże psują chronologię
                         batch_df = batch_df.loc[indices_to_keep]
 
                     rows_removed = initial_rows - len(batch_df)
@@ -4093,29 +4057,39 @@ def main():
             else:
                 logging.warning(f"Brak niepustych DataFrame do przetworzenia w grupie {group_name}.")
 
-        # all_raw_results = []
+        all_raw_results = []
         
+        # # --- DEBUG: Przetwarzam pliki wg wielkości
+        
+        # Podziel pliki na dwie grupy
+        # files_approx_24h = [p for p in unique_files if is_approx_24h_monotonic(p)]
+        # files_over_24h = [p for p in unique_files if is_over_24h_monotonic(p)]
+
         # process_files_group(files_approx_24h, "około 24h danych", group_config, all_raw_results)
         # process_files_group(files_over_24h, "powyżej 24h danych", group_config, all_raw_results)
+        # # --- KONIEC DEBUG ---
         process_files_group(unique_files, "wszystkie pliki z grupy", group_config, all_raw_results)
                 
     # Połącz wszystkie partie w jeden DataFrame
     if all_raw_results:
-        # combined_df = pd.concat(all_raw_results, ignore_index=True)
-        combined_df_unique = all_raw_results
-        # metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']
-        # cols_to_check = [col for col in all_raw_results[0].columns if col not in metadata_cols]
+        combined_df = pd.concat(all_raw_results, ignore_index=True)
+        # combined_df_unique = all_raw_results
+        metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']
+        cols_to_check = [col for col in combined_df.columns if col not in metadata_cols]
+        
+        # # --- DEBUG: Zapisz ramkę danych PO deduplikacji ---
+        # try:
+            # combined_df = pd.concat(combined_df_unique, ignore_index=True)
+            # debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
+            # debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
+            # logging.info(f"DEBUG: Zapisywanie stanu danych PO deduplikacji do: {debug_path_after_dedup.name}")
+            # combined_df.to_csv(debug_path_after_dedup, index=False)
+            # # zapis tylko pierwszych 70k wierszy
+            # # combined_df.head(70000).to_csv(debug_path_after_dedup, index=False)
+        # except Exception as e:
+            # logging.error(f"DEBUG: Nie udało się zapisać pliku PO deduplikacji: {e}")
+        # # --- KONIEC DEBUG ---
 
-        # Usuń duplikaty na podstawie wartości pomiarowych
-        # combined_df_unique = combined_df.drop_duplicates(subset=cols_to_check, keep='first')
-        # combined_df_unique = [
-            # df.drop_duplicates(subset=cols_to_check, keep='first') for df in all_raw_results
-        # ]
-
-        # logging.info(f"Po połączeniu i odfiltrowaniu duplikatów uzyskano {len(combined_df_unique)} unikalnych wierszy.")
-    # else:
-        # logging.warning("Brak danych do połączenia po przetworzeniu grup.")
-    
     # Final processing and saving
     if combined_df_unique:
     # if combined_df_unique is not None and not combined_df_unique.empty:
