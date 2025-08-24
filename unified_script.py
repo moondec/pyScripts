@@ -123,11 +123,11 @@ COLUMNS_TO_EXCLUDE_FROM_CSV = [
     'Temp (degC)',
     'Humidity (%)',
     'RTD_1 (degC)', 
-    # 'RTD_1_AV (degC)', 
+    'RTD_1_AV (degC)', 
     'RTD_2 (degC)', 
-    # 'RTD_2_AV (degC)',
+    'RTD_2_AV (degC)',
     'RTD_3 (degC)',
-    # 'RTD_3_AV (degC)',
+    'RTD_3_AV (degC)',
     'Prom_1 (mV)',
     'Prom_1_AV (mV)', 
     'Prom_1_SD (mV)',
@@ -135,15 +135,15 @@ COLUMNS_TO_EXCLUDE_FROM_CSV = [
     'Prom_2_AV (mV)',
     'Prom_2_SD (mV)',
     'RTD_4 (degC)',
-    # 'RTD_4_AV (degC)',
+    'RTD_4_AV (degC)',
     'RTD_5 (degC)',
-    # 'RTD_5_AV (degC)',
+    'RTD_5_AV (degC)',
     'RTD_6 (degC)',
-    # 'RTD_6_AV (degC)',
+    'RTD_6_AV (degC)',
     'RTD_7 (degC)',
-    # 'RTD_7_AV (degC)',
+    'RTD_7_AV (degC)',
     'RTD_8 (degC)',
-    # 'RTD_8_AV (degC)',
+    'RTD_8_AV (degC)',
     'TA_1_1_1 (degC)',
     'RH_1_1_1 (%)',
     'PPFD_BC_IN_2_1_1 (mV)',
@@ -558,12 +558,12 @@ MANUAL_TIME_SHIFTS = {
         # {"start": "2022-06-11 08:42:00", "end": "2022-06-13 00:03:00", "offset_hours": 7.5 }, #
         # {"start": "2023-02-06 12:17:00", "end": "2023-02-06 13:18:00", "offset_hours": 2.75 },
         # {"start": "2023-02-12 10:13:00", "end": "2023-02-12 11:12:00", "offset_hours": 6.4666667 },
-        {'start': '2024-09-10T08:36:00', 'end': '2024-09-10T12:20:00', "offset_hours": 333.85 },
-        {'start': '2024-11-10T03:20:00', 'end': '2024-11-10T03:27:00', "offset_hours": 52.35 },
-        {'start': '2024-11-19T13:41:00', 'end': '2024-11-20T17:01:00', "offset_hours": 50.73 },
-        {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
-        {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
-        {'start': '2025-05-15T05:26:00', 'end': '2025-05-20T08:53:00', "offset_hours": 28.4 },
+        # {'start': '2024-09-10T08:36:00', 'end': '2024-09-10T12:20:00', "offset_hours": 333.85 },
+        # {'start': '2024-11-10T03:20:00', 'end': '2024-11-10T03:27:00', "offset_hours": 52.35 },
+        # {'start': '2024-11-19T13:41:00', 'end': '2024-11-20T17:01:00', "offset_hours": 50.73 },
+        # {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
+        # {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.12 },
+        # {'start': '2025-05-15T05:26:00', 'end': '2025-05-20T08:53:00', "offset_hours": 28.4 },
     ],
     'ME_DOWN_MET_30min' : 'ME_MTSHIFT', 'ME_DOWN_MET_1min' : 'ME_MTSHIFT',
     'ME_Rain_down' : 'ME_MTSHIFT', 'ME_CalPlates' : 'ME_MTSHIFT',
@@ -1190,16 +1190,16 @@ COLUMN_MAPPING_RULES = {
         'TA_2_2_1': 'TA_1_1_2', # CNR4
         'P_1_1_1': 'P_1_2_1', # Dolny
         'P_2_1_1': 'P_1_1_1', # Górny
-        'RTD_1_AV (degC)': 'TS_6_1_1',
-        'RTD_2_AV (degC)': 'TS_6_2_1',
-        'RTD_3_AV (degC)': 'TS_7_1_1',
-        'RTD_4_AV (degC)': 'TS_7_2_1',
-        'RTD_5_AV (degC)': 'TS_8_1_1',
-        'RTD_6_AV (degC)': 'TS_8_2_1',
-        'RTD_7_AV (degC)': 'TS_9_1_1',
-        'RTD_8_AV (degC)': 'TS_9_2_1',
-        'RTD_9_AV (degC)': 'TS_10_1_1',
-        'RTD_10_AV (degC)': 'TS_10_2_1',
+        # 'RTD_1_AV (degC)': 'TS_6_1_1',
+        # 'RTD_2_AV (degC)': 'TS_6_2_1',
+        # 'RTD_3_AV (degC)': 'TS_7_1_1',
+        # 'RTD_4_AV (degC)': 'TS_7_2_1',
+        # 'RTD_5_AV (degC)': 'TS_8_1_1',
+        # 'RTD_6_AV (degC)': 'TS_8_2_1',
+        # 'RTD_7_AV (degC)': 'TS_9_1_1',
+        # 'RTD_8_AV (degC)': 'TS_9_2_1',
+        # 'RTD_9_AV (degC)': 'TS_10_1_1',
+        # 'RTD_10_AV (degC)': 'TS_10_2_1',
         # SWC, G i TS zdefiniowane poprawnie w loggerze - bez mapowania nazw
     },
     'SARBIA_MAP': {
@@ -3969,41 +3969,41 @@ def main():
                 seen_names.add(p.name)
         # KROK KRYTYCZNY: Sortuj pliki CSV według czasu ich modyfikacji
         # logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-        
         # csv_files.sort(key=lambda p: p.stat().st_mtime)
+        
         # Wersja nowa (sortowanie alfabetyczne po nazwie pliku)
         logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
         unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
         
-        # # --- FILTRACJA: usuń pliki puste oraz większe niż 0.4 MB ---
-        # filtered_files = []
-        # for p in unique_files:
-            # try:
-                # st = p.stat()
-                # if 0 < st.st_size: # <= int(0.4 * 1024 * 1024):  # od 1 bajta do 0.4 MB
-                    # filtered_files.append(p)
-            # except Exception:
-                # # jeżeli nie udało się odczytać metadanych, pomijamy plik
-                # continue
-        # # --- DEBUG: Zapisz listę plików PO sortowaniu ---
-        # try:
-            # debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
-            # logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
-            # with open(debug_after_path, 'w', encoding='utf-8') as f:
-                # f.write("filename;fullpath;modified_utc;size_mb\n")
-                # for p in unique_files: # tu zapisuje wszystkie pliki do przerobienia
-                    # try:
-                        # st = p.stat()
-                        # modified_utc = datetime.utcfromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
-                        # # modified_utc = datetime.datetime.fromtimestamp(st.st_mtime, datetime.UTC)
-                        # size_mb = round(st.st_size / (1024*1024), 3)
-                    # except Exception:
-                        # modified_utc = "N/A"
-                        # size_mb = "N/A"
-                    # f.write(f"{p.name};{str(p.resolve())};{modified_utc};{size_mb}\n")
-        # except Exception as e:
-            # logging.error(f"DEBUG: Nie udało się zapisać pliku listy po sortowaniu: {e}")
-        # # --- KONIEC DEBUG ---
+        # --- FILTRACJA: usuń pliki puste # oraz większe niż 0.4 MB ---
+        filtered_files = []
+        for p in unique_files:
+            try:
+                st = p.stat()
+                if 0 < st.st_size: # <= int(0.4 * 1024 * 1024):  # od 1 bajta do 0.4 MB
+                    filtered_files.append(p)
+            except Exception:
+                # jeżeli nie udało się odczytać metadanych, pomijamy plik
+                continue
+        # --- DEBUG: Zapisz listę plików PO sortowaniu ---
+        try:
+            debug_after_path = BASE_DIR / "debug_files_after_sort.txt"
+            logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
+            with open(debug_after_path, 'w', encoding='utf-8') as f:
+                f.write("filename;fullpath;modified_utc;size_mb\n")
+                for p in unique_files: # tu zapisuje wszystkie pliki do przerobienia
+                    try:
+                        st = p.stat()
+                        modified_utc = datetime.utcfromtimestamp(st.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                        # modified_utc = datetime.datetime.fromtimestamp(st.st_mtime, datetime.UTC)
+                        size_mb = round(st.st_size / (1024*1024), 3)
+                    except Exception:
+                        modified_utc = "N/A"
+                        size_mb = "N/A"
+                    f.write(f"{p.name};{str(p.resolve())};{modified_utc};{size_mb}\n")
+        except Exception as e:
+            logging.error(f"DEBUG: Nie udało się zapisać pliku listy po sortowaniu: {e}")
+        # --- KONIEC DEBUG ---
         
         logging.info(f"Wczytywanie wszystkich {len(unique_files)} posortowanych plików CSV do pamięci...")
 
@@ -4037,53 +4037,55 @@ def main():
         def process_files_group(file_list, group_name, group_config, all_raw_results):
             logging.info(f"Przetwarzanie grupy: {group_name}, liczba plików: {len(file_list)}")
             
-            # Wczytanie plików (serialne, analogicznie do Twojego kodu)
-            # all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}")]
-            # non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
+            # Wczytanie plików (serialne)
+            all_csv_dfs = [read_simple_csv_data(p) for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}")]
+            non_empty_dfs = [df for df in all_csv_dfs if df is not None and not df.empty]
+            
             # Usuwa duplikaty w locie po wczytaniu pliku
-            all_csv_dfs = []
-            for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}"):
-                df = read_simple_csv_data(p)
-                if df is None or df.empty:
-                    continue
-                # Usuwamy duplikaty wewnątrz pliku
-                df = drop_duplicates_in_df(df)
-                # Usuwamy duplikaty względem już wczytanych danych
-                df = drop_duplicates_against_existing(df, all_csv_dfs)
-                if not df.empty:
-                    all_csv_dfs.append(df)
+            # all_csv_dfs = []
+            # for p in tqdm(file_list, desc=f"Wczytywanie plików CSV - {group_name}"):
+                # df = read_simple_csv_data(p)
+                # if df is None or df.empty:
+                    # continue
+                # # Usuwamy duplikaty wewnątrz pliku
+                # df = drop_duplicates_in_df(df)
+                # # Usuwamy duplikaty względem już wczytanych danych
+                # df = drop_duplicates_against_existing(df, all_csv_dfs)
+                # if not df.empty:
+                    # all_csv_dfs.append(df)
 
             non_empty_dfs = all_csv_dfs  # lista ramek już bez duplikatów
             
-            # --- DEBUG: Zapisz ramkę danych PO deduplikacji ---
-            try:
-                combined_df = pd.concat(non_empty_dfs, ignore_index=True)
-                debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
-                debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
-                logging.info(f"DEBUG: Zapisywanie stanu danych PO deduplikacji do: {debug_path_after_dedup.name}")
-                combined_df.to_csv(debug_path_after_dedup, index=False)
-                # zapis tylko pierwszych 70k wierszy
-                # combined_df.head(70000).to_csv(debug_path_after_dedup, index=False)
-            except Exception as e:
-                logging.error(f"DEBUG: Nie udało się zapisać pliku PO deduplikacji: {e}")
-            # --- KONIEC DEBUG ---
-
+            # # --- DEBUG: Zapisz ramkę danych PO deduplikacji ---
+            # try:
+                # combined_df = pd.concat(non_empty_dfs, ignore_index=True)
+                # debug_path_after_dedup = Path(group_config.get('output_dir')) / f"debug_after_deduplication_{group_config['file_id']}.csv"
+                # debug_path_after_dedup.parent.mkdir(parents=True, exist_ok=True)
+                # logging.info(f"DEBUG: Zapisywanie stanu danych PO deduplikacji do: {debug_path_after_dedup.name}")
+                # combined_df.to_csv(debug_path_after_dedup, index=False)
+                # # zapis tylko pierwszych 70k wierszy
+                # # combined_df.head(70000).to_csv(debug_path_after_dedup, index=False)
+            # except Exception as e:
+                # logging.error(f"DEBUG: Nie udało się zapisać pliku PO deduplikacji: {e}")
+            # # --- KONIEC DEBUG ---
+            
+            # Usuwa duplikaty
             if non_empty_dfs:
                 batch_df = pd.concat(non_empty_dfs, ignore_index=True)
 
-                # if 'TIMESTAMP' in batch_df.columns:
-                    # initial_rows = len(batch_df)
-                    # metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']  # ewentualnie modyfikuj
-                    # cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
+                if 'TIMESTAMP' in batch_df.columns:
+                    initial_rows = len(batch_df)
+                    metadata_cols = ['source_filename', 'original_row_index', 'source_filepath']  # ewentualnie modyfikuj
+                    cols_to_check = [col for col in batch_df.columns if col not in metadata_cols]
 
-                    # if cols_to_check:
-                        # df_for_dedup = batch_df.copy()
-                        # indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
-                        # batch_df = batch_df.loc[indices_to_keep]
+                    if cols_to_check:
+                        df_for_dedup = batch_df.copy()
+                        indices_to_keep = df_for_dedup.drop_duplicates(subset=cols_to_check, keep='first').index
+                        batch_df = batch_df.loc[indices_to_keep]
 
-                    # rows_removed = initial_rows - len(batch_df)
-                    # if rows_removed > 0:
-                        # logging.info(f"Usunięto {rows_removed} zduplikowanych wierszy z grupy {group_name}.")
+                    rows_removed = initial_rows - len(batch_df)
+                    if rows_removed > 0:
+                        logging.info(f"Usunięto {rows_removed} zduplikowanych wierszy z grupy {group_name}.")
 
                 known_interval = group_config.get('interval')
                 corrected_batch = correct_and_report_chronology(batch_df, f"Grupa: {group_name}", known_interval)
