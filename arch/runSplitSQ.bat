@@ -1,0 +1,184 @@
+@echo off
+setlocal enabledelayedexpansion
+
+:: ============================================================================
+:: Skrypt wsadowy (.bat) do uruchamiania przetwarzania danych dla wielu stacji
+:: Wersja ostateczna - uproszczona i odporna na błędy
+:: ============================================================================
+
+echo Rozpoczynam przetwarzanie wsadowe...
+
+:: --- SEKCJA KONFIGURACJI ---
+:: Wszystkie zmienne, które mogą wymagać modyfikacji, są w jednym miejscu.
+
+:: 1. Pełna ścieżka do Twojego skryptu Pythona
+set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\Documents\pyScripts\splitSQ.py"
+
+:: 2. Główny katalog, w którym będą tworzone wszystkie wyniki
+set "BASE_OUTPUT_PATH=E:\test_split"
+set "DB_PATH=E:\test_split\meteoLAB.sqlite"
+
+:: 3. Definicje grup file_id dla poszczególnych zadań
+set "TUCZNO_FIDS=TU_MET_30min TU_MET_10min TU_MET_2min TU_MET_1min TU_MET_30sec TU_MET_5sec TU_MET_1sec"
+set "SARBIA_FIDS=SA_MET_30min SA_MET_1min"
+set "RZECIN_FIDS=RZ_MET30min RZ_MET1min RZ_MET30sec"
+set "MEZYK_TOP_FIDS=ME_TOP_MET_1min ME_TOP_MET_30min ME_Rain_top"
+set "MEZYK_DOWN_FIDS=ME_DOWN_MET_1min ME_DOWN_MET_30min ME_Rain_down ME_CalPlates"
+set "TLEN1_FIDS=TL1_RAD_30min TL1_RAD_1min"
+set "TLEN1a_FIDS=TL1a_MET_30_dT TL1a_Rain_down_30min TL1a_MET_1_dT TL1a_CalPlates_1min"
+set "TLEN1anew_FIDS=TL1a_MET_30_csi TL1a_MET_1_csi"
+set "TLEN2_FIDS=TL2_CalPlates_dT TL2_MET_1_csi TL2_MET_1_dT TL2_MET_1m TL2_MET_30_csi TL2_MET_30_dT TL2_MET_30m"
+
+:: --- KONIEC KONFIGURACJI ---
+
+
+REM :: --- GŁÓWNE WYKONANIE SKRYPTU ---
+
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: TUCZNO ###
+REM echo #####################################################################
+REM set "INPUT_PATH=D:\sites\TU\csi_TU\Campbell"
+REM set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TU"
+REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TUCZNO nie istnieje. Pomijam. ) else (
+    REM for %%F in (%TUCZNO_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM )
+
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: SARBIA ###
+REM echo #####################################################################
+REM set "INPUT_PATH=D:\sites\SA\csi_SA\Campbell"
+REM set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\SA"
+REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji SARBIA nie istnieje. Pomijam. ) else (
+    REM for %%F in (%SARBIA_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM )
+
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: RZECIN ###
+REM echo #####################################################################
+REM set "INPUT_PATH=D:\sites\RZ\csi_RZ\Campbell"
+REM set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\RZ"
+REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji RZECIN nie istnieje. Pomijam. ) else (
+    REM for %%F in (%RZECIN_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM )
+
+:: #####################################################################
+echo.
+echo ### Przetwarzanie dla stacji: TLEN1 ###
+echo #####################################################################
+set "INPUT_PATH=D:\sites\TR\csi_TR\Campbell"
+set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TL1"
+if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN1 nie istnieje. Pomijam. ) else (
+    for %%F in (%TLEN1_FIDS%) do (
+        echo. & echo --- Przetwarzam grupe: %%F ---
+        python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG --no-cache
+    )
+)
+
+:: #####################################################################
+echo.
+echo ### Przetwarzanie dla stacji: TLEN1a (nowe dane) ###
+echo #####################################################################
+set "INPUT_PATH=D:\sites\TR\dt_TR\Campbell"
+set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TL1"
+if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN1a CSI nie istnieje. Pomijam. ) else (
+    for %%F in (%TLEN1anew_FIDS%) do (
+        echo. & echo --- Przetwarzam grupe: %%F --- 
+        python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG --no-cache
+    )
+)
+
+:: #####################################################################
+echo.
+echo ### Przetwarzanie dla stacji: TLEN1a (ThermoFisher) ###
+echo #####################################################################
+set "INPUT_PATH=D:\sites\TR\dt_TR\ThermoFisher"
+set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TL1"
+if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN1a ThermoFisher  nie istnieje. Pomijam. ) else (
+    for %%F in (%TLEN1a_FIDS%) do (
+        echo. & echo --- Przetwarzam grupe: %%F ---
+        python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG --no-cache
+    )
+)
+
+:: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: TLEN2 csi ###
+REM echo #####################################################################
+REM set "INPUT_PATH=D:\sites\TR2\csi_TR2\Campbell"
+REM set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TL2"
+REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN2 nie istnieje. Pomijam. ) else (
+    REM for %%F in (%TLEN2_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM )
+
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: TLEN2 dT ###
+REM echo #####################################################################
+REM set "INPUT_PATH=D:\sites\TR2\dT_TR2\ThermoFisher"
+REM set "OUTPUT_PATH=%BASE_OUTPUT_PATH%\TL2"
+REM if not exist "%INPUT_PATH%\" ( echo Ostrzezenie: Katalog dla stacji TLEN2 nie istnieje. Pomijam. ) else (
+    REM for %%F in (%TLEN2_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM )
+
+REM :: #####################################################################
+REM echo.
+REM echo ### Przetwarzanie dla stacji: MEZYK (struktura specjalna) ###
+REM echo #####################################################################
+REM set "MEZYK_BASE_INPUT=D:\sites\ME\dT_ME\ThermoFisher"
+
+REM :: --- MEZYK TOP ---
+REM set "TOP_DIRS_LIST="
+REM for /D %%D in ("%MEZYK_BASE_INPUT%\*") do (
+    REM if exist "%%~D\DT85W_top\" (
+        REM set "TOP_DIRS_LIST=!TOP_DIRS_LIST! "%%~fD\DT85W_top""
+    REM )
+REM )
+REM if defined TOP_DIRS_LIST (
+    REM for %%F in (%MEZYK_TOP_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe Mezyk-TOP: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i %TOP_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM ) else (
+    REM echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-TOP.
+REM )
+
+REM :: --- MEZYK DOWN ---
+REM set "DOWN_DIRS_LIST="
+REM for /D %%D in ("%MEZYK_BASE_INPUT%\*") do (
+    REM if exist "%%~D\DT85_down\" (
+        REM set "DOWN_DIRS_LIST=!DOWN_DIRS_LIST! "%%~fD\DT85_down""
+    REM )
+REM )
+REM if defined DOWN_DIRS_LIST (
+    REM for %%F in (%MEZYK_DOWN_FIDS%) do (
+        REM echo. & echo --- Przetwarzam grupe Mezyk-DOWN: %%F ---
+        REM python "%PYTHON_SCRIPT_PATH%" --db-path "%DB_PATH%" -i %DOWN_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --jobs 8 --log-level DEBUG
+    REM )
+REM ) else (
+    REM echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-DOWN.
+REM )
+
+
+echo.
+echo =======================================================
+echo Wszystkie zdefiniowane zadania zostaly zakonczone.
+echo =======================================================
+pause

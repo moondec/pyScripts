@@ -1,0 +1,851 @@
+FILE_ID_MERGE_GROUPS = {
+
+    # Rzecin
+
+    'RZ_MET30min': { 'source_ids': ['Meteo_32', 'meteo_Meteo_32', 'Meteo_30', 'CR1000_Meteo_30', '_LiCor'], 'interval': '30min' },
+
+    'RZ_MET1min': { 'source_ids': ['sky_SKYE_1min_', 'CR1000_2_meteo_SKYE_1min', 'CR1000_sky_SKYE_1min', '3_SKYE', 'sky_SKYE', 'CR1000_2_meteo_Meteo_1', 'CR1000_Meteo_1', 'CR1000_2_meteo_Meteo_2', 'CR1000_2_Meteo_2', 'CR1000_Methan_1', 'CR1000_Methan_2', 'Parsival', 'NetRadiometers', 'SWD'], 'interval': '1min' },
+
+    'RZ_MET30sec': { 'source_ids': ['CR1000_wet_RadTaRH', 'CR1000_wet_TEMP_PRT', 'CR1000_wet_Ts_P'], 'interval': '30S' }, # Zmieniono '30sec' na '30S' dla spójności
+
+    # Tuczno
+
+    'TU_MET30min': { 'source_ids': ['CR5000_flux', 'Rad_tu', '_Bole_temp', '_meteo_Spec_idx', '_meteo_EneBal', '_meteo_Prec_Top', 'CR200Series_Table1', '_meteo_WXTmet', '_Results', '_profil_comp_integ', '_soil_Temperatury', '_soil_Soil_HFP01', '_garden_RainGauge', '_garden_T107_gar'], 'interval': '30min' },
+
+    'TU_MET10min': { 'source_ids': ['_garden_CS_616', '_studnia_1_CS616S1'], 'interval': '10min' },
+
+    'TU_MET2min': { 'source_ids': ['CR1000_LI840_stor'], 'interval': '2min' },
+
+    'TU_MET1min': { 'source_ids': ['_Rad_1min'], 'interval': '1min' },
+
+    'TU_MET30sec': { 'source_ids': ['CR1000_soil2_SoTemS13'], 'interval': '30S' }, # Zmieniono '30sec' na '30S'
+
+    'TU_MET5sec': { 'source_ids': ['_soil_PPFD_under_tree', 'CR1000_meteo_GlobalRad', '_soil_Temperatury_5', 'CR1000_meteo_GlobalRad'], 'interval': '5S' }, # Zmieniono '5sec' na '5S'
+
+    'TU_MET1sec': { 'source_ids': ['CR1000_profil_LI840', 'CR1000_LI840', 'CR1000_soil2_LI840'], 'interval': '1S' }, # Zmieniono '1sec' na '1S'
+
+    # Brody
+
+    'BR_MET30min': { 'source_ids': ['CR3000_Barometr', 'CR3000_CR3000', 'CR3000_Multiplekser_dat', 'CR3000_Rain', 'CR3000_Spec_Veg_Ind'], 'interval': '30min' },
+
+    'BR_MET1min': { 'source_ids': ['CR3000_SpectralData'], 'interval': '1min' },
+
+    # Tlen1
+
+    'TL1_MET30min': { 'source_ids': [ 'Rad_TR_30min', 'Soil_TR_30min' ], 'interval': '30min' },
+
+    'TL1_MET1min': { 'source_ids': [ 'Rad_TR_1min' ], 'interval': '1min' },
+
+    # Tlen1a
+
+    'TL1a_MET30min': { 'source_ids': [ 'pom30m_', 'Tlen_1a_Biomet', 'Tlen_1a_cnf4_data', '_Soil_30min', 'Tlen1A_biomet_Biomet', 'Tlen1A_biomet_cnf4_data'], 'interval': '30min' },
+
+    'TL1a_PREC30min': { 'source_ids': [ 'deszcz_d_'], 'interval': '30min' },
+
+    'TL1a_MET1min': { 'source_ids': [ 'pom1m_', 'Tlen1A_biomet_Meteo_1min' ], 'interval': '1min' },
+
+    'TL1a_CAL1min': { 'source_ids': [ 'plytki_calib_' ], 'interval': '1min' },
+
+    # Tlen2
+
+    'TL2_MET30min': { 'source_ids': [ 'pom30m_', 'TL2_30min', 'Tlen2_biomet_Biomet', 'Tlen_2_Soil_TL2_30min' , 'Tlen2_biomet_cnf4_data', 'Tlen2_biomet_Soil_30min'], 'interval': '30min' },
+
+    'TL2_MET1min': { 'source_ids': [ 'pom1m_', 'Tlen_2_Soil_moist_1min', 'Tlen2_biomet_Meteo_1min' ], 'interval': '1min' },
+
+    'TL2_CAL1min': { 'source_ids': [ 'plytki_calib_' ], 'interval': '1min' },
+
+    # Mezyk
+
+    'ME_TOP_MET_30min': { 'source_ids': [ 'pom30m_'], 'interval': '30min' },
+
+    'ME_DOWN_MET_30min': { 'source_ids': [ 'pom30m_'], 'interval': '30min' },
+
+    'Rain_down': { 'source_ids': [ 'deszcz_d_'], 'interval': '30min' },
+
+    'Rain_top': { 'source_ids': [ 'deszcz_' ], 'interval': '30min' },
+
+    'ME_MET_10m': { 'source_ids': [ 'pom10m_' ], 'interval': '10min' },
+
+    'ME_TOP_MET_1min': { 'source_ids': [ 'pom1m_' ], 'interval': '1min' },
+
+    'ME_DOWN_MET_1min': { 'source_ids': [ 'pom1m_' ], 'interval': '1min' },
+
+    'CalPlates': { 'source_ids': [ 'plytki_calib_' ], 'interval': '1min' },
+
+    # Sarbia
+
+    'SA_MET_30min': { 'source_ids': [ 'SA_biomet_Biomet', '_cnf4_data'], 'interval': '30min' },
+
+    'SA_MET_1min': { 'source_ids': [ 'SA_biomet_Meteo_1min'], 'interval': '1min' }
+
+}
+
+
+
+# TIMEZONE_CORRECTIONS = {
+
+#     'STACJA_TU_COMMON': { 'source_tz':'Europe/Warsaw', 'correction_end_date':'2011-05-27 09:00:00', 'post_correction_tz':'UTC', 'target_tz':'Etc/GMT-1'},
+
+#     'TU_MET30min': 'STACJA_TU_COMMON','TU_MET10min': 'STACJA_TU_COMMON','TU_MET1min': 'STACJA_TU_COMMON',
+
+#     'TU_MET2min': 'STACJA_TU_COMMON', 'TU_MET30sec': 'STACJA_TU_COMMON', 'TU_MET5sec': 'STACJA_TU_COMMON', 'TU_MET1sec': 'STACJA_TU_COMMON',
+
+#     'INNA_STACJA_ID': { 'source_tz':'Europe/Warsaw', 'correction_end_date':'2020-05-10 12:00:00', 'post_correction_tz':'UTC', 'target_tz':'Etc/GMT-1' }
+
+# }
+
+
+
+TIMEZONE_CORRECTIONS = {
+
+    # 1. Definicja "konfiguracji-matki" dla stacji TU
+
+    'STACJA_TU_COMMON': { 
+
+        'source_tz': 'Europe/Warsaw', # Nazwa strefy czasowej, w której rejestrator zapisywał dane przed datą poprawki (np. 'Europe/Warsaw'). Używanie nazw z bazy IANA (jak Europe/Warsaw) jest kluczowe, ponieważ automatycznie obsługują one zarówno czas zimowy (CET, UTC+1), jak i letni (CEST, UTC+2).
+
+        'correction_end_date': '2011-05-27 09:00:00', # Data i godzina, po której dane są już zapisywane poprawnie. Skrypt zastosuje specjalną korektę tylko do danych z timestampami wcześniejszymi lub równymi tej dacie.
+
+        'post_correction_tz': 'UTC', # Strefa czasowa "poprawnych" danych (tych po correction_end_date). 
+
+        'target_tz': 'Etc/GMT-1' # Docelowa, jednolita strefa czasowa dla wszystkich danych w plikach wynikowych. ("UTC/GMT +1 godzina"), użyjemy 'Etc/GMT-1'. (Uwaga: notacja Etc/GMT ma odwrócony znak, więc Etc/GMT-1 oznacza UTC+1).
+
+    },
+
+    
+
+   # 2. Poszczególne file_id, które wskazują na wspólną konfigurację
+
+    'TU_MET30min': 'STACJA_TU_COMMON',
+
+    'TU_MET10min': 'STACJA_TU_COMMON',
+
+    'TU_MET1min': 'STACJA_TU_COMMON',
+
+    'TU_MET2min': 'STACJA_TU_COMMON',
+
+    'TU_MET30sec': 'STACJA_TU_COMMON',
+
+    'TU_MET5sec': 'STACJA_TU_COMMON',
+
+    'TU_MET1sec': 'STACJA_TU_COMMON',
+
+
+
+    # # 3. Definicja "konfiguracji-matki" dla stacji TL1 (oryginalne dane są w czasie zimowym górowanie słońca o ok. 12:00, brak konieczności systemowej zmiany czasu zima/lato)
+
+    # 'STACJA_TL1_COMMON': {
+
+        # 'source_tz': 'Europe/Warsaw',
+
+        # 'correction_end_date': '2020-05-10 12:00:00',
+
+        # 'post_correction_tz': 'Etc/GMT-1',
+
+        # 'target_tz': 'Etc/GMT-1'
+
+    # },
+
+    
+
+    # 'TL1_MET30min' : 'STACJA_TL1_COMMON',
+
+    # 'TL1_MET1min' : 'STACJA_TL1_COMMON',
+
+    
+
+    # 4. Definicja "konfiguracji-matki" dla stacji TL1a 
+
+    'STACJA_TL1a_COMMON': {
+
+        'source_tz': 'Europe/Warsaw',
+
+        'correction_end_date': '2050-05-10 12:00:00', # znajdź datę po której jest CET
+
+        'post_correction_tz': 'Etc/GMT-1',
+
+        'target_tz': 'Etc/GMT-1'
+
+    },
+
+    
+
+    'TL1a_MET30min' : 'STACJA_TL1a_COMMON',
+
+    'TL1a_MET1min' : 'STACJA_TL1a_COMMON',
+
+    'TL1a_PREC30min' : 'STACJA_TL1a_COMMON',
+
+    'TL1a_CAL1min' : 'STACJA_TL1a_COMMON'
+
+    
+
+    # # 5. Definicja "konfiguracji-matki" dla stacji TL2 (oryginalne dane są w czasie zimowym górowanie słońca o ok. 12:00, brak konieczności systemowej zmiany czasu zima/lato)
+
+    # 'STACJA_TL2_COMMON': {
+
+        # 'source_tz': 'Europe/Warsaw',
+
+        # 'correction_end_date': '2050-05-10 12:00:00',
+
+        # 'post_correction_tz': 'Etc/GMT-1',
+
+        # 'target_tz': 'Etc/GMT-1'
+
+    # },   
+
+    
+
+    # 'TL2_MET30min' : 'STACJA_TL2_COMMON',
+
+    # 'TL2_MET1min' : 'STACJA_TL2_COMMON',
+
+    # 'TL2_CAL1min' : 'STACJA_TL2_COMMON',
+
+    
+
+    # # 6. Definicja "konfiguracji-matki" dla stacji ME (oryginalne dane są w czasie zimowym górowanie słońca o ok. 12:00, brak konieczności systemowej zmiany czasu zima/lato)
+
+    # 'STACJA_ME_COMMON': {
+
+        # 'source_tz': 'Europe/Warsaw',
+
+        # 'correction_end_date': '2050-05-10 12:00:00',
+
+        # 'post_correction_tz': 'Etc/GMT-1',
+
+        # 'target_tz': 'Etc/GMT-1'
+
+    # },
+
+    
+
+     # 'STACJA_ME_COMMON' : 'ME_TOP_MET_30min',   
+
+     # 'STACJA_ME_COMMON' : 'ME_DOWN_MET_30min',
+
+     # 'STACJA_ME_COMMON' : 'Rain_down',
+
+     # 'STACJA_ME_COMMON' : 'ME_DOWN_MET_1min',
+
+     # 'STACJA_ME_COMMON' : 'ME_DOWN_MET_30min',
+
+     # 'STACJA_ME_COMMON' : 'Rain_top',
+
+     # 'STACJA_ME_COMMON' : 'CalPlates',
+
+     # 'STACJA_ME_COMMON' : 'ME_MET_10m',
+
+    
+
+     # # 7. Definicja "konfiguracji-matki" dla stacji SA (oryginalne dane są w czasie zimowym górowanie słońca o ok. 12:00, brak konieczności systemowej zmiany czasu zima/lato)
+
+    # 'STACJA_SA_COMMON': {
+
+        # 'source_tz': 'Europe/Warsaw',
+
+        # 'correction_end_date': '2022-01-14 11:00:00',
+
+        # 'post_correction_tz': 'Etc/GMT-1',
+
+        # 'target_tz': 'Etc/GMT-1'
+
+    # },
+
+    
+
+     # 'STACJA_SA_COMMON' : 'SA_MET_30min',   
+
+     # 'STACJA_SA_COMMON' : 'SA_MET_1min'
+
+}
+
+
+
+# === POPRAWIONA SKŁADNIA SŁOWNIKA ===
+
+MANUAL_TIME_SHIFTS = {
+
+    # --- GRUPA TUCZNO ---
+
+    'STACJA_TU_COMMON': [
+
+        {
+
+            'start': '2008-01-01 00:00:00',
+
+            'end': '2008-03-31 00:00:00',
+
+            'offset_hours': 1
+
+        },
+
+        {
+
+            'start': '2011-03-27 00:00:00',
+
+            'end': '2011-05-27 09:00:00',
+
+            'offset_hours': 1
+
+        },
+
+    ],
+
+    'TU_MET30min': 'STACJA_TU_COMMON',
+
+    'TU_MET10min': 'STACJA_TU_COMMON',
+
+    'TU_MET1min':  'STACJA_TU_COMMON', 
+
+    'TU_MET2min':  'STACJA_TU_COMMON',
+
+    'TU_MET30sec': 'STACJA_TU_COMMON',
+
+    'TU_MET5sec':  'STACJA_TU_COMMON',
+
+    'TU_MET1sec':  'STACJA_TU_COMMON',
+
+    
+
+    # # --- GRUPA TL1a ---
+
+#     'STACJA_TL1a_COMMON': [
+
+#         {
+
+#             'start': '2025-06-01 00:00:00',
+
+#             'end': '2025-06-18 21:30:00',
+
+#             'offset_hours': -1
+
+#         },
+
+#     'TL1a_MET30min' : 'STACJA_TL1a_COMMON',
+
+#     'TL1a_MET1min' : 'STACJA_TL1a_COMMON',
+
+#     
+
+#     # --- GRUPA TL2 ---
+
+#     'STACJA_TL2_COMMON': [
+
+#         {
+
+#             'start': '2025-06-01 00:00:00',
+
+#             'end': '2025-06-18 21:30:00',
+
+#             'offset_hours': -1
+
+#         },
+
+#     'TL2_MET30min' : 'STACJA_TL2_COMMON',
+
+#     'TL2_MET1min' : 'STACJA_TL2_COMMON',
+
+#     
+
+# --- GRUPA SARBIA ---
+
+    # Poprawna struktura: najpierw definicja reguł, potem osobne definicje aliasów
+
+    # 'STACJA_SA_COMMON': [
+
+        # {
+
+            # 'start': '2021-06-01 00:00:00',
+
+            # 'end': '2055-06-18 21:30:00',
+
+            # 'offset_hours': -1
+
+        # },
+
+    # ],
+
+    # 'SA_MET_30min': 'STACJA_SA_COMMON',
+
+    # 'SA_MET_1min': 'STACJA_SA_COMMON',
+
+    
+
+#     # --- GRUPA TL1_OLD ---
+
+#     'TL_OLD_STATION_COMBINED': [ # Zastosować do całych grup
+
+#     # ------- pojedyncze przesunięcie w czasie 1
+
+#         {
+
+#             'start': '2013-01-01 00:00:00',
+
+#             'end': '2018-06-14 02:30:00',
+
+#             'offset_hours': -1  # W tym okresie ODEJMIJ 1 godzinę w wektorze czasu danych EC
+
+#         }, 
+
+#     # ------- koniec przesunięcia 1
+
+#     # ------- pojedyncze przesunięcie w czasie 2
+
+#         {
+
+#             'start': '2018-06-14 02:30:00',
+
+#             'end': '2018-06-19 10:00:00',
+
+#             'offset_hours': 1 # W tym okresie DODAJ 1 godzinę
+
+#         }, 
+
+#     # ------- koniec przesunięcia 2
+
+#     
+
+#     # ------- pojedyncze przesunięcie w czasie 3
+
+#         {
+
+#             'start': '2018-06-19 10:30:00',
+
+#             'end': '2019-08-23 09:00:00',
+
+#             'offset_hours': 0 # W tym okresie NIC NIE RÓB!
+
+#         },
+
+#     # ------- koniec przesunięcia 3
+
+# 
+
+# # ------- pojedyncze przesunięcie w czasie 4
+
+#         {
+
+#             'start': '2019-08-23 09:30:00',
+
+#             'end': '2019-12-31 23:59:00',
+
+#             'offset_hours': -2 # W tym okresie ODEJMIJ 2 godzinY
+
+#         },
+
+#     # ------- koniec przesunięcia 4
+
+# 
+
+#    # ------- pojedyncze przesunięcie w czasie 5
+
+#         {
+
+#             'start': '2019-12-31 23:59:00',
+
+#             'end': NOW,
+
+#             'offset_hours': -2 # W tym okresie ODEJMIJ 2 godzinY
+
+#         }
+
+#     # ------- koniec przesunięcia 5      
+
+#         
+
+#     ],
+
+#     'TL1_MET30min' : 'TL_OLD_STATION_COMBINED',
+
+#     'TL1_MET1min' : 'TL_OLD_STATION_COMBINED',
+
+#    # --- GRUPA ME_TOP ---
+
+#     # 1. Definicja reguł dla grupy
+
+#     'ME_TOP_STATION_COMBINED': [
+
+#         {
+
+#             'start': '2021-04-05 16:24:00',
+
+#             'end': '2021-12-06 12:30:00',
+
+#             'offset_hours': -1
+
+#         },
+
+#         {
+
+#             'start': '2014-01-20 05:00:00',
+
+#             'end': '2014-02-18 12:00:00',
+
+#             'offset_hours': -1
+
+#         },
+
+#     ],
+
+#    # 2. Definicja aliasów wskazujących na grupę (jako osobne wpisy w głównym słowniku)
+
+#    'ME_TOP_MET_30min' : 'ME_TOP_STATION_COMBINED',
+
+#    'ME_TOP_MET_1min' : 'ME_TOP_STATION_COMBINED',
+
+#    'Rain_top' : 'ME_TOP_STATION_COMBINED',
+
+
+
+    # --- GRUPA ME_DOWN ---
+
+    # 1. Definicja reguł dla grupy
+
+    'ME_DOWN_STATION_COMBINED': [
+
+        {
+
+            "start": "2018-05-30 16:03:00",
+
+            "end": "2018-06-02 21:40:00",
+
+            "offset_hours": 59
+
+        },
+
+        {
+
+            "start": "2019-07-04 23:46:00",
+
+            "end": "2019-07-08 20:21:00",
+
+            "offset_hours": 18.43 # 32.43 tu poprewić -14 godzin
+
+        },
+
+        {
+
+            "start": "2019-11-22 16:04:00",
+
+            "end": "2019-11-28 06:59:00", 
+
+            "offset_hours": 5.7
+
+        },
+
+        {
+
+            "start": "2019-12-09 11:51:00",
+
+            "end": "2019-12-31 23:59:00", #  trzeba to rozbić na lata
+
+            "offset_hours": 2.62
+
+        },
+
+        {
+
+            "start": "2020-01-01 00:00:00",
+
+            "end": "2020-01-06 11:59:00", # tu jest duża luka i czas nie musi być dokładny
+
+            "offset_hours": 2.62
+
+        },
+
+        {
+
+            "start": "2018-01-11 08:07:00",
+
+            "end": "2020-01-15 05:19:00", # 
+
+            "offset_hours": 4.204861
+
+        },
+
+        {
+
+            "start": "2021-06-29 03:17:00",
+
+            "end": "2021-06-30 08:17:00",
+
+            "offset_hours": 557.76
+
+        },
+
+        {
+
+            "start": "2021-08-01 04:12:00",
+
+            "end": "2021-08-04 08:59:00",
+
+            "offset_hours": 37
+
+        },
+
+        {
+
+            "start": "2021-08-07 19:30:00",
+
+            "end": "2021-08-08 19:42:00",
+
+            "offset_hours": 111.45
+
+        },
+
+        {
+
+            "start": "2021-11-10 10:58:00",
+
+            "end": "2021-11-12 00:42:00",
+
+            "offset_hours": 14
+
+        },
+
+        {
+
+            "start": "2022-05-30 08:21:00",
+
+            "end": "2022-06-03 22:04:00",
+
+            "offset_hours": 220
+
+        },
+
+        {
+
+            "start": "2023-02-06 12:17:00",
+
+            "end": "2023-02-06 13:18:00",
+
+            "offset_hours": 2.75
+
+        },
+
+        {
+
+            "start": "2023-02-12 10:13:00",
+
+            "end": "2023-02-12 11:12:00",
+
+            "offset_hours": 6.4666667
+
+        },
+
+        {
+
+            'start': '2024-11-19 13:41:00',
+
+            'end': '2024-11-20 07:35:00',
+
+            "offset_hours": 60.15
+
+        },
+
+        {
+
+            'start': '2025-01-08 02:47:00',
+
+            'end': '2025-01-08 11:50:00',
+
+            "offset_hours": 45.4
+
+        },
+
+        {
+
+            'start': '2025-01-30 16:57:00',
+
+            'end': '2025-02-17 10:18:00',
+
+            "offset_hours": 25.2
+
+        },
+
+        {
+
+            'start': '2025-05-15 05:26:00',
+
+            'end': '2025-05-18 14:52:00',
+
+            "offset_hours": 18
+
+        },
+
+    ],
+
+    # 2. Definicja aliasów wskazujących na grupę
+
+    'ME_DOWN_MET_30min' : 'ME_DOWN_STATION_COMBINED',
+
+    'ME_DOWN_MET_1min' : 'ME_DOWN_STATION_COMBINED',
+
+    'Rain_down' : 'ME_DOWN_STATION_COMBINED',
+
+    'CalPlates' : 'ME_DOWN_STATION_COMBINED',
+
+}
+
+
+
+CALIBRATION_RULES_BY_STATION = {
+
+    'MEZYK_DOWN': {
+
+        # Wszystkie reguły dla JEDNEJ kolumny muszą być w JEDNEJ liście
+
+        'PPFD_BC_IN_1_1_1': [
+
+            {'start': '2018-11-13 23:00:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3397.547, 'addend': 0, 'reason': 'LQA3027, (data in umol/m2/s1)'},
+
+            {'start': '2019-09-01 19:30:00', 'end': '2019-09-13 06:00:00', 'multiplier': 1, 'addend': -230, 'reason': 'LQA3028 - korekta'}
+
+        ],
+
+        'PPFD_BC_IN_1_1_2': [
+
+            {'start': '2018-08-08 13:30:00', 'end': '2018-11-17 12:00:00', 'multiplier': 1, 'addend': -650, 'reason': 'LQA3028 - stara korekta'},
+
+            {'start': '2018-11-13 23:00:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3288.716, 'addend': 0, 'reason': 'LQA3028, (data in umol/m2/s1)'},
+
+            {'start': '2019-09-01 19:30:00', 'end': '2019-09-13 06:00:00', 'multiplier': 1, 'addend': -230, 'reason': 'LQA3028 - korekta'}
+
+        ]
+
+    },
+
+    'MEZYK_TOP': {
+
+        'PPFD_1_2_1': [
+
+            {'start': '2018-01-01 00:00:00', 'end': '2018-11-15 12:00:00', 'multiplier': 199.601, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'}
+
+        ],
+
+        'PPFDr_1_2_1': [
+
+            {'start': '2018-01-01 00:00:00', 'end': '2018-11-15 12:00:00', 'multiplier': 201.613, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'}
+
+        ],
+
+        'SWin_1_2_1': [
+
+            {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 74.85, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'}
+
+        ],
+
+        'SWout_1_2_1': [
+
+            {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 81.5, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'}
+
+        ]
+
+    }
+
+}
+
+
+
+STATION_MAPPING_FOR_CALIBRATION = {
+
+    # 'ME_TOP_MET_30min': 'MEZYK_TOP',
+
+    'ME_TOP_MET1_min' : 'MEZYK_TOP',
+
+    # 'Rain_top': 'MEZYK_TOP',
+
+
+
+    # 'ME_DOWN_MET_30min' : 'MEZYK_DOWN',
+
+    'ME_DOWN_MET_1min' : 'MEZYK_DOWN',
+
+    # 'Rain_down' : 'MEZYK_DOWN',
+
+    # 'CalPlates' : 'MEZYK_DOWN',
+
+    
+
+    # Dodaj tutaj mapowania dla innych stacji, np.
+
+    # 'TU_STATION_COMBINED': 'TUCZNO',
+
+}
+
+
+
+# === NOWY SŁOWNIK DO FILTROWANIA ZAKRESÓW DAT ===
+
+DATE_RANGES_TO_EXCLUDE = {
+
+    # Przykład, dostosuj do swoich potrzeb
+
+    'ME_DOWN_STATION_COMBINED1': [
+
+        {
+
+            'start': '2018-06-01 10:19:00',
+
+            'end': '2018-06-03 14:04:00',
+
+            'reason': 'Awaria rejestratora1'
+
+        },
+
+        {
+
+            'start': '2020-01-10 06:57:00',
+
+            'end': '2018-01-11 08:06:00',
+
+            'reason': 'Awaria rejestratora2'
+
+        },
+
+        {
+
+            'start': '2021-07-31 20:48:00',
+
+            'end': '2021-08-01 04:11:00',
+
+            'reason': 'Awaria rejestratora3'
+
+        },
+
+        {
+
+            'start': '2021-09-22 12:51:00',
+
+            'end': '2021-09-22 23:50:00',
+
+            'reason': 'Awaria rejestratora3'
+
+        },
+
+        # {
+
+            # 'start': "2018-11-17 14:21",
+
+            # 'end': "2018-11-17 14:24",
+
+            # 'reason': 'Awaria BC'
+
+        # },        
+
+        
+
+            
+
+    ],
+
+    'ME_DOWN_MET_30min' : 'ME_DOWN_STATION_COMBINED1',
+
+    'ME_DOWN_MET_1min' : 'ME_DOWN_STATION_COMBINED1',
+
+    'Rain_down' : 'ME_DOWN_STATION_COMBINED1',
+
+    'CalPlates' : 'ME_DOWN_STATION_COMBINED1',
+
+}
