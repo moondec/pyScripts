@@ -163,21 +163,21 @@ if defined TOP_DIRS_LIST (
     echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-TOP.
 )
 
-REM :: --- MEZYK DOWN ---
-REM set "DOWN_DIRS_LIST="
-REM for /D %%D in ("%MEZYK_BASE_INPUT%\*") do (
-    REM if exist "%%~D\DT85_down\" (
-        REM set "DOWN_DIRS_LIST=!DOWN_DIRS_LIST! "%%~fD\DT85_down""
-    REM )
-REM )
-REM if defined DOWN_DIRS_LIST (
-    REM for %%F in (%MEZYK_DOWN_FIDS%) do (
-        REM echo. & echo --- Przetwarzam grupe Mezyk-DOWN: %%F ---
-        REM python "%PYTHON_SCRIPT_PATH%" -i %DOWN_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --log-level DEBUG  --db-path "%DB_OUTPUT_PATH%" --output-format both
-    REM )
-REM ) else (
-    REM echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-DOWN.
-REM )
+:: --- MEZYK DOWN ---
+set "DOWN_DIRS_LIST="
+for /D %%D in ("%MEZYK_BASE_INPUT%\*") do (
+    if exist "%%~D\DT85_down\" (
+        set "DOWN_DIRS_LIST=!DOWN_DIRS_LIST! "%%~fD\DT85_down""
+    )
+)
+if defined DOWN_DIRS_LIST (
+    for %%F in (%MEZYK_DOWN_FIDS%) do (
+        echo. & echo --- Przetwarzam grupe Mezyk-DOWN: %%F ---
+        python "%PYTHON_SCRIPT_PATH%" -i %DOWN_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --log-level DEBUG  --db-path "%DB_OUTPUT_PATH%" --output-format both
+    )
+) else (
+    echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-DOWN.
+)
 
 
 echo.

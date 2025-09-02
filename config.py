@@ -432,7 +432,7 @@ MANUAL_TIME_SHIFTS = {
         {"start": "2018-01-11 08:07:00", "end": "2018-01-15 05:19:00", "offset_hours": 4.204861 },
         # {"start": "2018-05-30 16:03:00", "end": "2018-06-02 21:40:00", "offset_hours": 59 },
         {"start": "2018-06-05 09:29:00", "end": "2018-06-07 13:02:00", "offset_hours": -1.18 },
-        {"start": "2018-10-03 00:00:00", "end": "2018-12-22 00:00:00", "offset_hours": 0.5 },
+        # {"start": "2018-10-03 00:00:00", "end": "2018-12-22 00:00:00", "offset_hours": 0.5 },
         {"start": "2019-07-05 06:01:00", "end": "2019-07-10 12:32:00", "offset_hours": 2.25 },
         {"start": "2019-09-01 14:45:00", "end": "2019-09-01 18:12:00", "offset_hours": 1.28  },
         {"start": "2020-01-07 23:02:00", "end": "2020-01-14 12:10:00", "offset_hours": -1.03  },
@@ -563,16 +563,16 @@ CALIBRATION_RULES_BY_STATION = {
         ],
     },
     'MEZYK_TOP_CAL': {
-        'PPFD_1_2_1': [
+        'PPFD_IN_1_1_1': [
             {'start': '2018-01-01 00:00:00', 'end': '2018-11-15 12:00:00', 'multiplier': 199.601, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
         ],
-        'PPFDr_1_2_1': [
+        'PPFD_OUT_1_1_1': [
             {'start': '2018-01-01 00:00:00', 'end': '2018-11-15 12:00:00', 'multiplier': 201.613, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
         ],
-        'SWin_1_2_1': [
+        'SW_IN_1_1_1': [
             {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 74.85, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
         ],
-        'SWout_1_2_1': [
+        'SW_OUT_1_1_1': [
             {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 81.5, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
         ]
     },
@@ -634,10 +634,10 @@ CALIBRATION_RULES_BY_STATION = {
         ],
      },
     'TL2dT_CAL': {
-        'SWin_1_2_1' : [
+        'SW_IN_1_1_2' : [
             {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 69.638, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
         ],
-        'PPFD_1_2_1' : [
+        'PPFD_IN_1_1_2' : [
             {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 213.675, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
         ]
     }
@@ -1183,8 +1183,10 @@ COLUMN_MAPPING_RULES = {
         #PPFD Radiation – SKL 2620 operated from 2014,7,8,16,30,0 until the end of the meteo instruments operation- demounted on 05-Sep-2018 05:30:00.
         'PPFD_1_1_1_Avg':'PPFD_IN_1_1_1',  # SKL 2620 incoming PPDF
         'PPFDr_1_1_1_Avg': 'PPFD_OUT_1_1_1',  #SKL 2620 reflected PPDF
+        'PPFD_1_2_1': 'PPFD_IN_1_1_2', # PQS ?
         #NR01 4-component net radiometer measurements
         'SWin_1_1_1_Avg': 'SW_IN_1_1_1', # NR01
+        'SWin_1_2_1': 'SW_IN_1_1_2', # CNR4 ?
         'SWout_1_1_1_Avg': 'SW_OUT_1_1_1', # NR01
         'LWin_1_1_1_Avg': 'LW_IN_1_1_1', # NR01
         'LWout_1_1_1_Avg': 'LW_OUT_1_1_1', # NR01
