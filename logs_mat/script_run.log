@@ -1,0 +1,13 @@
+2025-09-03 11:49:54,181 - INFO - Katalog wyjœciowy: E:\pdfy\Porownanie_CSV_vs_MATLAB\ME
+2025-09-03 11:49:54,197 - INFO - 
+--- DIAGNOSTYKA ZMAPOWANYCH GRUP ---
+2025-09-03 11:49:54,197 - INFO -   > Grupa 'ME_DOWN_MET_1min': CSV='ME_DOWN_MET_1min', MAT='MET_1m'
+2025-09-03 11:49:54,197 - INFO -   > Grupa 'ME_Rain_top': CSV='ME_Rain_top', MAT='Rain_top'
+2025-09-03 11:49:54,197 - INFO -   > Grupa 'ME_TOP_MET_1min': CSV='ME_TOP_MET_1min', MAT='MET_1m'
+2025-09-03 11:49:54,197 - INFO -   > Grupa 'ME_TOP_MET_30min': CSV='ME_TOP_MET_30min', MAT='MET_30m'
+2025-09-03 11:49:54,197 - INFO -   > Grupa 'CalPlates': CSV='None', MAT='CalPlates'
+2025-09-03 11:49:54,211 - INFO -   > Grupa 'MET_10m': CSV='None', MAT='MET_10m'
+2025-09-03 11:49:54,211 - INFO -   > Grupa 'Rain_down': CSV='None', MAT='Rain_down'
+2025-09-03 11:49:54,211 - INFO - -----------------------------------
+
+2025-09-03 11:49:54,211 - INFO - Uruchamianie przetwarzania równoleg³ego dla 7 grup...

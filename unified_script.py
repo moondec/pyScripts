@@ -107,9 +107,10 @@ from config import *
 CAMPBELL_EPOCH = pd.Timestamp('1990-01-01 00:00:00')
 STRUCT_FORMAT_MAP = {'ULONG':'L', 'IEEE4':'f', 'IEEE8':'d', 'LONG':'l', 'BOOL':'?', 'SHORT':'h', 'USHORT':'H', 'BYTE':'b'}
 BASE_DIR = Path(__file__).parent
-CACHE_FILE_PATH = BASE_DIR / ".cache_split.json"
-LOG_FILE_PATH = BASE_DIR / "log_split.txt"
-CHRONOLOGY_LOG_FILENAME = BASE_DIR / "log_chronology_correction.txt"
+LOGS_DIR = BASE_DIR / 'logs'
+CACHE_FILE_PATH = LOGS_DIR / ".cache_split.json"
+LOG_FILE_PATH = LOGS_DIR / "log_split.txt"
+CHRONOLOGY_LOG_FILENAME = LOGS_DIR / "log_chronology_correction.txt"
 chronology_logger = None
 
 # --- MODUŁY POMOCNICZE I LOGOWANIA ---
@@ -1895,7 +1896,7 @@ def main():
     if csv_files:
         # # --- DEBUG: Zapisz listę plików PRZED sortowaniem ---
         # try:
-            # debug_before_path = BASE_DIR / "debug_files_before_sort.txt"
+            # debug_before_path = LOGS_DIR / "debug_files_before_sort.txt"
             # logging.info(f"DEBUG: Zapisywanie listy plików PRZED sortowaniem do: {debug_before_path.name}")
             # with open(debug_before_path, 'w', encoding='utf-8') as f:
                 # for p in csv_files:
@@ -1942,7 +1943,7 @@ def main():
         
         # --- DEBUG: Zapisz listę plików PO sortowaniu ---
         try:
-            debug_after_path = BASE_DIR / f"debug_files_after_sort_{args.file_id}.txt"
+            debug_after_path = LOGS_DIR / f"debug_files_after_sort_{args.file_id}.txt"
             logging.info(f"DEBUG: Zapisywanie listy plików PO sortowaniu do: {debug_after_path.name}")
             with open(debug_after_path, 'w', encoding='utf-8') as f:
                 f.write("filename;fullpath;modified_utc;size_mb\n")

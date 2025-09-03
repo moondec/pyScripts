@@ -11,6 +11,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 import logging
 from datetime import datetime, timedelta
 import multiprocessing
+from pathlib import Path
 
 # import słowników config
 from config import *
@@ -544,6 +545,28 @@ def process_group(args):
     
 # --- GŁÓWNA CZĘŚĆ SKRYPTU ---
 if __name__ == '__main__':
+    BASE_DIR = Path(__file__).parent
+    LOGS_DIR = BASE_DIR / 'logs_mat'
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    
+    log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    root_logger = logging.getLogger()
+    
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+
+    # Handler do pliku
+    file_handler = logging.FileHandler(LOGS_DIR / "script_run.log")
+    file_handler.setFormatter(log_formatter)
+    root_logger.addHandler(file_handler)
+
+    # Handler do konsoli
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    root_logger.addHandler(console_handler)
+    
+    root_logger.setLevel(logging.INFO)
+    
     profiler = SimpleProfiler()
     profiler.start('Całkowity czas wykonania')
     
