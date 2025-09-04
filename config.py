@@ -733,6 +733,7 @@ QUALITY_FLAGS = {
         'PPFD_OUT_1_2_1':[
             {'start': '2019-10-15 13:30:00', 'end': '2019-10-16', 'flag_value': 3, 'reason': 'brak sensora'},
             {'start': '2019-09-01 18:00:00', 'end': '2019-10-15 13:30:00', 'flag_value': 3, 'reason': 'brak sensora'},
+            # {'start': '2021-01-18 00:44:00', 'end': '2021-01-18 00:44:00', 'flag_value': 3, 'reason': 'spike'},
         ],
         'PPFD_IN_1_1_1':[
             {'start': '2019-10-15', 'end': '2019-10-18 03:30:00', 'flag_value': 3, 'reason': 'brak sensora'},
