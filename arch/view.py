@@ -252,6 +252,9 @@ class MainWindow(QMainWindow):
         self.tooltip_checkbox.stateChanged.connect(self.on_tooltip_toggle)
         self.btn_fit_zoom = QPushButton("Dopasuj Widok")
         self.btn_fit_zoom.clicked.connect(self.redraw_plot)
+        self.btn_export = QPushButton("Eksportuj zaznaczenie")
+        self.btn_export.setStyleSheet("background-color: #0000FF; color: white; font-weight: bold;")
+        self.btn_export.clicked.connect(self.export_selection)
         self.btn_clear_selection = QPushButton("Wyczyść zaznaczenie")
         self.btn_clear_selection.clicked.connect(self.clear_selection)
         self.btn_calc_diff = QPushButton("Oblicz różnicę")
@@ -267,6 +270,7 @@ class MainWindow(QMainWindow):
         top_panel.addStretch()
         top_panel.addWidget(self.tooltip_checkbox)
         top_panel.addWidget(self.btn_fit_zoom)
+        top_panel.addWidget(self.btn_export)
         top_panel.addWidget(self.btn_clear_selection)
         top_panel.addWidget(self.btn_calc_diff)
         top_panel.addWidget(self.btn_correct)
@@ -683,7 +687,55 @@ class MainWindow(QMainWindow):
         t2 = self.df.loc[selected_indices[1], time_column]
         delta = abs(t2 - t1)
         QMessageBox.information(self, "Różnica czasu", f"Obliczona różnica czasu wynosi:\n\n{delta}")
+    
+    def export_selection(self):
+        """Eksportuje znaczniki czasu z zaznaczonych wierszy do schowka lub pliku."""
+        
+        selected_df = self.df[self.df['do_korekty']]
+        if selected_df.empty:
+            QMessageBox.information(self, "Informacja", "Nie zaznaczono żadnych wierszy do eksportu.")
+            return
 
+        time_column = self.df.columns[0]
+        timestamps = selected_df[time_column]
+        
+        # ZMIANA: Modyfikujemy sposób formatowania i łączenia tekstu
+        # 1. Tworzymy listę dat w pożądanym formacie
+        formatted_stamps = [ts.strftime('%Y-%m-%d %H:%M:%S') for ts in timestamps]
+        # 2. Każdą datę ujmujemy w pojedynczy cudzysłów
+        quoted_stamps = [f"'{s}'" for s in formatted_stamps]
+        # 3. Łączymy wszystko w jedną linię, oddzielając elementy przecinkiem i spacją
+        output_string = ', '.join(quoted_stamps)
+
+        # Reszta funkcji (pytanie o schowek/plik) pozostaje bez zmian
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Eksportuj zaznaczenie")
+        msg_box.setText(f"Wyeksportowano {len(quoted_stamps)} znaczników czasu.\n\nWybierz miejsce docelowe:")
+        msg_box.setIcon(QMessageBox.Icon.Question)
+        
+        btn_clipboard = msg_box.addButton("Kopiuj do schowka", QMessageBox.ButtonRole.ActionRole)
+        btn_save_file = msg_box.addButton("Zapisz do pliku...", QMessageBox.ButtonRole.ActionRole)
+        msg_box.addButton("Anuluj", QMessageBox.ButtonRole.RejectRole)
+        
+        msg_box.exec()
+        
+        clicked_button = msg_box.clickedButton()
+
+        if clicked_button == btn_clipboard:
+            clipboard = QApplication.clipboard()
+            clipboard.setText(output_string)
+            QMessageBox.information(self, "Sukces", "Znaczniki czasu zostały skopiowane do schowka.")
+
+        elif clicked_button == btn_save_file:
+            file_path, _ = QFileDialog.getSaveFileName(self, "Zapisz znaczniki czasu jako...", "", "Pliki tekstowe (*.txt);;Wszystkie pliki (*)")
+            if file_path:
+                try:
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        f.write(output_string)
+                    QMessageBox.information(self, "Sukces", f"Znaczniki czasu zostały zapisane w pliku:\n{file_path}")
+                except Exception as e:
+                    QMessageBox.critical(self, "Błąd zapisu", f"Nie udało się zapisać pliku.\nBłąd: {e}")
+                    
     def save_data(self):
         if self.df.empty:
             QMessageBox.warning(self, "Brak danych", "Nie ma żadnych danych do zapisania.")

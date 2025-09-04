@@ -123,7 +123,14 @@ def setup_logging(level: str = 'INFO'):
 
     log_level = getattr(logging, level.upper(), logging.INFO)
     log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
+    
+    # Pobieramy ścieżkę do samego folderu z pełnej ścieżki do pliku
+    log_directory = os.path.dirname(LOG_FILE_PATH)
+    
+    # Tworzymy folder, jeśli nie istnieje. `exist_ok=True` zapobiega błędowi,
+    # jeśli folder już został utworzony.
+    os.makedirs(log_directory, exist_ok=True)
+    
     file_handler = RotatingFileHandler(LOG_FILE_PATH, maxBytes=5*1024*1024, backupCount=2, encoding='utf-8')
     file_handler.setFormatter(log_formatter)
 
