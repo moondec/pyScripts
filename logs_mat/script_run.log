@@ -1,0 +1,26 @@
+2025-09-04 12:04:37,719 - INFO - Katalog wyjœciowy: E:\pdfy\Porownanie_CSV_vs_MATLAB\ME
+2025-09-04 12:04:37,743 - INFO - 
+--- DIAGNOSTYKA ZMAPOWANYCH GRUP ---
+2025-09-04 12:04:37,743 - INFO -   > Grupa 'ME_DOWN_MET_1min': CSV='ME_DOWN_MET_1min', MAT='MET_1m'
+2025-09-04 12:04:37,743 - INFO -   > Grupa 'ME_Rain_top': CSV='ME_Rain_top', MAT='Rain_top'
+2025-09-04 12:04:37,743 - INFO -   > Grupa 'ME_TOP_MET_1min': CSV='ME_TOP_MET_1min', MAT='MET_1m'
+2025-09-04 12:04:37,743 - INFO -   > Grupa 'ME_TOP_MET_30min': CSV='ME_TOP_MET_30min', MAT='MET_30m'
+2025-09-04 12:04:37,743 - INFO -   > Grupa 'CalPlates': CSV='None', MAT='CalPlates'
+2025-09-04 12:04:37,755 - INFO -   > Grupa 'MET_10m': CSV='None', MAT='MET_10m'
+2025-09-04 12:04:37,755 - INFO -   > Grupa 'Rain_down': CSV='None', MAT='Rain_down'
+2025-09-04 12:04:37,755 - INFO - -----------------------------------
+
+2025-09-04 12:04:37,755 - INFO - Uruchamianie przetwarzania równoleg³ego dla 7 grup...
+2025-09-04 12:13:08,381 - INFO - --- WYNIKI PRZETWARZANIA RÓWNOLEG£EGO ---
+2025-09-04 12:13:08,381 - INFO -  - ME_DOWN_MET_1min: Success
+2025-09-04 12:13:08,381 - INFO -  - ME_Rain_top: Skipped
+2025-09-04 12:13:08,381 - INFO -  - ME_TOP_MET_1min: Success
+2025-09-04 12:13:08,381 - INFO -  - ME_TOP_MET_30min: Success
+2025-09-04 12:13:08,381 - INFO -  - CalPlates: Skipped
+2025-09-04 12:13:08,381 - INFO -  - MET_10m: Skipped
+2025-09-04 12:13:08,381 - INFO -  - Rain_down: Skipped
+2025-09-04 12:13:08,381 - INFO - ----------------------------------------
+2025-09-04 12:13:08,381 - INFO - 
+==================================================
+PRZETWARZANIE ZAKOÑCZONE POMYŒLNIE!
+==================================================

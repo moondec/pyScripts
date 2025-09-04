@@ -570,7 +570,7 @@ class MainWindow(QMainWindow):
         start_color_index = len(self.file_colors)
         colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
         custom_nan_values = ["OverRange", "UnderRange", "NAN", "INF", "-INF", ""]
-        NON_NUMERIC = ['Timestamp', 'oryginalny_plik','group_id', 'source_file', 'interval', 'TZ', '5M METAR Tab.4678', '1M METAR Tab.4678', '5MMETARTab4678', '1MMETARTab4678', 'source_filename', 'source_filepath']  # Dodaj inne, jeśli trzeba
+        NON_NUMERIC = ['Timestamp', 'TIMESTAMP', 'oryginalny_plik','group_id', 'source_file', 'interval', 'TZ', '5M METAR Tab.4678', '1M METAR Tab.4678', '5MMETARTab4678', '1MMETARTab4678', 'source_filename', 'source_filepath']  # Dodaj inne, jeśli trzeba
 
         for i, path in enumerate(newly_added_paths):
             self.file_colors[path] = colors[(start_color_index + i) % len(colors)]
@@ -696,25 +696,26 @@ class MainWindow(QMainWindow):
     def export_selection(self):
         """Eksportuje znaczniki czasu z zaznaczonych wierszy do schowka lub pliku."""
         
-        # 1. Sprawdzamy, czy cokolwiek jest zaznaczone
         selected_df = self.df[self.df['do_korekty']]
         if selected_df.empty:
             QMessageBox.information(self, "Informacja", "Nie zaznaczono żadnych wierszy do eksportu.")
             return
 
-        # 2. Pobieramy i formatujemy znaczniki czasu
         time_column = self.df.columns[0]
         timestamps = selected_df[time_column]
         
-        # Tworzymy listę sformatowanych dat, każda zakończona przecinkiem
-        formatted_stamps = [ts.strftime('%Y-%m-%d %H:%M:%S') + ',' for ts in timestamps]
-        # Łączymy je w jeden tekst, gdzie każda data jest w nowej linii
-        output_string = '\n'.join(formatted_stamps)
+        # ZMIANA: Modyfikujemy sposób formatowania i łączenia tekstu
+        # 1. Tworzymy listę dat w pożądanym formacie
+        formatted_stamps = [ts.strftime('%Y-%m-%d %H:%M:%S') for ts in timestamps]
+        # 2. Każdą datę ujmujemy w pojedynczy cudzysłów
+        quoted_stamps = [f"'{s}'" for s in formatted_stamps]
+        # 3. Łączymy wszystko w jedną linię, oddzielając elementy przecinkiem i spacją
+        output_string = ', '.join(quoted_stamps)
 
-        # 3. Pytamy użytkownika, co chce zrobić
+        # Reszta funkcji (pytanie o schowek/plik) pozostaje bez zmian
         msg_box = QMessageBox(self)
         msg_box.setWindowTitle("Eksportuj zaznaczenie")
-        msg_box.setText(f"Wyeksportowano {len(formatted_stamps)} znaczników czasu.\n\nWybierz miejsce docelowe:")
+        msg_box.setText(f"Wyeksportowano {len(quoted_stamps)} znaczników czasu.\n\nWybierz miejsce docelowe:")
         msg_box.setIcon(QMessageBox.Icon.Question)
         
         btn_clipboard = msg_box.addButton("Kopiuj do schowka", QMessageBox.ButtonRole.ActionRole)
@@ -725,7 +726,6 @@ class MainWindow(QMainWindow):
         
         clicked_button = msg_box.clickedButton()
 
-        # 4. Wykonujemy wybraną akcję
         if clicked_button == btn_clipboard:
             clipboard = QApplication.clipboard()
             clipboard.setText(output_string)

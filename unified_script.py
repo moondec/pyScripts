@@ -57,9 +57,9 @@ Uruchamianie:
       -j, --jobs            (Opcjonalny) Liczba równoległych procesów. Domyślnie: liczba rdzeni CPU.
       --log-level           (Opcjonalny) Poziom logowania: DEBUG, INFO, WARNING, ERROR. Domyślnie: INFO.
       --output-format       (Opcjonalny) Format wyjściowy: 'sqlite', 'csv', 'both'. Domyślnie: 'sqlite'.
-      --no-cache            (Opcjonalny) Wyłącza użycie cache.
-      --run-tests           (Opcjonalny) Uruchamia tryb testowy do weryfikacji spójności wyników.
-      --overwrite           (Opcjonalny) Uruchamia tryb nadpisywania
+      --no-cache            (Opcjonalny) Wyłącza użycie cache. Ale nie nadpisze wyników. Zapisane wyniki mają priorytet.
+      --run-tests           (Opcjonalny) Uruchamia tryb testowy do weryfikacji spójności wyników. (do poprawy)
+      --overwrite           (Opcjonalny) Uruchamia tryb nadpisywania. Powinno być z '--no-cache' jeśli cache istnieje inaczej nie nadpisze.
     
     Przykłady użycia:
       # Przetwarzanie i zapis do bazy SQLite (domyślnie)

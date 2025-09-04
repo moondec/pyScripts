@@ -27,7 +27,7 @@ SET STATIONS=ME
 :: 4. Lista zmiennych do zwizualizowania (uzyj wzorcow z '*' na koncu)
 ::    Wybrano podstawowe zmienne: Temperatura, Promieniowanie krotkofalowe, PAR, Opad.
 :: SET "VARS_TO_PLOT="TA_*" "SW_IN_*" "PPFD_IN_*" "P_*""
-SET "VARS_TO_PLOT="SW_IN_*" "PPFD_IN_*""
+SET "VARS_TO_PLOT="SW_IN_*" "PPFD_IN_*" "PPFD_BC_IN_*""
 
 :: --- SEKCJA WYKONAWCZA ---
 

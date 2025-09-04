@@ -157,7 +157,7 @@ for /D %%D in ("%MEZYK_BASE_INPUT%\*") do (
 if defined TOP_DIRS_LIST (
     for %%F in (%MEZYK_TOP_FIDS%) do (
         echo. & echo --- Przetwarzam grupe Mezyk-TOP: %%F ---
-        python "%PYTHON_SCRIPT_PATH%" -i %TOP_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --log-level DEBUG  --db-path "%DB_OUTPUT_PATH%" --output-format both
+        python "%PYTHON_SCRIPT_PATH%" -i %TOP_DIRS_LIST% -o "%BASE_OUTPUT_PATH%\ME" -fid "%%F" --log-level DEBUG  --db-path "%DB_OUTPUT_PATH%" --output-format both --no-cache --overwrite 
     )
 ) else (
     echo Ostrzezenie: Nie znaleziono katalogow dla loggera Mezyk-TOP.
