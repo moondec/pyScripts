@@ -17,8 +17,8 @@ from pathlib import Path
 from config import *
 
 # --- STAŁE KONFIGURACYJNE ---
-INTERESUJACE_CZLONY = ["SW_IN_1_1_1", "SW_IN_1_2_1", "PPFD_IN_1_1_1", "PPFD_IN_1_2_1", "PPFD_IN_1_1_3", "PPFD_BC_IN_1_1_1", "PPFD_BC_IN_1_1_2"]
-ZMIENNE_RADIACYJNE = ["SW_IN_1_1_1", "SW_IN_1_2_1", "PPFD_IN_1_1_1", "PPFD_IN_1_2_1", "PPFD_IN_1_1_3", "PPFD_BC_IN_1_1_1", "PPFD_BC_IN_1_1_2"]
+INTERESUJACE_CZLONY = ["SW_IN_1_1_1", "SW_IN_1_1_1", "PPFD_IN_1_1_1", "PPFD_IN_1_1_2", "PPFD_IN_1_1_3", "PPFD_BC_IN_1_1_1", "PPFD_BC_IN_1_1_2"]
+ZMIENNE_RADIACYJNE = ["SW_IN_1_1_1", "SW_IN_1_1_1", "PPFD_IN_1_1_1", "PPFD_IN_1_1_2", "PPFD_IN_1_1_3", "PPFD_BC_IN_1_1_1", "PPFD_BC_IN_1_1_2"]
 
 RZEDY_SIATKI, KOLUMNY_SIATKI = 3, 4
 WYKRESOW_NA_STRONE = RZEDY_SIATKI * KOLUMNY_SIATKI
@@ -570,9 +570,17 @@ if __name__ == '__main__':
     profiler = SimpleProfiler()
     profiler.start('Całkowity czas wykonania')
     
-    sciezka_danych_csv = 'E:\\test_split\\ME'
-    sciezka_danych_mat = 'D:\\sites\\ME\\met-data_ME'
-    katalog_wyjsciowy = 'E:\\pdfy\\Porownanie_CSV_vs_MATLAB\\ME'
+    # sciezka_danych_csv = 'E:\\test_split\\ME'
+    # sciezka_danych_mat = 'D:\\sites\\ME\\met-data_ME'
+    # katalog_wyjsciowy = 'E:\\pdfy\\Porownanie_CSV_vs_MATLAB\\ME'
+    
+    # sciezka_danych_csv = 'E:\\test_split\\TL2'
+    # sciezka_danych_mat = 'D:\\sites\\TR2\\met-data_TR2'
+    # katalog_wyjsciowy = 'E:\\pdfy\\Porownanie_CSV_vs_MATLAB\\TL2'
+    
+    sciezka_danych_csv = 'E:\\test_split\\TL1'
+    sciezka_danych_mat = 'D:\\sites\\TR\\met-data_TR'
+    katalog_wyjsciowy = 'E:\\pdfy\\Porownanie_CSV_vs_MATLAB\\TL1'
     
     if not all([INTERESUJACE_CZLONY]):
         logging.error("Lista INTERESUJACE_CZLONY nie może być pusta!")

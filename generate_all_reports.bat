@@ -22,12 +22,13 @@ SET "BASE_OUTPUT_DIR=E:\pdfy\view_splitSQ"
 :: 3. Lista prefiksow stacji do przetworzenia (zgodnie z config.py)
 ::    (Mozesz dowolnie modyfikowac te liste, np. SET STATIONS=TU ME RZ)
 REM SET STATIONS=TU ME SA TL1 TL1a TL2 RZ BR
-SET STATIONS=ME
+SET STATIONS=TL1a TL1
 
 :: 4. Lista zmiennych do zwizualizowania (uzyj wzorcow z '*' na koncu)
 ::    Wybrano podstawowe zmienne: Temperatura, Promieniowanie krotkofalowe, PAR, Opad.
 :: SET "VARS_TO_PLOT="TA_*" "SW_IN_*" "PPFD_IN_*" "P_*""
 SET "VARS_TO_PLOT="SW_IN_*" "PPFD_IN_*" "PPFD_BC_IN_*""
+REM SET "VARS_TO_PLOT="SW_*" "PPFD*" "PPFD_BC_IN_*" "Sw_*""
 
 :: --- SEKCJA WYKONAWCZA ---
 

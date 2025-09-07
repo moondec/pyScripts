@@ -627,6 +627,14 @@ def matlab_to_datetime(matlab_datenum: float) -> datetime:
     """Konwertuje numer seryjny daty z MATLABa na obiekt datetime Pythona."""
     return datetime.fromordinal(int(matlab_datenum)) + timedelta(days=matlab_datenum % 1) - timedelta(days=366)
 
+def rename_group_id(group_id):
+    if group_id.startswith('TL1'):
+        return 'TR' + group_id[3:]
+    elif group_id.startswith('TL2'):
+        return 'TR2' + group_id[3:]
+    else:
+        return group_id
+        
 def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
     """
     (Wersja 3.2) Zawiera poprawki na warunek interwału (<= 5s) oraz
@@ -634,7 +642,7 @@ def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
     """
     group_id = config['file_id']
     main_input_path_str = config.get('main_input_path')
-    
+    group_id = rename_group_id(group_id)
     if not main_input_path_str:
         return pd.DataFrame()
 
@@ -645,6 +653,7 @@ def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
         base_project_path = Path(main_input_path_str).parent.parent
         matlab_base_path = base_project_path / f"met-data_{station_code.upper()}"
         data_path = matlab_base_path / str(year) / matlab_folder_name / "zero_level"
+        logging.debug(f"Ścieżka do .MAT: {data_path}")
     except Exception:
         return pd.DataFrame()
 
@@ -1593,9 +1602,11 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
 
             if group_id in GROUP_IDS_FOR_MATLAB_FILL:
                 matlab_df = load_matlab_data(int(year), config)
+                logging.debug(f"--- Odczytano .MAT dla roku: {int(year)} | Grupa: {group_id} ---")
                 if not matlab_df.empty:
                     matlab_df.set_index('TIMESTAMP', inplace=True)
                     combined_df = logger_data_df.combine_first(matlab_df).reset_index()
+                    logging.info(f"--- Dodano dane z .MAT dla roku: {int(year)} | Grupa: {group_id} ---")
                 else:
                     combined_df = logger_data_df.reset_index()
             else:
@@ -1929,13 +1940,17 @@ def main():
         # # --- KONIEC DEBUG ---
         
         # KROK KRYTYCZNY: 
-        # Wersja 1: (Sortuj pliki CSV według czasu ich modyfikacji)
-        # logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-        # unique_files.sort(key=lambda p: p.stat().st_mtime)
-        
-        # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
-        logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
-        unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
+        group_id = args.file_id
+        parts = group_id.split('_', 1)
+        station_code, _folder_name = parts
+        if 'ME' not in station_code:
+            # Wersja 1: (Sortuj pliki CSV według czasu ich modyfikacji)
+            logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
+            unique_files.sort(key=lambda p: p.stat().st_mtime)
+        else:
+            # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
+            logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
+            unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
                 
         # --- FILTRACJA: usuń pliki puste # oraz większe niż 0.4 MB --- (opcjonalne)
         filtered_files = []
