@@ -160,6 +160,7 @@ COLUMNS_TO_EXCLUDE_FROM_CSV = [
 
 # 2. Lista grup, gdzie dane są usupełniane z plików .MAT (Surowe dane niedostępne)
 GROUP_IDS_FOR_MATLAB_FILL = ['TL1_MET_30', 'TL1_RAD_30', 'TL1_SOIL_30', 'TL1_RAD_1', 'TL2_MET_1m', 'TL2_MET_30m', 'RZ_CSI_30', 'RZ_WET_30m']
+# GROUP_IDS_FOR_MATLAB_FILL = ['RZ_CSI_30', 'RZ_WET_30m']
 
 # 3. Koordynaty geograficzne stacji
 STATION_COORDINATES = {
@@ -183,8 +184,10 @@ STATION_COORDINATES = {
     'ME_CalPlates': {'lat': 52.836980, 'lon': 16.252285},
 
     # Tlen - precyzyjne rozróżnienie
-    'TL1_RAD_30min': {'lat': 53.634836, 'lon': 18.257957},      # Tlen1
-    'TL1_RAD_1min': {'lat': 53.634836, 'lon': 18.257957},       # Tlen1
+    'TL1_MET_30': {'lat': 53.634836, 'lon': 18.257957},      # Tlen1
+    'TL1_MET_1': {'lat': 53.634836, 'lon': 18.257957},       # Tlen1
+    'TL1_RAD_30': {'lat': 53.634836, 'lon': 18.257957},      # Tlen1
+    'TL1_RAD_1': {'lat': 53.634836, 'lon': 18.257957},       # Tlen1
     'TL1a_MET_30_dT': {'lat': 53.634, 'lon': 18.2561},          # Tlen1a
     'TL1a_Rain_down': {'lat': 53.634, 'lon': 18.2561},    # Tlen1a
     'TL1a_MET_1_dT': {'lat': 53.634, 'lon': 18.2561},           # Tlen1a
@@ -269,8 +272,8 @@ FILE_ID_MERGE_GROUPS = {
     'TL1_RAD_30': {"source_ids": ["Rad_TR_30min"], "interval": "30min"},
     'TL1_SOIL_30': {"source_ids": ["Soil_TR_30min"], "interval": "30min"},
     'TL1_RAD_1': {"source_ids": ["Rad_TR_1min"], "interval": "1min"},
-    # 'TL1_RAD_30min': { 'source_ids': [ 'TR_30min' ], 'interval': '30min' },
-    # 'TL1_RAD_1min': { 'source_ids': [ 'TR_1min' ], 'interval': '1min' },
+    # 'TL1_RAD_30': { 'source_ids': [ 'TR_30min' ], 'interval': '30min' },
+    # 'TL1_RAD_1': { 'source_ids': [ 'TR_1min' ], 'interval': '1min' },
     # Tlen1a
     'TL1a_MET_30_dT': {"source_ids": ["pom30m_"], "interval": "30min"},
     'TL1a_Rain_down_dT': {"source_ids": ["deszcz_d_"], "interval": "30min"},
@@ -495,7 +498,7 @@ MANUAL_TIME_SHIFTS = {
         # { "start": "2015-08-12 12:05:00", "end": "2016-01-12 01:00:00", "offset_hours": -0.2},
         # { "start": "2016-01-02 01:00:00", "end": "2055-03-19 11:49", "offset_hours": -2},
     ],
-    'TL1_RAD_30min' : 'TL1_MTSHIFT', 'TL1_RAD_1min' : 'TL1_MTSHIFT',
+    'TL1_RAD_30' : 'TL1_MTSHIFT', 'TL1_RAD_1' : 'TL1_MTSHIFT',
 
     'TL1_dT_MTSHIFT': [
         # { "start": "2021-11-03 01:00:00", "end": "2055-01-26 21:00", "offset_hours": 0},
@@ -527,7 +530,7 @@ CALIBRATION_RULES_BY_STATION = {
             {'start': '2018-08-08 13:30:00', 'end': '2018-11-17 12:00:00', 'multiplier': 1, 'addend': -650, 'reason': 'LQA3028 - stara korekta'},
             {'start': '2018-11-13 23:00:00', 'end': '2058-11-13 23:00:00', 'multiplier': 3288.716, 'addend': 0, 'reason': 'LQA3028, (data in umol/m2/s1)'},
             {'start': '2019-09-01 19:30:00', 'end': '2019-09-13 06:00:00', 'multiplier': 1, 'addend': -230, 'reason': 'LQA3028 - korekta'},
-        ]
+        ],
     },
     'MEZYK_DOWN_CAL': {
         # Wszystkie reguły dla JEDNEJ kolumny muszą być w JEDNEJ liście
@@ -595,27 +598,50 @@ CALIBRATION_RULES_BY_STATION = {
             {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 81.5, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
         ],
         'LW_IN_1_1_1': [
-            {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 86.505, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
+        {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'type': 'formula', 'expression': 'LW_IN_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 86.505}}
         ],
         'LW_OUT_1_1_1': [
-            {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'multiplier': 88.810, 'addend': 0, 'reason': 'CNR4 (data in W/m2)'},
-        ]
+        {'start': '2018-08-09 04:30:00', 'end': '2018-11-15 12:00:00', 'type': 'formula', 'expression': 'LW_OUT_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 88.810}}
+        ],
     },
     ## Tlen1 old site added by Klaudia- 19.07.2025
     'TL1_CAL': {
-	#Radiation fluxes- NR01
-        'SW_IN_1_1_1' : [
-            {'start':  '2013-04-25 17:30:00', 'end' : '2014-07-09 17:30:00', 'multiplier': 1.1658, 'addend': 0, 'reason': '%zmiana programu Campbel CR1000- NR01 poprawne współczynniki i lokalizacja kanałów pomiarowych'},
+	#Radiation fluxes- NR01 2014-06-17 08:00:00
+      # RAD_30$SWin_1_1_1_Avg[ir] <- (Rs_old[ir] / 74.074) * 86.356
+      # RAD_30$LWin_1_1_1_Avg[ir] <- (-SWout_old[ir] / 69.93) * 90.744
+      # RAD_30$LWout_1_1_1_Avg[ir] <- (LWout_old[ir] / 91.743) * 89.445
+      # RAD_30$SWout_1_1_1_Avg[ir] <- (LWin_old[ir] / 95.238) * 66.05
+        '_SWAP_RADIATION': [
+            {
+                'start': '2000-01-01 00:00:00', 
+                'end': '2014-07-09 14:30:00',
+                'type': 'formula_swap',
+                # Definicja zamiany kanałów: nowa_nazwa: stara_nazwa_lub_formuła
+                'swaps': {
+                    'SW_IN_1_1_1_new': '(SW_IN_1_1_1 / 74.074) * 86.356',
+                    # 'LW_IN_1_1_1_new': '(-SW_OUT_1_1_1 / 69.93) * 90.744 )',
+                    # 'LW_OUT_1_1_1_new': '(LW_OUT_1_1_1/ 91.743) * 89.445 )',
+                    'LW_IN_1_1_1_new': '(-SW_OUT_1_1_1 / 69.93) * 90.744 + (5.67e-8 * ((TA_1_1_2 + 273.15)**4))',
+                    'LW_OUT_1_1_1_new': '(LW_OUT_1_1_1/ 91.743) * 89.445 + (5.67e-8 * ((TA_1_1_2 + 273.15)**4))',
+                    'SW_OUT_1_1_1_new': '(LW_IN_1_1_1 / 95.238) * 66.05'
+                },
+                # Definicja ostatecznego mapowania nazw
+                'final_mapping': {
+                    'SW_IN_1_1_1': 'SW_IN_1_1_1_new',
+                    'LW_IN_1_1_1': 'LW_IN_1_1_1_new',
+                    'LW_OUT_1_1_1': 'LW_OUT_1_1_1_new',
+                    'SW_OUT_1_1_1': 'SW_OUT_1_1_1_new'
+                }
+            }
         ],
-        'SW_OUT_1_1_1' : [
-            {'start':  '2013-04-25 17:30:00', 'end' : '2014-07-09 17:30:00', 'multiplier': 0.6935, 'addend': 0, 'reason': '%zmiana programu Campbel CR1000- NR01 poprawne współczynniki i lokalizacja kanałów pomiarowych'},
+        'LW_IN_1_1_1': [
+        {'start': '2014-07-09 14:31:00', 'end' : '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_IN_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
         ],
-    	'LW_IN_1_1_1' : [
-            {'start':  '2013-04-25 17:30:00', 'end' : '2014-07-09 17:30:00', 'multiplier': 1.2976, 'addend': 0, 'reason': '%zmiana programu Campbel CR1000- NR01 poprawne współczynniki i lokalizacja kanałów pomiarowych'},
+        'LW_OUT_1_1_1': [
+        {'start': '2014-07-09 14:31:00', 'end' : '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_OUT_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
         ],
-        'LW_OUT_1_1_1' : [
-            {'start':  '2013-04-25 17:30:00', 'end' : '2014-07-09 17:30:00', 'multiplier': 0.9750, 'addend': 0, 'reason': '%zmiana programu Campbel CR1000- NR01 poprawne współczynniki i lokalizacja kanałów pomiarowych'},
-        ],
+    },
+    'TL1_SOIL_CAL': {
 	#Soil heat flux measurements
         'G_1_1_1': [
             {'start': '2013-04-25 17:30:00', 'end': '2014-06-17 08:00:00', 'multiplier': 16.07, 'addend': 0, 'reason': '%zmiana programu Campbel CR1000 -współczynniki do płytek glebowych'},
@@ -645,11 +671,11 @@ CALIBRATION_RULES_BY_STATION = {
             {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-13 09:30:00', 'multiplier': 70.423, 'addend': 8, 'reason': 'NR01 (data in W/m2)'},
             {'start':  '2018-11-13 09:31:00', 'end' : '2048-11-13 09:30:00', 'multiplier': 1, 'addend': 8, 'reason': 'NR01 (data in W/m2)'},
         ],
-        'LW_IN_2_1_1' : [
-            {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-13 09:30:00', 'multiplier': 70.522, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
+        'LW_IN_2_1_1': [
+        {'start': '2014-07-08 09:30:00', 'end' : '2018-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_IN_2_1_1 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)','constants': {'multiplier': 70.522}, 'reason': 'NR01 (data in W/m2)'}
         ],
-        'LW_OUT_2_1_1' : [
-            {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-13 09:30:00', 'multiplier': 68.446, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
+        'LW_OUT_2_1_1': [
+        {'start': '2014-07-08 09:30:00', 'end' : '2018-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_OUT_2_1_1 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)','constants': {'multiplier': 68.446}, 'reason': 'NR01 (data in W/m2)'}
         ],
         'PPFD_IN_2_1_1' : [
             {'start':  '2014-07-08 09:30:00', 'end' : '2019-08-06 09:30:00', 'multiplier': 210.970, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
@@ -686,11 +712,11 @@ CALIBRATION_RULES_BY_STATION = {
         'SW_OUT_1_1_2' : [
             {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 76.394, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
         ],
-        'LW_IN_1_1_2' : [
-            {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 70.671, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
+        'LW_IN_1_1_2': [
+        {'start': '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'type': 'formula', 'expression': 'LW_IN_1_1_2 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)','constants': {'multiplier': 70.671}, 'reason': 'NR01 (data in W/m2)'}
         ],
-        'LW_OUT_1_1_2' : [
-            {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 72.886, 'addend': 0, 'reason': 'NR01 (data in W/m2)'},
+        'LW_OUT_1_1_2': [
+        {'start': '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'type': 'formula', 'expression': 'LW_OUT_1_1_2 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)','constants': {'multiplier': 72.886}, 'reason': 'NR01 (data in W/m2)'}
         ],
         'PPFD_IN_1_1_2' : [
             {'start':  '2014-07-08 09:30:00', 'end' : '2018-11-16 12:30:00', 'multiplier': 213.675, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
@@ -703,6 +729,23 @@ CALIBRATION_RULES_BY_STATION = {
         ],
         'PPFD_BC_IN_1_1_2': [
             {'start': '2018-08-01 13:09:00', 'end': '2019-08-14 10:00:00', 'multiplier': 3491.25, 'addend': 0, 'reason': 'LQA3014, (data in umol/m2/s1)'},
+        ],
+    },
+    'SA_CAL': {
+        'SWC_1_1_1' : [
+            {'start':  '2014-07-08 09:30:00', 'end' : '2118-11-16 12:30:00', 'multiplier': 100, 'addend': 0, 'reason': 'SWC (data in %)'},
+        ],
+        'SWC_2_1_1' : [
+            {'start':  '2014-07-08 09:30:00', 'end' : '2118-11-16 12:30:00', 'multiplier': 100, 'addend': 0, 'reason': 'SWC (data in %)'},
+        ],
+        'SWC_3_1_1' : [
+            {'start':  '2014-07-08 09:30:00', 'end' : '2118-11-16 12:30:00', 'multiplier': 100, 'addend': 0, 'reason': 'SWC (data in %)'},
+        ],
+        'SWC_4_1_1' : [
+            {'start':  '2014-07-08 09:30:00', 'end' : '2118-11-16 12:30:00', 'multiplier': 100, 'addend': 0, 'reason': 'SWC (data in %)'},
+        ],
+        'SWC_5_1_1' : [
+            {'start':  '2014-07-08 09:30:00', 'end' : '2118-11-16 12:30:00', 'multiplier': 100, 'addend': 0, 'reason': 'SWC (data in %)'},
         ],
     }
 }
@@ -718,10 +761,10 @@ STATION_MAPPING_FOR_CALIBRATION = {
     'ME_Rain_down' : 'MEZYK_DOWN_CAL',
     'ME_CalPlates' : 'MEZYK_DOWN_CAL',
     # Tlen1 old site added by Klaudia- 19.07.2025
-    'TL1_RAD_30min' : 'TL1_CAL',
-    'TL1_RAD_1min' : 'TL1_CAL',
-    'TL1_MET_30': 'TL1_CAL',
-    'TL1_SOIL_30': 'TL1_CAL',
+    'TL1_RAD_30' : 'TL1_CAL',
+    'TL1_RAD_1' : 'TL1_CAL',
+    # 'TL1_MET_30': 'TL1_CAL',
+    'TL1_SOIL_30': 'TL1_SOIL_CAL',
     # Tlen1a site - dataTacker measurements (03.08.2018- 12.06.2024)
     'TL1a_MET_30_dT' : 'TL1adT_CAL',
     'TL1a_MET_1_dT' : 'TL1adT_CAL',
@@ -731,6 +774,8 @@ STATION_MAPPING_FOR_CALIBRATION = {
     # Tlen2 site - "new" tower - dataTacker measurements (01.08.2018- 26.06.2024)
     'TL2_MET_1_dT' : 'TL2dT_CAL',
     'TL2_MET_30_dT' : 'TL2dT_CAL',
+    'SA_MET_1min': 'SA_CAL',
+    'SA_MET_30min': 'SA_CAL',
 }
 
 # 8. SŁOWNIK FLAG JAKOŚCI
@@ -1070,7 +1115,15 @@ QUALITY_FLAGS['ME_TOP_QF']['PPFD_IN_1_1_1'].extend(new_records_ME_TOP)
 # Wynikowy JSON
 # print(json.dumps(QUALITY_FLAGS['ME_TOP_QF'], ensure_ascii=False, indent=2))
 
-# 9. Mapowanie nazw zmiennych. Zmienia nazwy zmiennych z oryginalnych w loggerze na FLUXNET
+# 9. Mapowanie nazw zmiennych. Zmienia nazwy zmiennych z oryginalnych w loggerze na FLUXNET _H_V_R
+# https://fluxnet.org/data/aboutdata/data-variables/
+# Horizontal position (H): same value identifies the same position in the horizontal plane. 
+# For example all the variables associated to sensors in a vertical profile would have the same H qualifier.
+
+# Vertical position (V): indexes must be in order, starting from the highest (for example V=1 
+# for the highest temperature sensor of a profile or for the higher, i.e. more superficial, 
+# soil temperature sensor in a profile). The indexes are assigned on the basis of the relative 
+# position for each vertical profile separately.
 COLUMN_MAPPING_RULES = {
     'TUCZNO_MAP': {
         # 'Fc_wpl': 'FC_1_1_1',
@@ -1197,11 +1250,13 @@ COLUMN_MAPPING_RULES = {
         'LWin_1_2_1': 'LW_IN_1_1_1', # CNR4
         'LWout_1_2_1': 'LW_OUT_1_1_1', # CNR4
         'Rn_1_2_1': 'RN_1_1_1', # CNR4
-        'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_1_1_1', #
-        'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_1_1_2', #
+        # 'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_1_1_1', #
+        # 'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_1_1_2', #
         'TA_2_2_1': 'TA_1_1_2', # CNR4
-        'P_1_1_1': 'P_1_2_1', # Dolny
-        'P_2_1_1': 'P_1_1_1', # Górny
+        # deszczomierze korytkowe
+        'P_1_2_1': 'P_1_1_2',
+        'P_1_3_1': 'P_1_1_3',
+        'P_1_4_1': 'P_1_1_4',
         # 'RTD_1_AV (degC)': 'TS_6_1_1',
         # 'RTD_2_AV (degC)': 'TS_6_2_1',
         # 'RTD_3_AV (degC)': 'TS_7_1_1',
@@ -1213,6 +1268,14 @@ COLUMN_MAPPING_RULES = {
         # 'RTD_9_AV (degC)': 'TS_10_1_1',
         # 'RTD_10_AV (degC)': 'TS_10_2_1',
         # SWC, G i TS zdefiniowane poprawnie w loggerze - bez mapowania nazw
+    },
+    'MEZYK_Prec_down_MAP': {
+        'Precipitationamountmm': 'P_1_2_1', # Dolny
+        'Precipitation amount [mm': 'P_1_2_1', # Dolny
+    },
+    'MEZYK_Prec_top_MAP': {
+        'Precipitationamountmm': 'P_1_1_1', # Górny
+        'Precipitation amount [mm': 'P_1_1_1', # Górny
     },
     'SARBIA_MAP': {
         'PPFDR_1_1_1': 'PPFD_OUT_1_1_1', # APOGE
@@ -1253,17 +1316,6 @@ COLUMN_MAPPING_RULES = {
     },
     # Tlen1 old site added by Klaudia- 19.07.2025
     'TLEN1_MAP': {
-	    #Radiation – BF3H /BF5sensors (PPFD) operated on and off from 25-Apr-2013 17:30:00 until 12-Aug-2019 and
-        #SKP (PPFD_2_1_1_Avg) operated from 13-Jan-2014 10:30:00 until the end of the meteo instruments operation- demounted on 14-Nov-2022.
-        'PPFD_1_1_1_Avg':'PPFD_IN_1_1_1',  # BF3/BF5 incoming direct PPDF
-        'PPFDd_1_1_1_Avg': 'PPFD_DIF_1_1_1', # BF3/BF5 incoming diffused PPDF
-        'PPFD_2_1_1_Avg': 'PPFD_IN_1_1_2',  #SKP215 incoming direct PPDF
-        'PPFDr_1_1_1_Avg': 'PPFD_OUT_1_1_1',  #SKP215 reflected PPDF
-        #NR01 4-component net radiometer measurements
-        'SWin_1_1_1_Avg': 'SW_IN_1_1_1', # NR01
-        'SWout_1_1_1_Avg': 'SW_OUT_1_1_1', # NR01
-        'LWin_1_1_1_Avg': 'LW_IN_1_1_1', # NR01
-        'LWout_1_1_1_Avg': 'LW_OUT_1_1_1', # NR01
         # Soil heat plates Hukseflux HFP 01
         'G_1_1_1_Avg': 'G_1_1_1',
         'G_2_1_1_Avg': 'G_1_1_2',
@@ -1294,6 +1346,26 @@ COLUMN_MAPPING_RULES = {
         'RH_1_1_1_Avg': 'RH_1_1_1',  # HMP 155 air temp. at 2m above ground
         'Ta_1_2_1_Avg': 'TA_1_2_1',  # HMP 155 air temp. at 30cm above ground
         'RH_1_2_1_Avg': 'RH_1_2_1',  # HMP 155 air temp. at 30cm above ground
+        },
+    'TLEN1_RAD_MAP': {
+	    #Radiation – BF3H /BF5sensors (PPFD) operated on and off from 25-Apr-2013 17:30:00 until 12-Aug-2019 and
+        #SKP (PPFD_2_1_1_Avg) operated from 13-Jan-2014 10:30:00 until the end of the meteo instruments operation- demounted on 14-Nov-2022.
+        'PPFD_1_1_1_Avg':'PPFD_IN_1_1_1',  # BF3/BF5 incoming direct PPDF
+        'PPFDd_1_1_1_Avg': 'PPFD_DIF_1_1_1', # BF3/BF5 incoming diffused PPDF
+        'PPFD_2_1_1_Avg': 'PPFD_IN_1_1_2',  #SKP215 incoming direct PPDF
+        'PPFDr_1_1_1_Avg': 'PPFD_OUT_1_1_1',  #SKP215 reflected PPDF
+        #NR01 4-component net radiometer measurements
+        'SWin_1_1_1_Avg': 'SW_IN_1_1_1', # NR01
+        'SWout_1_1_1_Avg': 'SW_OUT_1_1_1', # NR01
+        'LWin_1_1_1_Avg': 'LW_IN_1_1_1', # NR01
+        'LWout_1_1_1_Avg': 'LW_OUT_1_1_1', # NR01
+        'NR01TC_Avg': 'TA_1_1_2', # NR01
+        # SKR
+        'MSR_Avg' : 'MSR_1_1_1',
+        'NDVI_Avg' : 'NDVI_1_1_1',
+        'PRI_Avg': 'PRI_1_1_1',
+        'SAVI_Avg': 'SAVI_1_1_1',
+        'SR_Avg': 'SR_1_1_1',
         },
     'TLEN1a_MAP': {
         'PPFDr_1_2_1': 'PPFD_OUT_2_1_1', # PQS
@@ -1357,7 +1429,8 @@ COLUMN_MAPPING_RULES = {
         'TS_3_1_1_Avg': 'TS_2_1_3',
         'TS_4_1_1_Avg': 'TS_2_1_4',
         'TS_5_1_1_Avg': 'TS_2_1_5',
-        'Precipitationamountmm': 'P_2_1_1'
+        'Precipitationamountmm': 'P_2_1_1',
+        'Precipitation amount [mm': 'P_2_1_1',
         },
         ## Tlen2 "old" tower added by Klaudia- 19.07.2025
     'TLEN2_MAP': {
@@ -1377,6 +1450,8 @@ COLUMN_MAPPING_RULES = {
         'LWin_1_2_1': 'LW_IN_1_1_2', # CNR4
         'LWout_1_2_1': 'LW_OUT_1_1_2', # CNR4
         'Rn_1_2_1': 'RN_1_1_2', # CNR4
+        'Ta_2_2_1_Avg': 'TA_2_1_2', # CNR4
+        'TA_2_2_1': 'TA_2_1_2', # CNR4
         # Soil heat plates Hukseflux HFP 01
         'G_1_1_1_Avg': 'G_1_1_1',
         'G_2_1_1_Avg': 'G_2_1_1',
@@ -1432,16 +1507,16 @@ STATION_MAPPING_FOR_COLUMNS = {
     'ME_TOP_MET_1min': 'MEZYK_MAP',
     'ME_DOWN_MET_30min': 'MEZYK_MAP',
     'ME_DOWN_MET_1min': 'MEZYK_MAP',
-    'ME_Rain_down': 'MEZYK_MAP',
-    'ME_Rain_top': 'MEZYK_MAP',
+    'ME_Rain_down': 'MEZYK_Prec_down_MAP',
+    'ME_Rain_top': 'MEZYK_Prec_top_MAP',
     # ----- SARBIA -----
     'SA_MET_30min': 'SARBIA_MAP',
     'SA_MET_1min': 'SARBIA_MAP',
     # ----- TLEN1 -----
     'TL1_MET_30' : 'TLEN1_MAP',
     'TL1_SOIL_30' : 'TLEN1_MAP',
-    'TL1_RAD_30' : 'TLEN1_MAP',
-    'TL1_RAD_1' : 'TLEN1_MAP',
+    'TL1_RAD_30' : 'TLEN1_RAD_MAP',
+    'TL1_RAD_1' : 'TLEN1_RAD_MAP',
     # ----- TLEN1a -----
     'TL1a_MET_30_dT': 'TLEN1a_MAP',
     'TL1a_Rain_down_dT': 'TLEN1a_MAP',

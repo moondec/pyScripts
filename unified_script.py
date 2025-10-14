@@ -688,15 +688,39 @@ def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
             var_files = [f for f in data_path.glob('*.mat') if not f.name.startswith('tv')]
             matlab_data = {'TIMESTAMP': timestamps}
             
+            time_file_name_stem = "tv" if not month else f"tv_{month:02d}"
+            
             for var_file in var_files:
                 var_name = var_file.stem
-                if month and not var_name.endswith(f"_{month:02d}"): continue
-                
                 clean_var_name = var_name.rsplit('_', 1)[0] if month else var_name
-                mat_contents = loadmat(var_file)
+
+                # Pomiń pliki wektora czasu w tej pętli, przetworzyliśmy je wcześniej
+                if clean_var_name == 'tv':
+                    continue
+
+                try:
+                    mat_contents = loadmat(var_file)
+                except Exception as e:
+                    logging.warning(f"Nie można odczytać pliku {var_file.name}, pomijam. Błąd: {e}")
+                    continue
+
                 data_key = next((k for k in mat_contents if not k.startswith('__')), None)
                 if data_key:
-                    data = mat_contents[data_key].flatten()
+                    data_array = mat_contents[data_key]
+
+                    # Sprawdź, czy tablica jest 2-wymiarowa i ma więcej niż 1 kolumnę
+                    if data_array.ndim == 2 and data_array.shape[1] > 1:
+                        if len(timestamps) == data_array.shape[0]:
+                             # Scenariusz 1: Liczba wierszy pasuje do wektora czasu - prawdopodobnie dane są w kolumnach
+                             logging.warning(f"Plik {var_file.name} zawiera {data_array.shape[1]} kolumn. Wybieram ostatnią.")
+                             data = data_array[:, -1]
+                        else:
+                             # Scenariusz 2: Liczba wierszy nie pasuje - prawdopodobnie dane są w wierszach
+                             logging.warning(f"Plik {var_file.name} ma wymiary {data_array.shape}, ale wygląda na wierszowy. Spłaszczam.")
+                             data = data_array.flatten()
+                    else:
+                        data = data_array.flatten()
+                    
                     matlab_data[clean_var_name] = data
             
             monthly_dfs.append(pd.DataFrame(matlab_data))
@@ -786,30 +810,107 @@ def apply_manual_time_shifts(df: pd.DataFrame, file_id: str) -> pd.DataFrame:
             logging.warning(f"Błąd reguły manualnej dla '{file_id}': {e}.")
     return df_out
 
+# W unified_script.py - ZASTĄP CAŁĄ TĘ FUNKCJĘ
+
+# W unified_script.py - ZASTĄP CAŁĄ TĘ FUNKCJĘ
+
 def apply_calibration(df: pd.DataFrame, file_id: str) -> pd.DataFrame:
-    """(Wersja 2.0) Poprawiona, aby działać na naiwnych znacznikach czasu."""
+    """
+    (Wersja Ostateczna) Stosuje reguły kalibracyjne z gwarancją, że dane
+    spoza zdefiniowanego okresu pozostają nietknięte.
+    """
     station_name = STATION_MAPPING_FOR_CALIBRATION.get(file_id)
     if not station_name or station_name not in CALIBRATION_RULES_BY_STATION:
         return df
-    
+
     column_rules = CALIBRATION_RULES_BY_STATION[station_name]
     df_calibrated = df.copy()
+
+    # Przetwarzanie specjalnych reguł (np. _SWAP_RADIATION)
     for col_name, rules_list in column_rules.items():
+        if not col_name.startswith('_'):
+            continue
+        
+        for rule in rules_list:
+            if rule.get('type') == 'formula_swap':
+                try:
+                    start_ts = pd.to_datetime(rule['start'])
+                    end_ts = pd.to_datetime(rule['end'])
+                    mask = (df_calibrated['TIMESTAMP'] >= start_ts) & (df_calibrated['TIMESTAMP'] <= end_ts)
+                    
+                    if not mask.any():
+                        continue
+
+                    logging.info(f"Stosowanie reguły zamiany kanałów '{col_name}' dla grupy '{file_id}'.")
+
+                    # --- POCZĄTEK NOWEJ, BEZPIECZNEJ I UPROSZCZONEJ LOGIKI ---
+
+                    # Krok 1: Obliczenia w tle (do kolumn tymczasowych)
+                    # Obliczamy nowe wartości i zapisujemy je w osobnych, tymczasowych kolumnach.
+                    # Jest to niezbędne, aby wszystkie formuły w regule używały spójnych danych wejściowych.
+                    swaps = rule.get('swaps', {})
+                    temp_cols = list(swaps.keys())
+                    for temp_col, expression in swaps.items():
+                        df_calibrated.loc[mask, temp_col] = df_calibrated.loc[mask].eval(expression)
+
+                    # Krok 2: PRECYZYJNE WSTAWIENIE DANYCH
+                    # Bezpośrednio przypisujemy obliczone wartości do docelowych kolumn,
+                    # ale tylko dla wierszy objętych maską czasową.
+                    final_mapping = rule.get('final_mapping', {})
+                    for final_col, temp_col in final_mapping.items():
+                        if final_col in df_calibrated.columns and temp_col in df_calibrated.columns:
+                            # To jest najbardziej bezpośrednia i bezpieczna metoda w pandas.
+                            # Mówi ona: "dla kolumny `final_col`, w wierszach `mask`,
+                            # wstaw wartości z kolumny `temp_col` z tych samych wierszy `mask`".
+                            df_calibrated.loc[mask, final_col] = df_calibrated.loc[mask, temp_col]
+
+                    # Krok 3: Bezpieczne usunięcie kolumn tymczasowych
+                    # Po wstawieniu danych, tymczasowe kolumny są już niepotrzebne.
+                    df_calibrated.drop(columns=temp_cols, inplace=True, errors='ignore')
+
+                    # --- KONIEC NOWEJ LOGIKI ---
+
+                except Exception as e:
+                    logging.warning(f"Błąd reguły zamiany kanałów '{col_name}': {e}", exc_info=True)
+
+    # Przetwarzanie standardowych reguł kalibracyjnych (bez zmian, ta część działała poprawnie)
+    for col_name, rules_list in column_rules.items():
+        if col_name.startswith('_'):
+            continue
+
         if col_name not in df_calibrated.columns:
             continue
-        df_calibrated[col_name] = pd.to_numeric(df_calibrated[col_name], errors='coerce')
+
         for rule in rules_list:
             try:
-                # Tworzymy naiwne daty do porównania
                 start_ts = pd.to_datetime(rule['start'])
                 end_ts = pd.to_datetime(rule['end'])
-                multiplier = float(rule.get('multiplier', 1.0))
-                addend = float(rule.get('addend', 0.0))
                 mask = (df_calibrated['TIMESTAMP'] >= start_ts) & (df_calibrated['TIMESTAMP'] <= end_ts)
-                if mask.any():
+                
+                if not mask.any():
+                    continue
+
+                rule_type = rule.get('type', 'simple')
+
+                if rule_type == 'simple':
+                    df_calibrated[col_name] = pd.to_numeric(df_calibrated[col_name], errors='coerce')
+                    multiplier = float(rule.get('multiplier', 1.0))
+                    addend = float(rule.get('addend', 0.0))
                     df_calibrated.loc[mask, col_name] = (df_calibrated.loc[mask, col_name] * multiplier) + addend
+                
+                elif rule_type == 'formula':
+                    expression = rule.get('expression')
+                    if not expression:
+                        continue
+                    
+                    constants = rule.get('constants', {})
+                    df_calibrated.loc[mask, col_name] = df_calibrated[mask].eval(
+                        expression,
+                        local_dict=constants
+                    )
             except Exception as e:
-                logging.warning(f"Błąd reguły kalibracji dla '{col_name}': {e}.")
+                logging.warning(f"Błąd standardowej reguły kalibracji dla '{col_name}': {e}")
+
     return df_calibrated
 
 def apply_value_range_flags(df: pd.DataFrame) -> pd.DataFrame:
@@ -1303,7 +1404,10 @@ def _enforce_numeric_types(df: pd.DataFrame) -> pd.DataFrame:
     Wymusza konwersję kolumn na typ numeryczny, ze specjalnym traktowaniem kolumn flag.
     Wersja 7.13: Dodano agresywną konwersję kolumn '_flag' na typ integer.
     """
-    cols_to_skip = ['TIMESTAMP', 'group_id', 'source_file', 'interval', 'TZ', '5M METAR Tab.4678', '1M METAR Tab.4678', '5MMETARTab4678', '1MMETARTab4678', 'source_filename', 'source_filepath']
+    cols_to_skip = ['TIMESTAMP', 'group_id', 'source_file', 'interval', 'TZ', '5M METAR Tab.4678', 
+    '1M METAR Tab.4678', '5MMETARTab4678', '1MMETARTab4678', 'source_filename', 
+    'source_filepath', 'http_header' , 'http_post_response', 'http_post_tx', 'file_handle', 
+    'OSSignature', 'OSDate', 'OSVersion', 'ProgName', 'RevBoard']
 
     for col in df.columns:
         if col in cols_to_skip:
@@ -1602,32 +1706,55 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
 
             if group_id in GROUP_IDS_FOR_MATLAB_FILL:
                 matlab_df = load_matlab_data(int(year), config)
-                logging.debug(f"--- Odczytano .MAT dla roku: {int(year)} | Grupa: {group_id} ---")
                 if not matlab_df.empty:
+                    # --- POCZĄTEK KLUCZOWEJ ZMIANY ---
+                    # Krok 1: Scal duplikaty w danych z MAT, zanim cokolwiek innego z nimi zrobisz.
+                    if matlab_df.columns.duplicated().any():
+                        logging.info(f"Scalanie zduplikowanych kolumn w danych .MAT dla roku {int(year)}...")
+                        matlab_df = matlab_df.T.groupby(level=0).first().T
+                        # Upewnij się, że TIMESTAMP jest poprawnym typem po transpozycji
+                        if 'TIMESTAMP' in matlab_df.columns:
+                             matlab_df['TIMESTAMP'] = pd.to_datetime(matlab_df['TIMESTAMP'], errors='coerce')
+
+                    # Krok 2: Ustaw indeks i dopiero teraz bezpiecznie połącz z danymi z loggera
                     matlab_df.set_index('TIMESTAMP', inplace=True)
                     combined_df = logger_data_df.combine_first(matlab_df).reset_index()
-                    logging.info(f"--- Dodano dane z .MAT dla roku: {int(year)} | Grupa: {group_id} ---")
+                    # --- KONIEC KLUCZOWEJ ZMIANY ---
+                    logging.info(f"--- Uzupełniono/zastąpiono dane z .MAT dla roku: {int(year)} ---")
                 else:
                     combined_df = logger_data_df.reset_index()
             else:
                 combined_df = logger_data_df.reset_index()
 
+            if combined_df.empty:
+                continue
+
+            # Krok A: Zastosuj mapowanie nazw. Może to utworzyć duplikaty.
             mapped_df = apply_column_mapping(combined_df, config)
 
+            # Krok B: Centralne i jedyne miejsce scalania duplikatów.
             if mapped_df.columns.duplicated().any():
+                logging.info(f"Scalanie zduplikowanych kolumn po mapowaniu dla roku {int(year)}...")
                 mapped_df = mapped_df.T.groupby(level=0).first().T
-                mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
-                mapped_df = _enforce_numeric_types(mapped_df)
-                mapped_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                
+                # Przywróć TIMESTAMP i typy danych
+                if 'TIMESTAMP' in mapped_df.columns:
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
+                else:
+                    mapped_df.reset_index(inplace=True)
+                    mapped_df.rename(columns={'index': 'TIMESTAMP'}, inplace=True)
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
 
+                mapped_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                mapped_df = _enforce_numeric_types(mapped_df)
+                logging.info("Scalanie zakończone.")
+            
+            # Krok C: Oczyszczenie nazw kolumn.
             mapped_df = _sanitize_column_names(mapped_df)
             if mapped_df.empty: continue
 
-            # --- POCZĄTEK KLUCZOWEJ ZMIANY ---
-            # Defragmentacja ramki danych zaraz po jej finalnym ustrukturyzowaniu.
-            # To zapobiega ostrzeżeniom w kolejnych funkcjach i poprawia ich wydajność.
+            # Teraz ramka jest gotowa do dalszych operacji
             corrected_df = mapped_df.copy()
-            # --- KONIEC KLUCZOWEJ ZMIANY ---
 
             corrected_df['TIMESTAMP'] = apply_timezone_correction(corrected_df['TIMESTAMP'], config['file_id'])
             corrected_df.dropna(subset=['TIMESTAMP'], inplace=True)
@@ -1639,11 +1766,13 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
             corrected_df = apply_quality_flags(corrected_df, config)
             corrected_df = apply_manual_overrides(corrected_df, config)
             corrected_df = align_timestamp(corrected_df, config.get('interval'))
+            # corrected_df = _enforce_numeric_types(corrected_df)
             corrected_df = _ensure_flag_columns_exist(corrected_df)
-            corrected_df = _enforce_numeric_types(corrected_df)
             corrected_df = corrected_df.copy()
             corrected_df = _filter_future_timestamps(corrected_df)
-            
+            # corrected_df.drop_duplicates(subset=['TIMESTAMP'], keep='last', inplace=True)
+            # corrected_df.reset_index(drop=True, inplace=True)
+
             output_format = config.get('output_format', 'sqlite')
             if output_format in ['sqlite', 'both']:
                 save_dataframe_to_sqlite(corrected_df, config, lock)
