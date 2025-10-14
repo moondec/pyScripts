@@ -1,0 +1,28 @@
+# Nazwa środowiska Conda
+name: moj-projekt-srodowisko
+
+# Kanały, z których pobierane będą pakiety (kolejność ma znaczenie)
+channels:
+  - conda-forge
+  - defaults
+
+# Lista zależności
+dependencies:
+  # Wersja Pythona
+  - python=3.10
+
+  # Główne zależności projektu
+  - numpy
+  - pandas
+  - sqlalchemy
+  - scipy
+  - tqdm
+
+  # Zależności deweloperskie i do testowania
+  - pytest
+
+  # Sekcja dla pakietów, które nie są dostępne w kanałach Conda
+  # i muszą być zainstalowane przez pip.
+  # Na ten moment wszystkie Twoje zależności są w Conda.
+  # - pip:
+  #   - jakis-pakiet-z-pypi
