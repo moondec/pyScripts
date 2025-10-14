@@ -1,4 +1,4 @@
-import json
+import json  # noqa: F401
 from datetime import datetime, timedelta
 # --- POCZĄTEK SEKCJI KONFIGURACJI ---
 
@@ -415,7 +415,6 @@ TIMEZONE_CORRECTIONS = {
      'ME_DOWN_MET_30min' : 'ME_TZSHIFT',
      'ME_Rain_down' : 'ME_TZSHIFT',
      'ME_DOWN_MET_1min' : 'ME_TZSHIFT',
-     'ME_DOWN_MET_30min' : 'ME_TZSHIFT',
      'ME_Rain_top' : 'ME_TZSHIFT',
      'ME_CalPlates' : 'ME_TZSHIFT',
      'ME_MET_10m' : 'ME_TZSHIFT',
@@ -906,14 +905,15 @@ QUALITY_FLAGS = {
             {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
             {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
             {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-			{'start': '2019-08-12 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
+			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
         ],
         'PPFD_DIF_1_1_1':[
             {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled'},
             {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
             {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
             {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-			{'start': '2019-08-12 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
+			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
+            {'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
         ],
         'PPFD_IN_1_1_2':[
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 10:30:00', 'flag_value': 2, 'reason': 'incorrect SKP215 readings?'},
@@ -952,7 +952,7 @@ QUALITY_FLAGS = {
             {'start': '2013-04-25 17:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
             {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
         ]
-    },
+    },    
     # Tlen2 "old" tower added by Klaudia- 19.07.2025
     'TL2_QF': {
      '*': [
@@ -1076,12 +1076,13 @@ STATION_MAPPING_FOR_QC = {
     'ME_TOP_MET_30min': 'ME_TOP_QF',
     'ME_TOP_MET_1min': 'ME_TOP_QF',
     'ME_Rain_top': 'ME_TOP_QF',
+    # nowa lub zmieniona linia
     # Tlen1
     'TL1_MET_30': 'TL1_QF',
     'TL1_RAD_30': 'TL1_QF',
     'TL1_SOIL_30': 'TL1_QF',
     'TL1_RAD_1': 'TL1_QF',
-    # Tlen2
+    # # Tlen2
     'TL2_MET_30m': 'TL2_QF',
     'TL2_CalPlates_dT': 'TL2dt_QF',
     'TL2_MET_1_dT': 'TL2dt_QF',
@@ -1430,21 +1431,28 @@ COLUMN_MAPPING_RULES = {
         'TS_4_1_1_Avg': 'TS_2_1_4',
         'TS_5_1_1_Avg': 'TS_2_1_5',
         'Precipitationamountmm': 'P_2_1_1',
-        'Precipitation amount [mm': 'P_2_1_1',
+        'Precipitation amount [mm': 'P_2_1_1', #Termohigrometry HYGROvue5  air humidity at 30cm above ground
+        'Ta_1ROT_Avg': 'TA_2_1_2', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air temp. at ca. 1,3 m above ground *considered as 2m measurements repetition?
+        'Ta_2ROT_Avg': 'TA_2_1_3', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air temp. at ca. 1,3 m a above ground *considered as 2m measurements repetition?
+        'RH_1ROT_Avg': 'RH_2_1_2', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air humidity at ca. 1,3 m a above ground *considered as 2m measurements repetition?
+        'RH_2ROT_Avg': 'RH_2_1_3',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
         },
-        ## Tlen2 "old" tower added by Klaudia- 19.07.2025
+        # Tlen2 "old" tower added by Klaudia- 19.07.2025
     'TLEN2_MAP': {
-        'PPFD_1_1_1': 'PPFD_IN_1_1_1', # co to za czujnik? BF5? SKP215 PQS
-        #PPFD Radiation – SKL 2620 operated from 2014,7,8,16,30,0 until the end of the meteo instruments operation- demounted on 05-Sep-2018 05:30:00.
+        'PPFD_1_1_1': 'PPFD_IN_1_1_1', # SKL 2620 incoming PPDF
+        #PPFD Radiation – SKL 2620 operated on the "OLD tower" CR1000 Campbell datalogger from 2014-07-08 16:30:0 until the end of the meteo instruments operation- demounted on 2018-09-05 05:30:00.
         'PPFD_1_1_1_Avg':'PPFD_IN_1_1_1',  # SKL 2620 incoming PPDF
         'PPFDr_1_1_1_Avg': 'PPFD_OUT_1_1_1',  #SKL 2620 reflected PPDF
-        'PPFD_1_2_1': 'PPFD_IN_1_1_2', # PQS ?
-        'PPFDr_1_2_1': 'PPFD_OUT_1_1_2', # PQS ?
-        #NR01 4-component net radiometer measurements
+    	#PPFD Radiation – PQS1 operated on the "new tower" - DataTacker datalogger from 2018-08-01 16:30:00 until 2024-07-2024 14:00:00 (datalogger replaced by the CR1000X datalogger). Assumed as the SAME location (REPETITION)
+        'PPFD_1_2_1': 'PPFD_IN_1_1_2', # PQS1 
+        'PPFDr_1_2_1': 'PPFD_OUT_1_1_2', # PQS1
+        #NR01 4-component net radiometer measurements operated on the "OLD tower" CR1000 Campbell datalogger from 2014-07-08 16:30:0 until the end of the meteo instruments operation- demounted on 2018-09-05 05:30:00.
         'SWin_1_1_1_Avg': 'SW_IN_1_1_1', # NR01
         'SWout_1_1_1_Avg': 'SW_OUT_1_1_1', # NR01
         'LWin_1_1_1_Avg': 'LW_IN_1_1_1', # NR01
         'LWout_1_1_1_Avg': 'LW_OUT_1_1_1', # NR01
+        'NR01TC_Avg': 'TA_1_1_2', # NR01
+        #CNR4 4-component net radiometer measurements operated on the "NEW tower" - DataTacker datalogger from 2018-08-01 16:30:00 until 2024-07-2024 14:00:00 (datalogger replaced by the CR1000X datalogger) and since then still working
         'SWin_1_2_1': 'SW_IN_1_1_2', # CNR4
         'SWout_1_2_1': 'SW_OUT_1_1_2', # CNR4
         'LWin_1_2_1': 'LW_IN_1_1_2', # CNR4
@@ -1452,37 +1460,98 @@ COLUMN_MAPPING_RULES = {
         'Rn_1_2_1': 'RN_1_1_2', # CNR4
         'Ta_2_2_1_Avg': 'TA_2_1_2', # CNR4
         'TA_2_2_1': 'TA_2_1_2', # CNR4
-        # Soil heat plates Hukseflux HFP 01
+        # Below canopy PPFD radiation - NEW tower
+        'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_1_1_1', #LI191 -NEED CHANGE!!! (_1_1_1)?
+        'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_1_1_2', #LI191  -NEED CHANGE!!! (_1_1_2)?
+        # Soil heat plates Hukseflux HFP 01- all in ca. 5 cm depth?- OLD tower
         'G_1_1_1_Avg': 'G_1_1_1',
-        'G_2_1_1_Avg': 'G_2_1_1',
-        'G_3_1_1_Avg': 'G_3_1_1',
-        'G_4_1_1_Avg': 'G_4_1_1',
-        # Soil moisture, 1 profile (10, 30, 50cm)- CS616
-        'VW_1': 'SWC_1_1_1', # CS616 10cm
-        'VW_2': 'SWC_1_2_1',  # CS616 30cm
-        'VW_3': 'SWC_1_3_1', # CS616 50cm
-        # Soil Temperature- T107 soil termometer
-        # profile 1
+        'G_2_1_1_Avg': 'G_1_1_2',
+        'G_3_1_1_Avg': 'G_1_1_3',
+        'G_4_1_1_Avg': 'G_1_1_4',
+        # Soil heat plates Hukseflux HFP01SC-20 at 5cm depth - all in ca. 5 cm depth?- NEW tower - INSTALLED AT THE SAME SITLE (LOCATION) AS Hukseflux HFP 01- all in ca. 5 cm depth (REPETITIONS?)
+        'G_1_1_1': 'G_1_1_5', #-NEED CHANGE!!! (_5_1_1)?
+        'G_2_1_1': 'G_1_1_6', #-NEED CHANGE!!! (_6_1_1)?
+        'G_3_1_1': 'G_1_1_7', #-NEED CHANGE!!! (_7_1_1)?
+        'G_4_1_1': 'G_1_1_8', #-NEED CHANGE!!! (_8_1_1)?
+        'G_5_1_1': 'G_1_1_9', #-NEED CHANGE!!! (_9_1_1)? 
+        'G_6_1_1': 'G_1_1_10', #-NEED CHANGE!!! (_10_1_1)?
+        'G_7_1_1': 'G_1_1_11', #-NEED CHANGE!!! (_11_1_1)?
+        'G_8_1_1': 'G_1_1_12', #-NEED CHANGE!!! (_12_1_1)?
+        'G_9_1_1': 'G_1_1_13',  #-NEED CHANGE!!! (_13_1_1)?
+        'G_10_1_1': 'G_1_1_14', #-NEED CHANGE!!! (_14_1_1)?
+        # Soil moisture, 1 profile (10, 30, 50cm)- CS616- OLD tower
+        'VW_1': 'SWC_1_2_1', # CS616 10cm #-NEED CHANGE!!! (_1_2_1)?
+        'VW_2': 'SWC_1_3_1',  # CS616 30cm #-NEED CHANGE!!! (_1_3_1)?
+        'VW_3': 'SWC_1_4_1', # CS616 50cm #-NEED CHANGE!!! (_1_4_1)?
+        # Soil Temperature- T107 soil termometer - OLD tower
+        # profile 1- OLD tower
         'Ts_1_1_1_Avg': 'TS_1_1_1', # soil profile 1 – 2cm depth
         'Ts_1_2_1_Avg': 'TS_1_2_1',  # soil profile 1 – 5cm depth
         'Ts_1_3_1_Avg': 'TS_1_3_1',   # soil profile 1 – 10cm depth
         'Ts_1_4_1_Avg': 'TS_1_4_1',  # soil profile 1 – 30cm depth
         'Ts_1_5_1_Avg': 'TS_1_5_1',  # soil profile 1 – 50cm depth
-        # profile 2
+        # profile 2- OLD tower
         'Ts_2_1_1_Avg': 'TS_2_1_1',  # soil profile 2 – 2cm depth
         'Ts_2_2_1_Avg': 'TS_2_2_1',  # soil profile 2 – 5cm depth
         'Ts_2_3_1_Avg': 'TS_2_3_1',  # soil profile 2 – 10cm depth
         'Ts_2_4_1_Avg': 'TS_2_4_1',  # soil profile 2 – 30cm depth
         'Ts_2_5_1_Avg': 'TS_2_5_1',  # soil profile 2 – 500cm depth
-        # Precipitation measurements- forest floor – Tipping Rain gauges  A-ster TPG
+        # Soil moisture and temperature at 5cm depth- Acclima (ACC-SEN-SDI) sensor- NEW tower-INSTALLED AT THE SAME SITLE (LOCATION) AS CS616 and T107 soil termometer at ca. 5 cm depth (REPETITIONS?)
+        'SWC_1_1_1': 'SWC_1_1_1',  #-NEED CHANGE!!! (_1_1_1)?
+        'SWC_2_1_1': 'SWC_1_1_2',  #-NEED CHANGE!!! (_1_1_2)?
+        'SWC_3_1_1': 'SWC_1_1_3', #-NEED CHANGE!!! (_1_1_3)?
+        'SWC_4_1_1': 'SWC_1_1_4', #-NEED CHANGE!!! (_1_1_4)?
+        'SWC_5_1_1': 'SWC_1_1_5', #-NEED CHANGE!!! (_1_1_5)?
+        'TS_1_1_1': 'TS_3_2_1',  #-NEED CHANGE!!! (_1_1_1)? na 5 cm
+        'TS_2_1_1': 'TS_3_2_2', #-NEED CHANGE!!! (_1_1_2)?
+        'TS_3_1_1': 'TS_3_2_3', #-NEED CHANGE!!! (_1_1_3)?
+        'TS_4_1_1': 'TS_3_2_4', #-NEED CHANGE!!! (_1_1_4)?
+        'TS_5_1_1': 'TS_3_2_5', #-NEED CHANGE!!! (_1_1_5)?
+        # Precipitation measurements- forest floor – Tipping Rain gauges  A-ster TPG- OLD tower
         'P_rain_1_1_1_Tot': 'P_1_1_1', #Rain gauge 1
         'P_rain_1_2_1_Tot':'P_1_1_2', #Rain gauge 2
-        # Air temperature and humidity- HMP 155, Vaisala and NR01
+    	# Precipitation measurements- forest floor – Tipping Rain gauges RM Young (52202H)- NEW tower
+        'P_1_2_1': 'P_1_1_3', #Rain gauge 1 #-NEED CHANGE!!! (_1_1_3)?
+        'P_1_3_1': 'P_1_1_4', #Rain gauge 2 #-NEED CHANGE!!! (_1_1_4)?
+        # Air temperature and humidity- HMP 155, Vaisala- OLD tower
         'Ta_1_1_1_Avg': 'TA_1_1_1',  # HMP 155 air temp. at 2m above ground
         'RH_1_1_1_Avg': 'RH_1_1_1',  # HMP 155 air temp. at 2m above ground
         'Ta_1_2_1_Avg': 'TA_1_2_1',  # HMP 155 air temp. at 30cm above ground
         'RH_1_2_1_Avg': 'RH_1_2_1',  # HMP 155 air temp. at 30cm above ground
+        # Air temperature and humidity- Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 - NEW tower
+        'TA_1_1_1': 'TA_1_1_2', #air temp. at 2m above ground  #-NEED CHANGE!!! (_1_1_2)?
+        'TA_1_2_1': 'TA_1_2_2', #air temp. at 30cm above ground  #-NEED CHANGE!!! (_1_2_2)?
+        'RH_1_1_1': 'RH_1_1_2', #air humidity at 2m above ground #-NEED CHANGE!!! (_1_1_2)?
+        'RH_1_2_1': 'RH_1_2_2', #LI191  -NEED CHANGE!!! (_1_1_2)?
+         ## Soil heat plates Hukseflux HFP01SC-20 at 5cm depth - all in ca. 5 cm depth?- NEW tower - INSTALLED AT THE SAME SITLE (LOCATION) AS Hukseflux HFP 01- all in ca. 5 cm depth (REPETITIONS?)
+        'G_1_1_1_Avg': 'G_1_1_5', #-NEED CHANGE!!! (_5_1_1)?  # noqa: F601
+        'G_2_1_1_Avg': 'G_1_1_6', #-NEED CHANGE!!! (_6_1_1)?  # noqa: F601
+        'G_3_1_1_Avg': 'G_1_1_7', #-NEED CHANGE!!! (_7_1_1)?  # noqa: F601
+        'G_4_1_1_Avg': 'G_1_1_8', #-NEED CHANGE!!! (_8_1_1)?  # noqa: F601
+        'G_5_1_1_Avg': 'G_1_1_9', #-NEED CHANGE!!! (_9_1_1)? 
+        'G_6_1_1_Avg': 'G_1_1_10', #-NEED CHANGE!!! (_10_1_1)?
+        'G_7_1_1_Avg': 'G_1_1_11', #-NEED CHANGE!!! (_11_1_1)?
+        'G_8_1_1_Avg': 'G_1_1_12', #-NEED CHANGE!!! (_12_1_1)?
+        'G_9_1_1_Avg': 'G_1_1_13',  #-NEED CHANGE!!! (_13_1_1)?
+        'G_10_1_1_Avg': 'G_1_1_14', #-NEED CHANGE!!! (_14_1_1)?
+        ## Soil moisture and temperature at 5cm depth- Acclima (ACC-SEN-SDI) sensor- NEW tower-INSTALLED AT THE SAME SITLE (LOCATION) AS CS616 and T107 soil termometer at ca. 5 cm depth (REPETITIONS?)
+        'SWC_1_1_1_Avg': 'SWC_1_1_1',  #-NEED CHANGE!!! (_1_1_1)?
+        'SWC_2_1_1_Avg': 'SWC_1_1_2',  #-NEED CHANGE!!! (_1_1_2)?
+        'SWC_3_1_1_Avg': 'SWC_1_1_3', #-NEED CHANGE!!! (_1_1_3)?
+        'SWC_4_1_1_Avg': 'SWC_1_1_4', #-NEED CHANGE!!! (_1_1_4)?
+        'SWC_5_1_1_Avg': 'SWC_1_1_5', #-NEED CHANGE!!! (_1_1_5)?
+        'TS_1_1_1_Avg': 'TS_3_2_1',  #-NEED CHANGE!!! (_1_1_1)?
+        'TS_2_1_1_Avg': 'TS_3_2_2', #-NEED CHANGE!!! (_1_1_2)?
+        'TS_3_1_1_Avg': 'TS_3_2_3', #-NEED CHANGE!!! (_1_1_3)?
+        'TS_4_1_1_Avg': 'TS_3_2_4', #-NEED CHANGE!!! (_1_1_4)?
+        'TS_5_1_1_Avg': 'TS_3_2_5', #air humidity at 30cm above ground  #-NEED CHANGE!!! (_1_2_2)?
         }
+    # 'TLEN1a_CR1000X_MAP': {
+        
+    #     },
+    # 'TLEN2_CR1000X_MAP': {
+        
+    #     }   
 }
 # 9.1 Mapowanie nazw kolumn w grupach
 STATION_MAPPING_FOR_COLUMNS = {
@@ -1524,20 +1593,24 @@ STATION_MAPPING_FOR_COLUMNS = {
     'TL1a_CalPlates_dT': 'TLEN1a_MAP',
     'TL1a_MET_30_csi': 'TLEN1a_MAP',
     'TL1a_MET_1_csi': 'TLEN1a_MAP',
+    # ----- TLEN1a CR1000X-----
+    # 'TL1a_MET_30_csi': 'TLEN1a_CR1000X_MAP',
+    # 'TL1a_MET_1_csi': 'TLEN1a_CR1000X_MAP',
     # ----- TLEN2 -----
     # 'TL2_MET_1m' : 'TLEN2_MAP',
     'TL2_MET_30m': 'TLEN2_MAP',
     'TL2_MET_1_dT': 'TLEN2_MAP',
     'TL2_MET_30_dT': 'TLEN2_MAP',
-    'TL2_MET_1_csi': 'TLEN2_MAP',
-    'TL2_MET_30_csi': 'TLEN2_MAP',
+    # ----- TLEN2 CR1000x-----
+    # 'TL2_MET_1_csi': 'TLEN2_CR1000X_MAP',
+    # 'TL2_MET_30_csi': 'TLEN2_CR1000X_MAP',
 }
 # 11. Automatyczne przypisanie flag jakości na podstawie zakresów (działa po kalibracji i zmianie nazw)
 VALUE_RANGE_FLAGS = {
     # Ta reguła zostanie zastosowana do wszystkich kolumn zaczynających się na 'TA'
     # np. TA_1_1_1, TA_1_1_2, TA_2_1_1 itd.
-    'TA_': {'min': -40, 'max': 45},
-    'air_temperature': {'min': 233, 'max': 313},
+    'TA_': {'min': -39, 'max': 45},
+    'air_temperature': {'min': 234, 'max': 313},
     'RH_': {'min': 10, 'max': 105},
     'TS_': {'min': -30, 'max': 60},
     'T107_': {'min': -30, 'max': 60},
