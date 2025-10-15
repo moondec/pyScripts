@@ -1362,7 +1362,7 @@ COLUMN_MAPPING_RULES = {
         'LWin_1_1_1_Avg': 'LW_IN_1_1_1', # NR01
         'LWout_1_1_1_Avg': 'LW_OUT_1_1_1', # NR01
         'NR01TC_Avg': 'TA_1_1_2', # NR01
-        # SKR
+        # SKR1850A/SKYE (po naprawie i kalibracji: SKR1860 ND/A)
         'MSR_Avg' : 'MSR_1_1_1',
         'NDVI_Avg' : 'NDVI_1_1_1',
         'PRI_Avg': 'PRI_1_1_1',
@@ -1370,27 +1370,28 @@ COLUMN_MAPPING_RULES = {
         'SR_Avg': 'SR_1_1_1',
         },
     'TLEN1a_MAP': {
-        'PPFDr_1_2_1': 'PPFD_OUT_2_1_1', # PQS
-        'PPFD_1_2_1': 'PPFD_IN_2_1_1', # PQS
+        'PPFDr_1_2_1': 'PPFD_OUT_2_1_1', # PQS1
+        'PPFD_1_2_1': 'PPFD_IN_2_1_1', # PQS1
         'SWin_1_2_1': 'SW_IN_2_1_1', # CNR4
         'SWout_1_2_1': 'SW_OUT_2_1_1', # CNR4
-        'PPFD_1_1_1': 'PPFD_IN_2_1_1', # PQS
+        'PPFD_1_1_1': 'PPFD_IN_2_1_1', # PQS1
         'SWIN_1_2_1': 'SW_IN_2_1_1', # CNR4
         'SWOUT_1_2_1': 'SW_OUT_2_1_1', # CNR4
         'LWin_1_2_1': 'LW_IN_2_1_1', # CNR4
         'LWout_1_2_1': 'LW_OUT_2_1_1', # CNR4
         'Rn_1_2_1': 'RN_2_1_1', # CNR4
-        'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_2_1_1', #
-        'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_2_1_2', #
+        'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_2_1_1', ##LI191
+        'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_2_1_2', ##LI191
         'TA_2_2_1': 'TA_2_1_2', # CNR4
-        'P_1_1_1': 'P_2_1_1', # laser
-        'P_1_2_1': 'P_2_1_2', # korytkowy 1
-        'P_1_3_1': 'P_2_1_3', # korytkowy 2
-        'TA_1_1_1': 'TA_2_1_1',
-        'TA_1_2_1': 'TA_2_2_1',
-        'RH_1_1_1': 'RH_2_1_1',
-        'TA_2_2_1_Avg': 'TA_2_2_1',
-        'RH_1_2_1': 'RH_2_2_1',
+        'P_1_1_1': 'P_2_1_1', # deszczomierz laserowy LPM, Thies
+        'P_1_2_1': 'P_2_1_2', # deszczomierz korytkowy 1  RM Young (52202H)
+        'P_1_3_1': 'P_2_1_3', # deszczomierz korytkowy 2  RM Young (52202H)
+        'TA_1_1_1': 'TA_2_1_1', #Termohigrometry HYGROvue5/ Rotronic? ??? air temp. at 2m above ground 
+        'TA_1_2_1': 'TA_2_2_1', #Termohigrometry HYGROvue5/ Rotronic? ??? air temp. at 30cm above ground
+        'RH_1_1_1': 'RH_2_1_1', #Termohigrometry HYGROvue5/ Rotronic? ??? air humidity at 2m above ground
+		'RH_1_2_1': 'RH_2_2_1',#Termohigrometry HYGROvue5/ Rotronic? ???  air humidity at 30cm above ground
+        'TA_2_2_1_Avg': 'TA_2_2_1',#CNR4 Temp.
+		# płytki glebowe Hukseflux model: HFP01SC-20 at 5cm depth
         'G_1_1_1': 'G_2_1_1',
         'G_2_1_1': 'G_2_1_2',
         'G_3_1_1': 'G_2_1_3',
@@ -1411,34 +1412,37 @@ COLUMN_MAPPING_RULES = {
         'G_8_1_1_Avg': 'G_2_1_8',
         'G_9_1_1_Avg': 'G_2_1_9',
         'G_10_1_1_Avg': 'G_2_1_10',
-        'SWC_1_1_1_Avg': 'SWC_2_1_1',
-        'SWC_2_1_1_Avg': 'SWC_2_1_2',
-        'SWC_3_1_1_Avg': 'SWC_2_1_3',
-        'SWC_4_1_1_Avg': 'SWC_2_1_4',
-        'SWC_5_1_1_Avg': 'SWC_2_1_5',
+		# Temperatura i wilgotność gleby
+        'SWC_1_1_1_Avg': 'SWC_2_1_1',# wilgotność gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - lokalizacja BRUZDA (w wartstwie mineralnej gleby otoczonej organiczną)
+        'SWC_2_1_1_Avg': 'SWC_2_1_2',# wilgotność gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - lokalizacja BRUZDA (w wartstwie mineralnej gleby otoczonej organiczną)
+        'SWC_3_1_1_Avg': 'SWC_2_1_3',# wilgotność gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
+        'SWC_4_1_1_Avg': 'SWC_2_1_4',# wilgotność gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
+        'SWC_5_1_1_Avg': 'SWC_2_1_5',# wilgotność gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
         'SWC_1_1_1': 'SWC_2_1_1',
         'SWC_2_1_1': 'SWC_2_1_2',
         'SWC_3_1_1': 'SWC_2_1_3',
         'SWC_4_1_1': 'SWC_2_1_4',
         'SWC_5_1_1': 'SWC_2_1_5',
-        'TS_1_1_1': 'TS_2_1_1',
-        'TS_2_1_1': 'TS_2_1_2',
-        'TS_3_1_1': 'TS_2_1_3',
-        'TS_4_1_1': 'TS_2_1_4',
-        'TS_5_1_1': 'TS_2_1_5',
+        'TS_1_1_1': 'TS_2_1_1',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - lokalizacja BRUZDA (w wartstwie mineralnej gleby otoczonej organiczną)
+        'TS_2_1_1': 'TS_2_1_2',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - lokalizacja BRUZDA (w wartstwie mineralnej gleby otoczonej organiczną)
+        'TS_3_1_1': 'TS_2_1_3',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
+        'TS_4_1_1': 'TS_2_1_4',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
+        'TS_5_1_1': 'TS_2_1_5',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
         'TS_1_1_1_Avg': 'TS_2_1_1',
         'TS_2_1_1_Avg': 'TS_2_1_2',
         'TS_3_1_1_Avg': 'TS_2_1_3',
         'TS_4_1_1_Avg': 'TS_2_1_4',
         'TS_5_1_1_Avg': 'TS_2_1_5',
-        'Precipitationamountmm': 'P_2_1_1',
-        'Precipitation amount [mm': 'P_2_1_1', #Termohigrometry HYGROvue5  air humidity at 30cm above ground
+		# Opad
+        'Precipitationamountmm': 'P_2_1_1',# deszczomierz laserowy LPM, Thies
+        'Precipitation amount [mm': 'P_2_1_1',# deszczomierz laserowy LPM, Thies
+		# Dodatkowe czujniki temp. i wilgotności powietrza
         'Ta_1ROT_Avg': 'TA_2_1_2', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air temp. at ca. 1,3 m above ground *considered as 2m measurements repetition?
         'Ta_2ROT_Avg': 'TA_2_1_3', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air temp. at ca. 1,3 m a above ground *considered as 2m measurements repetition?
         'RH_1ROT_Avg': 'RH_2_1_2', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air humidity at ca. 1,3 m a above ground *considered as 2m measurements repetition?
-        'RH_2ROT_Avg': 'RH_2_1_3',# temperatura gleby na 5 cm Czujniki wilgotności i temperstury gleby Acclima (ACC-SEN-SDI) - gleba mineralna
+        'RH_2ROT_Avg': 'RH_2_1_3', #Termohigrometry Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 air humidity at ca. 1,3 m a above ground *considered as 2m measurements repetition?
         },
-        # Tlen2 "old" tower added by Klaudia- 19.07.2025
+        # Tlen2 "old" tower added by Klaudia- 19.07.2025 and "NEW" tower adjustment (added by Klaudia- 08.10.2025)
     'TLEN2_MAP': {
         'PPFD_1_1_1': 'PPFD_IN_1_1_1', # SKL 2620 incoming PPDF
         #PPFD Radiation – SKL 2620 operated on the "OLD tower" CR1000 Campbell datalogger from 2014-07-08 16:30:0 until the end of the meteo instruments operation- demounted on 2018-09-05 05:30:00.
@@ -1469,22 +1473,32 @@ COLUMN_MAPPING_RULES = {
         'G_2_1_1_Avg': 'G_1_1_2',
         'G_3_1_1_Avg': 'G_1_1_3',
         'G_4_1_1_Avg': 'G_1_1_4',
-        # Soil heat plates Hukseflux HFP01SC-20 at 5cm depth - all in ca. 5 cm depth?- NEW tower - INSTALLED AT THE SAME SITLE (LOCATION) AS Hukseflux HFP 01- all in ca. 5 cm depth (REPETITIONS?)
-        'G_1_1_1': 'G_1_1_5', #-NEED CHANGE!!! (_5_1_1)?
-        'G_2_1_1': 'G_1_1_6', #-NEED CHANGE!!! (_6_1_1)?
-        'G_3_1_1': 'G_1_1_7', #-NEED CHANGE!!! (_7_1_1)?
-        'G_4_1_1': 'G_1_1_8', #-NEED CHANGE!!! (_8_1_1)?
-        'G_5_1_1': 'G_1_1_9', #-NEED CHANGE!!! (_9_1_1)? 
-        'G_6_1_1': 'G_1_1_10', #-NEED CHANGE!!! (_10_1_1)?
-        'G_7_1_1': 'G_1_1_11', #-NEED CHANGE!!! (_11_1_1)?
-        'G_8_1_1': 'G_1_1_12', #-NEED CHANGE!!! (_12_1_1)?
-        'G_9_1_1': 'G_1_1_13',  #-NEED CHANGE!!! (_13_1_1)?
-        'G_10_1_1': 'G_1_1_14', #-NEED CHANGE!!! (_14_1_1)?
+        # Soil heat plates Hukseflux HFP01SC-20 at 5cm depth - all in ca. 5 cm depth?- NEW tower - INSTALLED AT THE SAME SITE (LOCATION) AS Hukseflux HFP 01- all in ca. 5 cm depth (treated ad REPETITIONS?)
+        'G_1_1_1': 'G_1_1_5', 
+        'G_2_1_1': 'G_1_1_6', 
+        'G_3_1_1': 'G_1_1_7',
+        'G_4_1_1': 'G_1_1_8',
+        'G_5_1_1': 'G_1_1_9', 
+        'G_6_1_1': 'G_1_1_10', 
+        'G_7_1_1': 'G_1_1_11', 
+        'G_8_1_1': 'G_1_1_12', 
+        'G_9_1_1': 'G_1_1_13',  
+        'G_10_1_1': 'G_1_1_14', 
+        'G_1_1_1_Avg': 'G_1_1_5',# noqa: F601
+        'G_2_1_1_Avg': 'G_1_1_6', # noqa: F601
+        'G_3_1_1_Avg': 'G_1_1_7', # noqa: F601
+        'G_4_1_1_Avg': 'G_1_1_8', # noqa: F601
+        'G_5_1_1_Avg': 'G_1_1_9', 
+        'G_6_1_1_Avg': 'G_1_1_10', 
+        'G_7_1_1_Avg': 'G_1_1_11',
+        'G_8_1_1_Avg': 'G_1_1_12', 
+        'G_9_1_1_Avg': 'G_1_1_13',  
+        'G_10_1_1_Avg': 'G_1_1_14',
         # Soil moisture, 1 profile (10, 30, 50cm)- CS616- OLD tower
-        'VW_1': 'SWC_1_2_1', # CS616 10cm #-NEED CHANGE!!! (_1_2_1)?
-        'VW_2': 'SWC_1_3_1',  # CS616 30cm #-NEED CHANGE!!! (_1_3_1)?
-        'VW_3': 'SWC_1_4_1', # CS616 50cm #-NEED CHANGE!!! (_1_4_1)?
-        # Soil Temperature- T107 soil termometer - OLD tower
+        'VW_1': 'SWC_1_2_1', # CS616 -10cm 
+        'VW_2': 'SWC_1_3_1',  # CS616 -30cm 
+        'VW_3': 'SWC_1_4_1', # CS616 -50cm
+        # Soil Temperature- T107 soil thermometer - OLD tower
         # profile 1- OLD tower
         'Ts_1_1_1_Avg': 'TS_1_1_1', # soil profile 1 – 2cm depth
         'Ts_1_2_1_Avg': 'TS_1_2_1',  # soil profile 1 – 5cm depth
@@ -1497,62 +1511,44 @@ COLUMN_MAPPING_RULES = {
         'Ts_2_3_1_Avg': 'TS_2_3_1',  # soil profile 2 – 10cm depth
         'Ts_2_4_1_Avg': 'TS_2_4_1',  # soil profile 2 – 30cm depth
         'Ts_2_5_1_Avg': 'TS_2_5_1',  # soil profile 2 – 500cm depth
-        # Soil moisture and temperature at 5cm depth- Acclima (ACC-SEN-SDI) sensor- NEW tower-INSTALLED AT THE SAME SITLE (LOCATION) AS CS616 and T107 soil termometer at ca. 5 cm depth (REPETITIONS?)
-        'SWC_1_1_1': 'SWC_1_1_1',  #-NEED CHANGE!!! (_1_1_1)?
-        'SWC_2_1_1': 'SWC_1_1_2',  #-NEED CHANGE!!! (_1_1_2)?
-        'SWC_3_1_1': 'SWC_1_1_3', #-NEED CHANGE!!! (_1_1_3)?
-        'SWC_4_1_1': 'SWC_1_1_4', #-NEED CHANGE!!! (_1_1_4)?
-        'SWC_5_1_1': 'SWC_1_1_5', #-NEED CHANGE!!! (_1_1_5)?
-        'TS_1_1_1': 'TS_3_2_1',  #-NEED CHANGE!!! (_1_1_1)? na 5 cm
-        'TS_2_1_1': 'TS_3_2_2', #-NEED CHANGE!!! (_1_1_2)?
-        'TS_3_1_1': 'TS_3_2_3', #-NEED CHANGE!!! (_1_1_3)?
-        'TS_4_1_1': 'TS_3_2_4', #-NEED CHANGE!!! (_1_1_4)?
-        'TS_5_1_1': 'TS_3_2_5', #-NEED CHANGE!!! (_1_1_5)?
+        # Soil moisture and temperature at 5cm depth- Acclima (ACC-SEN-SDI) sensor- NEW tower-INSTALLED AT THE SAME SITLE (LOCATION) AS CS616 and T107 soil thermometer at ca. 5 cm depth (REPETITIONS?)
+        'SWC_1_1_1': 'SWC_1_1_1',  
+        'SWC_2_1_1': 'SWC_1_1_2',  
+        'SWC_3_1_1': 'SWC_1_1_3', 
+        'SWC_4_1_1': 'SWC_1_1_4',
+        'SWC_5_1_1': 'SWC_1_1_5', 
+        'TS_1_1_1': 'TS_3_2_1',  # na 5 cm = poziom głębokości "2"
+        'TS_2_1_1': 'TS_3_2_2', 
+        'TS_3_1_1': 'TS_3_2_3', 
+        'TS_4_1_1': 'TS_3_2_4',
+        'TS_5_1_1': 'TS_3_2_5',
+        'SWC_1_1_1_Avg': 'SWC_1_1_1', 
+        'SWC_2_1_1_Avg': 'SWC_1_1_2',  
+        'SWC_3_1_1_Avg': 'SWC_1_1_3', 
+        'SWC_4_1_1_Avg': 'SWC_1_1_4', 
+        'SWC_5_1_1_Avg': 'SWC_1_1_5', 
+        'TS_1_1_1_Avg': 'TS_3_2_1', 
+        'TS_2_1_1_Avg': 'TS_3_2_2', 
+        'TS_3_1_1_Avg': 'TS_3_2_3', 
+        'TS_4_1_1_Avg': 'TS_3_2_4',
+        'TS_5_1_1_Avg': 'TS_3_2_5',
         # Precipitation measurements- forest floor – Tipping Rain gauges  A-ster TPG- OLD tower
         'P_rain_1_1_1_Tot': 'P_1_1_1', #Rain gauge 1
         'P_rain_1_2_1_Tot':'P_1_1_2', #Rain gauge 2
-    	# Precipitation measurements- forest floor – Tipping Rain gauges RM Young (52202H)- NEW tower
-        'P_1_2_1': 'P_1_1_3', #Rain gauge 1 #-NEED CHANGE!!! (_1_1_3)?
-        'P_1_3_1': 'P_1_1_4', #Rain gauge 2 #-NEED CHANGE!!! (_1_1_4)?
+    	# Precipitation measurements- forest floor – Tipping Rain gauges RM Young (52202H)- NEW tower (located near Aster rain gauges)
+        'P_1_2_1': 'P_1_1_3', #Rain gauge 1 
+        'P_1_3_1': 'P_1_1_4', #Rain gauge 2
         # Air temperature and humidity- HMP 155, Vaisala- OLD tower
         'Ta_1_1_1_Avg': 'TA_1_1_1',  # HMP 155 air temp. at 2m above ground
         'RH_1_1_1_Avg': 'RH_1_1_1',  # HMP 155 air temp. at 2m above ground
         'Ta_1_2_1_Avg': 'TA_1_2_1',  # HMP 155 air temp. at 30cm above ground
         'RH_1_2_1_Avg': 'RH_1_2_1',  # HMP 155 air temp. at 30cm above ground
         # Air temperature and humidity- Alfa Tech/Rotronic, HYGRO CLIP HC2-S3 - NEW tower
-        'TA_1_1_1': 'TA_1_1_2', #air temp. at 2m above ground  #-NEED CHANGE!!! (_1_1_2)?
-        'TA_1_2_1': 'TA_1_2_2', #air temp. at 30cm above ground  #-NEED CHANGE!!! (_1_2_2)?
-        'RH_1_1_1': 'RH_1_1_2', #air humidity at 2m above ground #-NEED CHANGE!!! (_1_1_2)?
-        'RH_1_2_1': 'RH_1_2_2', #LI191  -NEED CHANGE!!! (_1_1_2)?
-         ## Soil heat plates Hukseflux HFP01SC-20 at 5cm depth - all in ca. 5 cm depth?- NEW tower - INSTALLED AT THE SAME SITLE (LOCATION) AS Hukseflux HFP 01- all in ca. 5 cm depth (REPETITIONS?)
-        'G_1_1_1_Avg': 'G_1_1_5', #-NEED CHANGE!!! (_5_1_1)?  # noqa: F601
-        'G_2_1_1_Avg': 'G_1_1_6', #-NEED CHANGE!!! (_6_1_1)?  # noqa: F601
-        'G_3_1_1_Avg': 'G_1_1_7', #-NEED CHANGE!!! (_7_1_1)?  # noqa: F601
-        'G_4_1_1_Avg': 'G_1_1_8', #-NEED CHANGE!!! (_8_1_1)?  # noqa: F601
-        'G_5_1_1_Avg': 'G_1_1_9', #-NEED CHANGE!!! (_9_1_1)? 
-        'G_6_1_1_Avg': 'G_1_1_10', #-NEED CHANGE!!! (_10_1_1)?
-        'G_7_1_1_Avg': 'G_1_1_11', #-NEED CHANGE!!! (_11_1_1)?
-        'G_8_1_1_Avg': 'G_1_1_12', #-NEED CHANGE!!! (_12_1_1)?
-        'G_9_1_1_Avg': 'G_1_1_13',  #-NEED CHANGE!!! (_13_1_1)?
-        'G_10_1_1_Avg': 'G_1_1_14', #-NEED CHANGE!!! (_14_1_1)?
-        ## Soil moisture and temperature at 5cm depth- Acclima (ACC-SEN-SDI) sensor- NEW tower-INSTALLED AT THE SAME SITLE (LOCATION) AS CS616 and T107 soil termometer at ca. 5 cm depth (REPETITIONS?)
-        'SWC_1_1_1_Avg': 'SWC_1_1_1',  #-NEED CHANGE!!! (_1_1_1)?
-        'SWC_2_1_1_Avg': 'SWC_1_1_2',  #-NEED CHANGE!!! (_1_1_2)?
-        'SWC_3_1_1_Avg': 'SWC_1_1_3', #-NEED CHANGE!!! (_1_1_3)?
-        'SWC_4_1_1_Avg': 'SWC_1_1_4', #-NEED CHANGE!!! (_1_1_4)?
-        'SWC_5_1_1_Avg': 'SWC_1_1_5', #-NEED CHANGE!!! (_1_1_5)?
-        'TS_1_1_1_Avg': 'TS_3_2_1',  #-NEED CHANGE!!! (_1_1_1)?
-        'TS_2_1_1_Avg': 'TS_3_2_2', #-NEED CHANGE!!! (_1_1_2)?
-        'TS_3_1_1_Avg': 'TS_3_2_3', #-NEED CHANGE!!! (_1_1_3)?
-        'TS_4_1_1_Avg': 'TS_3_2_4', #-NEED CHANGE!!! (_1_1_4)?
-        'TS_5_1_1_Avg': 'TS_3_2_5', #air humidity at 30cm above ground  #-NEED CHANGE!!! (_1_2_2)?
+        'TA_1_1_1': 'TA_1_1_2', #air temp. at 2m above ground
+        'TA_1_2_1': 'TA_1_2_2', #air temp. at 30cm above ground
+        'RH_1_1_1': 'RH_1_1_2', #air humidity at 2m above ground
+        'RH_1_2_1': 'RH_1_2_2', #air humidity at 30cm above ground
         }
-    # 'TLEN1a_CR1000X_MAP': {
-        
-    #     },
-    # 'TLEN2_CR1000X_MAP': {
-        
-    #     }   
 }
 # 9.1 Mapowanie nazw kolumn w grupach
 STATION_MAPPING_FOR_COLUMNS = {
@@ -1594,17 +1590,11 @@ STATION_MAPPING_FOR_COLUMNS = {
     'TL1a_CalPlates_dT': 'TLEN1a_MAP',
     'TL1a_MET_30_csi': 'TLEN1a_MAP',
     'TL1a_MET_1_csi': 'TLEN1a_MAP',
-    # ----- TLEN1a CR1000X-----
-    # 'TL1a_MET_30_csi': 'TLEN1a_CR1000X_MAP',
-    # 'TL1a_MET_1_csi': 'TLEN1a_CR1000X_MAP',
     # ----- TLEN2 -----
     # 'TL2_MET_1m' : 'TLEN2_MAP',
     'TL2_MET_30m': 'TLEN2_MAP',
     'TL2_MET_1_dT': 'TLEN2_MAP',
     'TL2_MET_30_dT': 'TLEN2_MAP',
-    # ----- TLEN2 CR1000x-----
-    # 'TL2_MET_1_csi': 'TLEN2_CR1000X_MAP',
-    # 'TL2_MET_30_csi': 'TLEN2_CR1000X_MAP',
 }
 # 11. Automatyczne przypisanie flag jakości na podstawie zakresów (działa po kalibracji i zmianie nazw)
 VALUE_RANGE_FLAGS = {
@@ -1677,3 +1667,4 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
