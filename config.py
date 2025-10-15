@@ -905,15 +905,16 @@ QUALITY_FLAGS = {
             {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
             {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
             {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
+			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 5'},
+			{'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},	
         ],
         'PPFD_DIF_1_1_1':[
             {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled'},
             {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
             {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
             {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
-            {'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
+            {'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 5'},
+			{'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
         ],
         'PPFD_IN_1_1_2':[
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 10:30:00', 'flag_value': 2, 'reason': 'incorrect SKP215 readings?'},
@@ -1674,4 +1675,5 @@ STATION_MAPPING_FOR_OVERRIDES = {
     # Mezyk
     'ME_DOWN_MET_30min': 'MEZYK_OVR'
 }
+
 # --- KONIEC SEKCJI KONFIGURACJI ---
