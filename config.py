@@ -1,3 +1,31 @@
+# -*- coding: utf-8 -*-
+
+"""
+================================================================================
+            Centralny Plik Konfiguracyjny
+================================================================================
+
+Opis:
+    Ten plik zawiera wszystkie słowniki konfiguracyjne używane przez skrypt
+    do przetwarzania danych. Centralizacja konfiguracji ułatwia zarządzanie
+    regułami i zapewnia spójność między różnymi trybami działania.
+
+Struktura:
+    1. STATION_COORDINATES: Współrzędne geograficzne stacji.
+    2. FILE_ID_MERGE_GROUPS: Grupowanie plików źródłowych.
+    3. TIMEZONE_CORRECTIONS: Reguły korekty stref czasowych.
+    4. MANUAL_TIME_SHIFTS: Ręczne przesunięcia czasowe.
+    5. CALIBRATION_RULES_BY_STATION: Reguły kalibracji sensorów.
+    6. STATION_MAPPING_FOR_CALIBRATION: Mapowanie grup na reguły kalibracji.
+    7. QUALITY_FLAGS: Reguły flagowania danych.
+    8. STATION_MAPPING_FOR_QC: Mapowanie grup na reguły flagowania.
+    9. COLUMN_MAPPING_RULES: Reguły zmiany nazw kolumn.
+    10. STATION_MAPPING_FOR_COLUMNS: Mapowanie grup na reguły zmiany nazw.
+    11. VALUE_RANGE_FLAGS: Dopuszczalne zakresy wartości dla zmiennych.
+    12. MANUAL_VALUE_OVERRIDES: Ręczne nadpisywanie wartości.
+    13. STATION_MAPPING_FOR_OVERRIDES: Mapowanie grup na reguły nadpisów.
+--------------------------------------------------------------------------------
+"""
 import json  # noqa: F401
 from datetime import datetime, timedelta
 # --- POCZĄTEK SEKCJI KONFIGURACJI ---
