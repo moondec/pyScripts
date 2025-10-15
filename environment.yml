@@ -1,5 +1,5 @@
 # Nazwa środowiska Conda
-name: moj-projekt-srodowisko
+name: pyScripts
 
 # Kanały, z których pobierane będą pakiety (kolejność ma znaczenie)
 channels:

@@ -12,7 +12,7 @@ echo Rozpoczynam przetwarzanie wsadowe...
 :: Wszystkie zmienne, które mogą wymagać modyfikacji, są w jednym miejscu.
 
 :: 1. Pełna ścieżka do Twojego skryptu Pythona
-set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\Documents\pyScripts\unified_script.py"
+set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\DokumentsMacBookPro\pyScripts\unified_script.py"
 
 :: 2. Główny katalog, w którym będą tworzone wszystkie wyniki
 set "BASE_OUTPUT_PATH=E:\test_split"
