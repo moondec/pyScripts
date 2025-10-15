@@ -1,3 +1,0 @@
-filename;fullpath;modified_utc;size_mb
-deszcz_d_20251008T234542.CSV;D:\sites\ME\dT_ME\ThermoFisher\current\DT85_down\deszcz_d_20251008T234542.CSV;2025-10-08 22:45:49;0.015
-deszcz_d_20251009T234547.CSV;D:\sites\ME\dT_ME\ThermoFisher\current\DT85_down\deszcz_d_20251009T234547.CSV;2025-10-09 22:45:57;0.016

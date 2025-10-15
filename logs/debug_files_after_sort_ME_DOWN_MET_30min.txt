@@ -1,3 +1,0 @@
-filename;fullpath;modified_utc;size_mb
-pom30m_20251008T234548.CSV;D:\sites\ME\dT_ME\ThermoFisher\current\DT85_down\pom30m_20251008T234548.CSV;2025-10-08 22:45:52;0.007
-pom30m_20251009T234554.CSV;D:\sites\ME\dT_ME\ThermoFisher\current\DT85_down\pom30m_20251009T234554.CSV;2025-10-09 22:45:57;0.008
