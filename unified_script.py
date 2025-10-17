@@ -333,7 +333,9 @@ def save_dataframe_to_sqlite(df: pd.DataFrame, config: dict, lock: multiprocessi
                         except Exception: # Błąd jeśli tabela jest pusta lub odpytanie nie zadziała
                             pass 
                     if all_existing_dfs:
-                        existing_df = pd.concat(all_existing_dfs, ignore_index=True)
+                        non_empty_dfs = [df for df in all_existing_dfs if not df.empty]
+                        if non_empty_dfs:
+                            existing_df = pd.concat(non_empty_dfs, ignore_index=True)
 
                 # Krok 4: Połącz dane zgodnie z trybem i ponownie oczyść typy
                 if not existing_df.empty:
@@ -520,8 +522,10 @@ def read_tob1_data(file_path: Path, metadata: tuple) -> pd.DataFrame:
                 if len(records_in_chunk) < chunk_size_rows: break
 
         if not all_chunks: return pd.DataFrame()
-        
-        final_df = pd.concat(all_chunks, ignore_index=True)
+
+        non_empty_chunks = [df for df in all_chunks if not df.empty]
+        if not non_empty_chunks: return pd.DataFrame()
+        final_df = pd.concat(non_empty_chunks, ignore_index=True)
         final_df['source_file'] = str(file_path.resolve())
         return final_df
 
