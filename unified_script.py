@@ -745,7 +745,7 @@ def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
             
             timestamps = [matlab_to_datetime(t) for t in time_vector_raw]
             
-            var_files = [f for f in data_path.glob('*.mat') if not f.name.startswith('tv')]
+            var_files = [f for f in data_path.glob('*.mat') if not f.name.startswith('tv') and 'sync-conflict' not in f.name]
             matlab_data = {'TIMESTAMP': timestamps}
             
             time_file_name_stem = "tv" if not month else f"tv_{month:02d}"
@@ -1747,7 +1747,7 @@ def process_binary_file(args: tuple) -> Optional[pd.DataFrame]:
 def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multiprocessing.Lock):
     """
     Final, unified processing pipeline.
-    Wersja 8.1: Restrukturyzacja w celu poprawnego ładowania danych .MAT, nawet gdy brakuje danych z loggerów.
+    Wersja 8.2: Poprawki błędów składni i robustniejsze łączenie danych.
     """
     group_id = config['file_id']
     
@@ -1755,21 +1755,17 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
     logger_data_by_year = defaultdict(pd.DataFrame)
     if raw_dfs:
         logging.debug(f"Przetwarzanie {len(raw_dfs)} ramek danych z loggerów.")
-        # Use list comprehension to filter out empty dataframes before concatenation
         non_empty_dfs = [df for df in raw_dfs if not df.empty]
         if non_empty_dfs:
             full_logger_df = pd.concat(non_empty_dfs, ignore_index=True)
             if 'TIMESTAMP' in full_logger_df.columns:
                 full_logger_df.dropna(subset=['TIMESTAMP'], inplace=True)
-                # Group by timestamp to handle duplicates across files
                 full_logger_df = full_logger_df.groupby('TIMESTAMP').first()
-                # Now group by year
                 for year, year_group in full_logger_df.groupby(full_logger_df.index.year):
                     logger_data_by_year[year] = year_group
 
     # 2. Find all available years from MATLAB data
     matlab_years = []
-    logging.debug(f"Sprawdzanie czy group_id '{group_id}' jest w GROUP_IDS_FOR_MATLAB_FILL. Zawartość listy: {GROUP_IDS_FOR_MATLAB_FILL}")
     if group_id in GROUP_IDS_FOR_MATLAB_FILL:
         matlab_years = find_matlab_years(config) 
 
@@ -1789,7 +1785,6 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
 
             logger_data_df = logger_data_by_year.get(year, pd.DataFrame())
             
-            # Load MATLAB data for the current year
             matlab_df = pd.DataFrame()
             if group_id in GROUP_IDS_FOR_MATLAB_FILL:
                 matlab_df = load_matlab_data(int(year), config)
@@ -1798,7 +1793,10 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
 
             # Combine logger and MATLAB data
             if not logger_data_df.empty and not matlab_df.empty:
-                combined_df = logger_data_df.combine_first(matlab_df).reset_index()
+                # Use a more robust method than combine_first to avoid internal pandas errors
+                combined_df = pd.concat([logger_data_df, matlab_df])
+                combined_df = combined_df.groupby(combined_df.index).first()
+                combined_df.reset_index(inplace=True)
                 logging.info(f"Połączono dane z loggera i .MAT dla roku: {int(year)}")
             elif not matlab_df.empty:
                 combined_df = matlab_df.reset_index()
