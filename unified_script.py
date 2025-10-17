@@ -925,9 +925,14 @@ def apply_value_range_flags(df: pd.DataFrame) -> pd.DataFrame:
             out_of_range_mask = (numeric_col < min_val) | (numeric_col > max_val)
             if out_of_range_mask.any():
                 flag_col_name = f"{col_name}_flag"
-                if flag_col_name not in df_out.columns: df_out[flag_col_name] = 0
+                if flag_col_name not in df_out.columns:
+                    df_out[flag_col_name] = 0
+
                 df_out[flag_col_name] = pd.to_numeric(df_out[flag_col_name], errors='coerce').fillna(0).astype(int)
-                df_out.loc[out_of_range_mask, flag_col_name] = 4
+
+                # Only update flags that are currently 0
+                update_mask = out_of_range_mask & (df_out[flag_col_name] == 0)
+                df_out.loc[update_mask, flag_col_name] = 4
     return df_out
 
 def apply_quality_flags(df: pd.DataFrame, config: dict) -> pd.DataFrame:
@@ -981,8 +986,12 @@ def apply_quality_flags(df: pd.DataFrame, config: dict) -> pd.DataFrame:
                         flag_col_name = f"{col_name}_flag"
                         if flag_col_name not in df_out.columns:
                             df_out[flag_col_name] = 0
-                        
-                        df_out.loc[final_mask, flag_col_name] = rule['flag_value']
+
+                        df_out[flag_col_name] = pd.to_numeric(df_out[flag_col_name], errors='coerce').fillna(0).astype(int)
+
+                        # Only update flags that are currently 0
+                        update_mask = final_mask & (df_out[flag_col_name] == 0)
+                        df_out.loc[update_mask, flag_col_name] = rule['flag_value']
             except Exception as e:
                 logging.warning(f"Błąd reguły flagowania dla '{group_id}' (kolumna: {col_to_flag}): {e}")
                 
