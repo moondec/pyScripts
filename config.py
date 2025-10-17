@@ -522,7 +522,7 @@ MANUAL_TIME_SHIFTS = {
     
     'TL1_MTSHIFT': [
         # { "start": "2013-01-01 00:00:00", "end": "2055-08-12 14:00", "offset_hours": -2},
-        # { "start": "2015-08-12 12:05:00", "end": "2016-01-12 01:00:00", "offset_hours": -0.2},
+        { "start": "2015-08-12 12:05:00", "end": "2016-01-11 14:18:00", "offset_hours": 1},
         # { "start": "2016-01-02 01:00:00", "end": "2055-03-19 11:49", "offset_hours": -2},
     ],
     'TL1_RAD_30' : 'TL1_MTSHIFT', 'TL1_RAD_1' : 'TL1_MTSHIFT',

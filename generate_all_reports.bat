@@ -21,8 +21,8 @@ SET "BASE_OUTPUT_DIR=E:\pdfy\view_splitSQ"
 
 :: 3. Lista prefiksow stacji do przetworzenia (zgodnie z config.py)
 ::    (Mozesz dowolnie modyfikowac te liste, np. SET STATIONS=TU ME RZ)
-SET STATIONS=TU ME TL1 TL1a TL2 RZ BR
-REM SET STATIONS=SA
+REM SET STATIONS=TU ME TL1 TL1a TL2 RZ BR
+SET STATIONS=SA TL1 TL1a TL2
 
 :: 4. Lista zmiennych do zwizualizowania (uzyj wzorcow z '*' na koncu)
 ::    Wybrano podstawowe zmienne: Temperatura, Promieniowanie krotkofalowe, PAR, Opad.

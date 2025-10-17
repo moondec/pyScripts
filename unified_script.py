@@ -634,6 +634,66 @@ def rename_group_id(group_id):
         return 'TR2' + group_id[3:]
     else:
         return group_id
+
+def find_matlab_years(config: dict) -> List[int]:
+    """Scans the project structure to find all years for which .MAT data exists."""
+    logging.debug("--- Rozpoczynanie skanowania lat dla danych .MAT ---")
+    group_id = config['file_id']
+    main_input_path_str = config.get('main_input_path')
+    
+    renamed_group_id = rename_group_id(group_id)
+    logging.debug(f"Oryginalny group_id: '{group_id}', zmieniony na: '{renamed_group_id}'")
+
+    if not main_input_path_str:
+        logging.warning("Brak 'main_input_path' w konfiguracji. Nie można skanować lat .MAT.")
+        return []
+
+    try:
+        parts = renamed_group_id.split('_', 1)
+        if len(parts) < 2:
+            logging.warning(f"Nie można było podzielić group_id '{renamed_group_id}' na kod stacji i nazwę folderu.")
+            return []
+        
+        station_code, matlab_folder_name = parts
+        logging.debug(f"Kod stacji: '{station_code}', nazwa folderu .MAT: '{matlab_folder_name}'")
+
+        base_project_path = Path(main_input_path_str).parent.parent
+        matlab_base_path = base_project_path / f"met-data_{station_code.upper()}"
+        logging.debug(f"Próba skanowania ścieżki bazowej dla .MAT: {matlab_base_path}")
+
+        if not matlab_base_path.exists():
+            logging.warning(f"Ścieżka bazowa dla danych .MAT nie istnieje: {matlab_base_path}")
+            return []
+
+        year_paths = matlab_base_path.glob('[0-9][0-9][0-9][0-9]')
+        years = []
+        
+        # To see if glob finds anything at all
+        found_year_paths = False
+        for p in year_paths:
+            found_year_paths = True
+            logging.debug(f"Znaleziono potencjalny katalog roku: {p}")
+            if p.is_dir():
+                expected_data_path = p / matlab_folder_name / "zero_level"
+                logging.debug(f"Sprawdzanie istnienia ścieżki danych: {expected_data_path}")
+                if expected_data_path.exists():
+                    logging.info(f"Potwierdzono istnienie danych .MAT dla roku {p.name} w ścieżce: {expected_data_path}")
+                    years.append(int(p.name))
+                else:
+                    logging.debug(f"Ścieżka danych .MAT nie istnieje dla roku {p.name}.")
+        
+        if not found_year_paths:
+            logging.warning(f"Glob '[0-9][0-9][0-9][0-9]' nie znalazł żadnych pasujących katalogów w {matlab_base_path}")
+
+        if years:
+            logging.info(f"Zakończono skanowanie. Znaleziono lata z danymi .MAT: {years}")
+        else:
+            logging.warning("Nie znaleziono żadnych lat z kompletnymi danymi .MAT.")
+            
+        return years
+    except Exception as e:
+        logging.error(f"Krytyczny błąd podczas skanowania lat dla danych .MAT: {e}", exc_info=True)
+        return []
         
 def load_matlab_data(year: int, config: dict) -> pd.DataFrame:
     """
@@ -1687,55 +1747,70 @@ def process_binary_file(args: tuple) -> Optional[pd.DataFrame]:
 def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multiprocessing.Lock):
     """
     Final, unified processing pipeline.
-    Wersja 7.25: Optymalizuje moment defragmentacji, aby wyciszyć ostrzeżenia o wydajności.
+    Wersja 8.1: Restrukturyzacja w celu poprawnego ładowania danych .MAT, nawet gdy brakuje danych z loggerów.
     """
-    if not raw_dfs:
-        logging.info("Brak danych do przetworzenia.")
-        return
-    
     group_id = config['file_id']
-    data_by_year = defaultdict(list)
-    for df in raw_dfs:
-        if not df.empty and 'TIMESTAMP' in df.columns:
-            df.dropna(subset=['TIMESTAMP'], inplace=True)
-            for year, year_group in df.groupby(df['TIMESTAMP'].dt.year):
-                data_by_year[year].append(year_group)
+    
+    # 1. Process logger data and group by year
+    logger_data_by_year = defaultdict(pd.DataFrame)
+    if raw_dfs:
+        logging.debug(f"Przetwarzanie {len(raw_dfs)} ramek danych z loggerów.")
+        # Use list comprehension to filter out empty dataframes before concatenation
+        non_empty_dfs = [df for df in raw_dfs if not df.empty]
+        if non_empty_dfs:
+            full_logger_df = pd.concat(non_empty_dfs, ignore_index=True)
+            if 'TIMESTAMP' in full_logger_df.columns:
+                full_logger_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                # Group by timestamp to handle duplicates across files
+                full_logger_df = full_logger_df.groupby('TIMESTAMP').first()
+                # Now group by year
+                for year, year_group in full_logger_df.groupby(full_logger_df.index.year):
+                    logger_data_by_year[year] = year_group
 
-    logging.info(f"Rozpoczynanie finalnego przetwarzania i zapisu dla {len(data_by_year)} lat...")
+    # 2. Find all available years from MATLAB data
+    matlab_years = []
+    logging.debug(f"Sprawdzanie czy group_id '{group_id}' jest w GROUP_IDS_FOR_MATLAB_FILL. Zawartość listy: {GROUP_IDS_FOR_MATLAB_FILL}")
+    if group_id in GROUP_IDS_FOR_MATLAB_FILL:
+        matlab_years = find_matlab_years(config) 
 
-    for year, dfs_for_year in sorted(data_by_year.items()):
+    # 3. Determine the full set of years to process
+    all_years = set(logger_data_by_year.keys()) | set(matlab_years)
+
+    if not all_years:
+        logging.warning("Brak danych do przetworzenia (nie znaleziono danych z loggerów ani pasujących plików .MAT).")
+        return
+
+    logging.info(f"Rozpoczynanie finalnego przetwarzania i zapisu dla lat: {sorted(list(all_years))}...")
+
+    # 4. Loop over all years and process
+    for year in sorted(list(all_years)):
         try:
             logging.info(f"--- Przetwarzanie roku: {int(year)} | Grupa: {group_id} ---")
 
-            logger_data_raw = pd.concat(dfs_for_year, ignore_index=True)
-            if logger_data_raw.empty:
-                continue
+            logger_data_df = logger_data_by_year.get(year, pd.DataFrame())
             
-            logger_data_df = logger_data_raw.groupby('TIMESTAMP').first()
-
+            # Load MATLAB data for the current year
+            matlab_df = pd.DataFrame()
             if group_id in GROUP_IDS_FOR_MATLAB_FILL:
                 matlab_df = load_matlab_data(int(year), config)
                 if not matlab_df.empty:
-                    # --- POCZĄTEK KLUCZOWEJ ZMIANY ---
-                    # Krok 1: Scal duplikaty w danych z MAT, zanim cokolwiek innego z nimi zrobisz.
-                    if matlab_df.columns.duplicated().any():
-                        logging.info(f"Scalanie zduplikowanych kolumn w danych .MAT dla roku {int(year)}...")
-                        matlab_df = matlab_df.T.groupby(level=0).first().T
-                        # Upewnij się, że TIMESTAMP jest poprawnym typem po transpozycji
-                        if 'TIMESTAMP' in matlab_df.columns:
-                             matlab_df['TIMESTAMP'] = pd.to_datetime(matlab_df['TIMESTAMP'], errors='coerce')
-
-                    # Krok 2: Ustaw indeks i dopiero teraz bezpiecznie połącz z danymi z loggera
                     matlab_df.set_index('TIMESTAMP', inplace=True)
-                    combined_df = logger_data_df.combine_first(matlab_df).reset_index()
-                    # --- KONIEC KLUCZOWEJ ZMIANY ---
-                    logging.info(f"--- Uzupełniono/zastąpiono dane z .MAT dla roku: {int(year)} ---")
-                else:
-                    combined_df = logger_data_df.reset_index()
-            else:
+
+            # Combine logger and MATLAB data
+            if not logger_data_df.empty and not matlab_df.empty:
+                combined_df = logger_data_df.combine_first(matlab_df).reset_index()
+                logging.info(f"Połączono dane z loggera i .MAT dla roku: {int(year)}")
+            elif not matlab_df.empty:
+                combined_df = matlab_df.reset_index()
+                logging.info(f"Użyto tylko danych z .MAT dla roku: {int(year)}")
+            elif not logger_data_df.empty:
                 combined_df = logger_data_df.reset_index()
+            else:
+                logging.warning(f"Brak danych dla roku {year} (ani z loggera, ani z .MAT).")
+                continue
 
             if combined_df.empty:
+                logging.warning(f"Brak danych dla roku {year} po próbie scalenia.")
                 continue
 
             # Krok A: Zastosuj mapowanie nazw. Może to utworzyć duplikaty.
@@ -1746,7 +1821,6 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
                 logging.info(f"Scalanie zduplikowanych kolumn po mapowaniu dla roku {int(year)}...")
                 mapped_df = mapped_df.T.groupby(level=0).first().T
                 
-                # Przywróć TIMESTAMP i typy danych
                 if 'TIMESTAMP' in mapped_df.columns:
                     mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
                 else:
@@ -1762,7 +1836,6 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
             mapped_df = _sanitize_column_names(mapped_df)
             if mapped_df.empty: continue
 
-            # Teraz ramka jest gotowa do dalszych operacji
             corrected_df = mapped_df.copy()
 
             corrected_df['TIMESTAMP'] = apply_timezone_correction(corrected_df['TIMESTAMP'], config['file_id'])
@@ -1775,12 +1848,235 @@ def process_and_save_data(raw_dfs: List[pd.DataFrame], config: dict, lock: multi
             corrected_df = apply_quality_flags(corrected_df, config)
             corrected_df = apply_manual_overrides(corrected_df, config)
             corrected_df = align_timestamp(corrected_df, config.get('interval'))
-            # corrected_df = _enforce_numeric_types(corrected_df)
             corrected_df = _ensure_flag_columns_exist(corrected_df)
             corrected_df = corrected_df.copy()
             corrected_df = _filter_future_timestamps(corrected_df)
-            # corrected_df.drop_duplicates(subset=['TIMESTAMP'], keep='last', inplace=True)
-            # corrected_df.reset_index(drop=True, inplace=True)
+
+            output_format = config.get('output_format', 'sqlite')
+            if output_format in ['sqlite', 'both']:
+                save_dataframe_to_sqlite(corrected_df, config, lock)
+            if output_format in ['csv', 'both']:
+                save_dataframe_to_csv(corrected_df, int(year), config, lock)
+
+        except Exception as e:
+            logging.error(f"Krytyczny błąd podczas finalnego przetwarzania roku {int(year)}: {e}", exc_info=True)
+    """
+    Final, unified processing pipeline.
+    Wersja 8.1: Restrukturyzacja w celu poprawnego ładowania danych .MAT, nawet gdy brakuje danych z loggerów.
+    """
+    group_id = config['file_id']
+    
+    # 1. Process logger data and group by year
+    logger_data_by_year = defaultdict(pd.DataFrame)
+    if raw_dfs:
+        logging.debug(f"Przetwarzanie {len(raw_dfs)} ramek danych z loggerów.")
+        # Use list comprehension to filter out empty dataframes before concatenation
+        non_empty_dfs = [df for df in raw_dfs if not df.empty]
+        if non_empty_dfs:
+            full_logger_df = pd.concat(non_empty_dfs, ignore_index=True)
+            if 'TIMESTAMP' in full_logger_df.columns:
+                full_logger_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                # Group by timestamp to handle duplicates across files
+                full_logger_df = full_logger_df.groupby('TIMESTAMP').first()
+                # Now group by year
+                for year, year_group in full_logger_df.groupby(full_logger_df.index.year):
+                    logger_data_by_year[year] = year_group
+
+    # 2. Find all available years from MATLAB data
+    matlab_years = []
+    logging.debug(f"Sprawdzanie czy group_id '{group_id}' jest w GROUP_IDS_FOR_MATLAB_FILL. Zawartość listy: {GROUP_IDS_FOR_MATLAB_FILL}")
+    if group_id in GROUP_IDS_FOR_MATLAB_FILL:
+        matlab_years = find_matlab_years(config) 
+
+    # 3. Determine the full set of years to process
+    all_years = set(logger_data_by_year.keys()) | set(matlab_years)
+
+    if not all_years:
+        logging.warning("Brak danych do przetworzenia (nie znaleziono danych z loggerów ani pasujących plików .MAT).")
+        return
+
+    logging.info(f"Rozpoczynanie finalnego przetwarzania i zapisu dla lat: {sorted(list(all_years))}...")
+
+    # 4. Loop over all years and process
+    for year in sorted(list(all_years)):
+        try:
+            logging.info(f"--- Przetwarzanie roku: {int(year)} | Grupa: {group_id} ---")
+
+            logger_data_df = logger_data_by_year.get(year, pd.DataFrame())
+            
+            # Load MATLAB data for the current year
+            matlab_df = pd.DataFrame()
+            if group_id in GROUP_IDS_FOR_MATLAB_FILL:
+                matlab_df = load_matlab_data(int(year), config)
+                if not matlab_df.empty:
+                    matlab_df.set_index('TIMESTAMP', inplace=True)
+
+            # Combine logger and MATLAB data
+            if not logger_data_df.empty and not matlab_df.empty:
+                combined_df = logger_data_df.combine_first(matlab_df).reset_index()
+                logging.info(f"Połączono dane z loggera i .MAT dla roku: {int(year)}")
+            elif not matlab_df.empty:
+                combined_df = matlab_df.reset_index()
+                logging.info(f"Użyto tylko danych z .MAT dla roku: {int(year)}")
+            elif not logger_data_df.empty:
+                combined_df = logger_data_df.reset_index()
+            else:
+                logging.warning(f"Brak danych dla roku {year} (ani z loggera, ani z .MAT).")
+                continue
+
+            if combined_df.empty:
+                logging.warning(f"Brak danych dla roku {year} po próbie scalenia.")
+                continue
+
+            # Krok A: Zastosuj mapowanie nazw. Może to utworzyć duplikaty.
+            mapped_df = apply_column_mapping(combined_df, config)
+
+            # Krok B: Centralne i jedyne miejsce scalania duplikatów.
+            if mapped_df.columns.duplicated().any():
+                logging.info(f"Scalanie zduplikowanych kolumn po mapowaniu dla roku {int(year)}...")
+                mapped_df = mapped_df.T.groupby(level=0).first().T
+                
+                if 'TIMESTAMP' in mapped_df.columns:
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
+                else:
+                    mapped_df.reset_index(inplace=True)
+                    mapped_df.rename(columns={'index': 'TIMESTAMP'}, inplace=True)
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
+
+                mapped_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                mapped_df = _enforce_numeric_types(mapped_df)
+                logging.info("Scalanie zakończone.")
+            
+            # Krok C: Oczyszczenie nazw kolumn.
+            mapped_df = _sanitize_column_names(mapped_df)
+            if mapped_df.empty: continue
+
+            corrected_df = mapped_df.copy()
+
+            corrected_df['TIMESTAMP'] = apply_timezone_correction(corrected_df['TIMESTAMP'], config['file_id'])
+            corrected_df.dropna(subset=['TIMESTAMP'], inplace=True)
+            if corrected_df.empty: continue
+
+            corrected_df = apply_manual_time_shifts(corrected_df, config['file_id'])
+            corrected_df = apply_calibration(corrected_df, config['file_id'])
+            corrected_df = apply_value_range_flags(corrected_df)
+            corrected_df = apply_quality_flags(corrected_df, config)
+            corrected_df = apply_manual_overrides(corrected_df, config)
+            corrected_df = align_timestamp(corrected_df, config.get('interval'))
+            corrected_df = _ensure_flag_columns_exist(corrected_df)
+            corrected_df = corrected_df.copy()
+            corrected_df = _filter_future_timestamps(corrected_df)
+
+            output_format = config.get('output_format', 'sqlite')
+            if output_format in ['sqlite', 'both']:
+                save_dataframe_to_sqlite(corrected_df, config, lock)
+            if output_format in ['csv', 'both']:
+                save_dataframe_to_csv(corrected_df, int(year), config, lock)
+
+        except Exception as e:
+            logging.error(f"Krytyczny błąd podczas finalnego przetwarzania roku {int(year)}: {e}", exc_info=True)
+    group_id = config['file_id']
+    
+    # 1. Process logger data and group by year
+    logger_data_by_year = defaultdict(pd.DataFrame)
+    if raw_dfs:
+        logging.debug(f"Przetwarzanie {len(raw_dfs)} ramek danych z loggerów.")
+        # Use list comprehension to filter out empty dataframes before concatenation
+        non_empty_dfs = [df for df in raw_dfs if not df.empty]
+        if non_empty_dfs:
+            full_logger_df = pd.concat(non_empty_dfs, ignore_index=True)
+            if 'TIMESTAMP' in full_logger_df.columns:
+                full_logger_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                # Group by timestamp to handle duplicates across files
+                full_logger_df = full_logger_df.groupby('TIMESTAMP').first()
+                # Now group by year
+                for year, year_group in full_logger_df.groupby(full_logger_df.index.year):
+                    logger_data_by_year[year] = year_group
+
+    # 2. Find all available years from MATLAB data
+    matlab_years = []
+    logging.debug(f"Sprawdzanie czy group_id '{group_id}' jest w GROUP_IDS_FOR_MATLAB_FILL. Zawartość listy: {GROUP_IDS_FOR_MATLAB_FILL}")
+    if group_id in GROUP_IDS_FOR_MATLAB_FILL:
+        matlab_years = find_matlab_years(config) 
+
+    # 3. Determine the full set of years to process
+    all_years = set(logger_data_by_year.keys()) | set(matlab_years)
+
+    if not all_years:
+        logging.warning("Brak danych do przetworzenia (nie znaleziono danych z loggerów ani pasujących plików .MAT).")
+        return
+
+    logging.info(f"Rozpoczynanie finalnego przetwarzania i zapisu dla lat: {sorted(list(all_years))}...")
+
+    # 4. Loop over all years and process
+    for year in sorted(list(all_years)):
+        try:
+            logging.info(f"--- Przetwarzanie roku: {int(year)} | Grupa: {group_id} ---")
+
+            logger_data_df = logger_data_by_year.get(year, pd.DataFrame())
+            
+            # Load MATLAB data for the current year
+            matlab_df = pd.DataFrame()
+            if group_id in GROUP_IDS_FOR_MATLAB_FILL:
+                matlab_df = load_matlab_data(int(year), config)
+                if not matlab_df.empty:
+                    matlab_df.set_index('TIMESTAMP', inplace=True)
+
+            # Combine logger and MATLAB data
+            if not logger_data_df.empty and not matlab_df.empty:
+                combined_df = logger_data_df.combine_first(matlab_df).reset_index()
+                logging.info(f"Połączono dane z loggera i .MAT dla roku: {int(year)}")
+            elif not matlab_df.empty:
+                combined_df = matlab_df.reset_index()
+                logging.info(f"Użyto tylko danych z .MAT dla roku: {int(year)}")
+            elif not logger_data_df.empty:
+                combined_df = logger_data_df.reset_index()
+            else:
+                logging.warning(f"Brak danych dla roku {year} (ani z loggera, ani z .MAT).")
+                continue
+
+            if combined_df.empty:
+                logging.warning(f"Brak danych dla roku {year} po próbie scalenia.")
+                continue
+
+            # Krok A: Zastosuj mapowanie nazw. Może to utworzyć duplikaty.
+            mapped_df = apply_column_mapping(combined_df, config)
+
+            # Krok B: Centralne i jedyne miejsce scalania duplikatów.
+            if mapped_df.columns.duplicated().any():
+                logging.info(f"Scalanie zduplikowanych kolumn po mapowaniu dla roku {int(year)}...")
+                mapped_df = mapped_df.T.groupby(level=0).first().T
+                
+                if 'TIMESTAMP' in mapped_df.columns:
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
+                else:
+                    mapped_df.reset_index(inplace=True)
+                    mapped_df.rename(columns={'index': 'TIMESTAMP'}, inplace=True)
+                    mapped_df['TIMESTAMP'] = pd.to_datetime(mapped_df['TIMESTAMP'], errors='coerce')
+
+                mapped_df.dropna(subset=['TIMESTAMP'], inplace=True)
+                mapped_df = _enforce_numeric_types(mapped_df)
+                logging.info("Scalanie zakończone.")
+            
+            # Krok C: Oczyszczenie nazw kolumn.
+            mapped_df = _sanitize_column_names(mapped_df)
+            if mapped_df.empty: continue
+
+            corrected_df = mapped_df.copy()
+
+            corrected_df['TIMESTAMP'] = apply_timezone_correction(corrected_df['TIMESTAMP'], config['file_id'])
+            corrected_df.dropna(subset=['TIMESTAMP'], inplace=True)
+            if corrected_df.empty: continue
+
+            corrected_df = apply_manual_time_shifts(corrected_df, config['file_id'])
+            corrected_df = apply_calibration(corrected_df, config['file_id'])
+            corrected_df = apply_value_range_flags(corrected_df)
+            corrected_df = apply_quality_flags(corrected_df, config)
+            corrected_df = apply_manual_overrides(corrected_df, config)
+            corrected_df = align_timestamp(corrected_df, config.get('interval'))
+            corrected_df = _ensure_flag_columns_exist(corrected_df)
+            corrected_df = corrected_df.copy()
+            corrected_df = _filter_future_timestamps(corrected_df)
 
             output_format = config.get('output_format', 'sqlite')
             if output_format in ['sqlite', 'both']:
@@ -2028,11 +2324,24 @@ def main():
 
     processed_files_cache = load_cache() if not args.no_cache else {}
     all_files = scan_for_files(args.input_dir, group_config.get('source_ids', []))
-    files_to_process = [p for p in all_files if not is_file_in_cache(p, processed_files_cache)]
-
-    if not files_to_process:
-        logging.info("Brak nowych lub zmodyfikowanych plików do przetworzenia.")
-        return
+    if not args.no_cache and not args.overwrite:
+        processed_files_from_cache = [p for p in all_files if is_file_in_cache(p, cache)]
+        if processed_files_from_cache:
+            logging.info(f"Znaleziono {len(processed_files_from_cache)} plików w cache, które zostaną pominięte.")
+        
+        files_to_process = [p for p in all_files if not is_file_in_cache(p, cache)]
+        
+        if not files_to_process:
+            logging.info("Brak nowych lub zmodyfikowanych plików do przetworzenia z loggerów.")
+            # If the group is not eligible for MAT file filling, exit now.
+            # Otherwise, continue with an empty file list to allow MAT-only processing.
+            if args.file_id not in GROUP_IDS_FOR_MATLAB_FILL:
+                logging.debug(f"ID grupy '{args.file_id}' nie jest w GROUP_IDS_FOR_MATLAB_FILL. Zakończenie pracy.")
+                return
+            else:
+                logging.debug(f"ID grupy '{args.file_id}' jest w GROUP_IDS_FOR_MATLAB_FILL. Kontynuowanie dla danych .MAT.")
+    else:
+        files_to_process = all_files
     logging.info(f"Znaleziono {len(files_to_process)} nowych/zmienionych plików.")
 
     binary_files = [p for p in files_to_process if identify_file_type(p) in ['TOB1', 'TOA5']]
@@ -2179,9 +2488,9 @@ def main():
         process_files_group(unique_files, args.file_id, group_config, all_raw_results)
                 
     # Final processing and saving
-    if all_raw_results:
-        lock = multiprocessing.Manager().Lock()
-        process_and_save_data(all_raw_results, group_config, lock)
+    # if all_raw_results:
+    lock = multiprocessing.Manager().Lock()
+    process_and_save_data(all_raw_results, group_config, lock)
 
     if use_cache:
         update_cache(files_to_process, processed_files_cache)
