@@ -924,42 +924,42 @@ QUALITY_FLAGS = {
     },
     'TL1_QF': {
         '*': [
-            {'start': '2013-03-29 17:30:00', 'end': '2013-04-25 17:30:00', 'flag_value': 3, 'reason': 'Delay in meteo sensors intalation in relation to flux data'},
+            {'start': '2013-03-29 17:30:00', 'end': '2013-04-25 17:30:00', 'flag_value': 3, 'reason': 'Delay in meteo sensors installation in relation to flux data'},
             {'start': '2021-07-14 23:00:00', 'end': '2021-07-20 09:30:00', 'flag_value': 3, 'reason': 'Storm damage'},
         ],
 	# Radiation fluxes
         'PPFD_IN_1_1_1':[
-            {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled'},
-            {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
-            {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
-            {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 5'},
+            {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled'},
+            {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 2'},
+            {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 3'},
+            {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 4'},
+			{'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 5'},
 			{'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},	
         ],
         'PPFD_DIF_1_1_1':[
-            {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled'},
-            {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 2'},
-            {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 3'},
-            {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 4'},
-            {'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside te sensor dome BF3/BF5H- deinstalled 5'},
+            {'start': '2014-06-16 00:00:00', 'end': '2014-08-26 12:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled'},
+            {'start': '2015-12-08 12:00:00', 'end': '2016-01-13 12:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 2'},
+            {'start': '2016-12-02 10:30:00', 'end': '2017-02-13 12:30:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 3'},
+            {'start': '2017-10-18 10:00:00', 'end': '2018-04-10 16:00:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 4'},
+            {'start': '2019-08-12 00:00:00', 'end': '2020-01-13 10:30:00', 'flag_value': 3, 'reason': 'condensation inside the sensor dome BF3/BF5H- deinstalled 5'},
 			{'start': '2020-12-02 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'BF5 sensor deinstalled for good'},
         ],
         'PPFD_IN_1_1_2':[
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 10:30:00', 'flag_value': 2, 'reason': 'incorrect SKP215 readings?'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
+            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'PPFD_OUT_1_1_1':[
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 10:30:00', 'flag_value': 2, 'reason': 'incorrect SKP215 readings?'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
+            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'SW_IN_1_1_1':[
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
+            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'SW_OUT_1_1_1':[
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
+            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'LW_IN_1_1_1':[
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurememet terminated, mast demounted, only soil sensors and rain gauges left'},
+            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'LW_OUT_1_1_1':[
             {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
@@ -973,8 +973,9 @@ QUALITY_FLAGS = {
 			{'start': '2014-11-18 13:30:00', 'end': '2015-01-04 16:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2015-01-10 22:00:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '2021-02-24T14:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
+			{'start': '2021-02-24T14:00:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
+            #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'RH_1_1_1':[
             {'start': '2013-04-25 17:30:00', 'end': '2013-05-17 12:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
@@ -984,23 +985,28 @@ QUALITY_FLAGS = {
 			{'start': '2014-11-18 13:30:00', 'end': '2015-01-04 16:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2015-01-10 22:00:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '2021-02-24T14:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
+			{'start': '2021-02-24T14:00:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
+            #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'TA_1_2_1':[
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
 			{'start': '2014-01-23 02:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '2021-02-23 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
+			{'start': '22015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
+			{'start': '2021-02-23 14:30:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
+            #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'RH_1_2_1':[
-           {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+            {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
 			{'start': '2014-01-23 02:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '2021-02-23 14:30:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-            {'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
-        ]
+			{'start': '22015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
+			{'start': '2021-02-23 14:30:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
+            #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
+        ],
     },    
     # Tlen2 "old" tower added by Klaudia- 19.07.2025
     'TL2_QF': {
@@ -1715,6 +1721,8 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
+
 
 
 
