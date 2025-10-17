@@ -22,7 +22,7 @@ SET "BASE_OUTPUT_DIR=E:\pdfy\view_splitSQ"
 :: 3. Lista prefiksow stacji do przetworzenia (zgodnie z config.py)
 ::    (Mozesz dowolnie modyfikowac te liste, np. SET STATIONS=TU ME RZ)
 REM SET STATIONS=TU ME TL1 TL1a TL2 RZ BR
-SET STATIONS=SA TL1 TL1a TL2
+SET STATIONS=SA TL1 TL1a TL2 ME
 
 :: 4. Lista zmiennych do zwizualizowania (uzyj wzorcow z '*' na koncu)
 ::    Wybrano podstawowe zmienne: Temperatura, Promieniowanie krotkofalowe, PAR, Opad.
@@ -43,7 +43,7 @@ FOR %%s IN (%STATIONS%) DO (
     ECHO [---] Rozpoczynam przetwarzanie stacji: %%s [---]
 
     :: Definiowanie i tworzenie dedykowanego folderu dla raportow danej stacji
-    SET "STATION_OUTPUT_DIR=%BASE_OUTPUT_DIR%\%%s_REPORTS"
+    SET "STATION_OUTPUT_DIR=%BASE_OUTPUT_DIR%\%%s"
     IF NOT EXIST "%STATION_OUTPUT_DIR%" (
         ECHO Tworze folder wyjsciowy: %STATION_OUTPUT_DIR%
         MKDIR "%STATION_OUTPUT_DIR%"
