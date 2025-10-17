@@ -2323,7 +2323,10 @@ def main():
         initialize_database(Path(args.db_path))
 
     processed_files_cache = load_cache() if not args.no_cache else {}
-    all_files = scan_for_files(args.input_dir, group_config.get('source_ids', []))
+    # --- Cache and File Scanning ---
+    cache = load_cache() if not args.no_cache else {}
+    all_files = scan_for_files(group_config['input_dir'], group_config.get('source_ids', []))
+    
     if not args.no_cache and not args.overwrite:
         processed_files_from_cache = [p for p in all_files if is_file_in_cache(p, cache)]
         if processed_files_from_cache:
