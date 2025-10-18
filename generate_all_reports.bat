@@ -32,6 +32,8 @@ REM SET "VARS_TO_PLOT="SW_*" "PPFD*" "PPFD_BC_IN_*" "Sw_*""
 
 :: --- SEKCJA WYKONAWCZA ---
 
+SETLOCAL EnableDelayedExpansion
+
 ECHO.
 ECHO Rozpoczynanie procesu generowania raportow...
 ECHO Baza danych: %DB_PATH%
@@ -44,9 +46,9 @@ FOR %%s IN (%STATIONS%) DO (
 
     :: Definiowanie i tworzenie dedykowanego folderu dla raportow danej stacji
     SET "STATION_OUTPUT_DIR=%BASE_OUTPUT_DIR%\%%s"
-    IF NOT EXIST "%STATION_OUTPUT_DIR%" (
-        ECHO Tworze folder wyjsciowy: %STATION_OUTPUT_DIR%
-        MKDIR "%STATION_OUTPUT_DIR%"
+    IF NOT EXIST "!STATION_OUTPUT_DIR!" (
+        ECHO Tworze folder wyjsciowy: !STATION_OUTPUT_DIR!
+        MKDIR "!STATION_OUTPUT_DIR!"
     ) ELSE (
         ECHO Folder wyjsciowy juz istnieje.
     )
@@ -55,7 +57,7 @@ FOR %%s IN (%STATIONS%) DO (
     ECHO Uruchamiam skrypt dla grup pasujacych do wzorca "%%s_*"...
     ECHO Wybrane zmienne: %VARS_TO_PLOT%
     
-    python %PYTHON_SCRIPT% --db_path "%DB_PATH%" --output_dir "%STATION_OUTPUT_DIR%" --groups "%%s_*" --vars %VARS_TO_PLOT%
+    python %PYTHON_SCRIPT% --db_path "%DB_PATH%" --output_dir "!STATION_OUTPUT_DIR!" --groups "%%s_*" --vars %VARS_TO_PLOT%
     
     ECHO [OK] Zakonczono przetwarzanie stacji: %%s
 )
