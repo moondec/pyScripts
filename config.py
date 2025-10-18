@@ -1089,6 +1089,11 @@ QUALITY_FLAGS = {
             {'start': '2018-07-18 13:30:00', 'end': '2018-09-04 16:30:00', 'flag_value': 3, 'reason': 'Sensor mulfuntion'},
         ],
     },
+    'TL1dt_QF': {
+        '*': [
+            {'start': '2018-01-16 00:00:00', 'end': '2018-08-02 16:00:00', 'flag_value': 3, 'reason': 'datalogger mulfuntion'},
+        ],
+    },
     'TL2dt_QF': {
      '*': [
             {'start': '2021-05-16 00:00:00', 'end': '2041-04-28 13:30:00', 'flag_value': 3, 'reason': 'datalogger mulfuntion'},
@@ -1137,6 +1142,10 @@ STATION_MAPPING_FOR_QC = {
     'TL1_RAD_30': 'TL1_QF',
     'TL1_SOIL_30': 'TL1_QF',
     'TL1_RAD_1': 'TL1_QF',
+    'TL1a_MET_30_dT': 'TL1dt_QF',
+    'TL1a_Rain_down_dT': 'TL1dt_QF',
+    'TL1a_MET_1_dT': 'TL1dt_QF',
+    'TL1a_CalPlates_dT': 'TL1dt_QF',
     # # Tlen2
     'TL2_MET_30m': 'TL2_QF',
     'TL2_CalPlates_dT': 'TL2dt_QF',
