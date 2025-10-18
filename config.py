@@ -533,7 +533,7 @@ MANUAL_TIME_SHIFTS = {
         { "start": "2018-08-01 22:46:00", "end": "2018-08-22 13:44:00", "offset_hours": -14.8166666667},
         { "start": "2018-09-18 00:00:00", "end": "2018-11-18 00:00", "offset_hours": 0.5},
         { "start": "2021-10-25 00:00:00", "end": "2022-04-08 00:00", "offset_hours": 1},
-        { "start": "2022-07-02 12:59:00", "end": "2051-09-23 11:49", "offset_hours": -1}, # godzina bez - znaczenia braki w danych
+        # { "start": "2022-07-02 12:59:00", "end": "2051-09-23 11:49", "offset_hours": -1}, # godzina bez - znaczenia braki w danych
     ],
     'TL1a_MET_30_dT' : 'TL1_dT_MTSHIFT', 'TL1a_MET_1_dT' : 'TL1_dT_MTSHIFT', 'TL1a_Rain_down_dT' : 'TL1_dT_MTSHIFT', 'TL1a_CalPlates_1min' : 'TL1_dT_MTSHIFT',
 
