@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 :: ============================================================================
 :: Skrypt wsadowy (.bat) do uruchamiania przetwarzania danych dla wielu stacji
-:: Wersja 4.0 - Dynamiczne ścieżki, dedykowane bazy danych i selektywne uruchamianie
+:: Wersja 4.1 - Poprawki w obsłudze ścieżek i przekazywaniu argumentów
 :: ============================================================================
 
 echo Rozpoczynam przetwarzanie wsadowe...
@@ -43,62 +43,52 @@ for %%S in (%STATIONS%) do (
     echo #####################################################################
 
     set "STATION_ID=%%S"
-    set "FIDS_VAR=!STATION_ID!_FIDS"
-
-    if "!STATION_ID!"=="TU" (
-        set "INPUT_PATH=%BASE_SITES_PATH%\TU\csi_TU\Campbell"
-        set "OUTPUT_PATH=%BASE_SITES_PATH%\TU\met_data_TU"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_TU.db"
-        call :process_station TU !TUCZNO_FIDS!
-    )
 
     if "!STATION_ID!"=="SA" (
         set "INPUT_PATH=%BASE_SITES_PATH%\SA\csi_SA\Campbell"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\SA\met_data_SA"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_SA.db"
-        call :process_station SA !SARBIA_FIDS!
+        set "DB_PATH=!OUTPUT_PATH!\met_data_SA.db"
+        call :process_station SA "!SARBIA_FIDS!"
     )
 
     if "!STATION_ID!"=="TL1" (
         set "INPUT_PATH=%BASE_SITES_PATH%\TR\csi_TR\Campbell"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\TR\met_data_TL1"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_TL1.db"
-        call :process_station TL1 !TLEN1_FIDS!
+        set "DB_PATH=!OUTPUT_PATH!\met_data_TL1.db"
+        call :process_station TL1 "!TLEN1_FIDS!"
     )
     
     if "!STATION_ID!"=="TL1a" (
         set "INPUT_PATH=%BASE_SITES_PATH%\TR\dt_TR\ThermoFisher"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\TR\met_data_TL1"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_TL1.db"
-        call :process_station TL1a !TLEN1a_FIDS!
+        set "DB_PATH=!OUTPUT_PATH!\met_data_TL1.db"
+        call :process_station TL1a "!TLEN1a_FIDS!"
     )
 
     if "!STATION_ID!"=="TL1anew" (
         set "INPUT_PATH=%BASE_SITES_PATH%\TR\dT_TR\Campbell"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\TR\met_data_TL1"
         set "DB_PATH=%OUTPUT_PATH%\met_data_TL1.db"
-        call :process_station TL1anew !TLEN1anew_FIDS!
+        call :process_station TL1anew "!TLEN1anew_FIDS!"
     )
 
     if "!STATION_ID!"=="TL2" (
-        set "INPUT_PATH_CSI=%BASE_SITES_PATH%\TR2\csi_TR2\Campbell"
-        set "INPUT_PATH_DT=%BASE_SITES_PATH%\TR2\dT_TR2\ThermoFisher"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\TR2\met_data_TL2"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_TL2.db"
+        set "DB_PATH=!OUTPUT_PATH!\met_data_TL2.db"
         
         echo. & echo --- Przetwarzam dane CSI dla TL2 ---
-        set "INPUT_PATH=!INPUT_PATH_CSI!"
-        call :process_station TL2_csi !TLEN2_FIDS!
+        set "INPUT_PATH=%BASE_SITES_PATH%\TR2\csi_TR2\Campbell"
+        call :process_station TL2_csi "!TLEN2_FIDS!"
 
         echo. & echo --- Przetwarzam dane dT dla TL2 ---
-        set "INPUT_PATH=!INPUT_PATH_DT!"
-        call :process_station TL2_dT !TLEN2_FIDS!
+        set "INPUT_PATH=%BASE_SITES_PATH%\TR2\dT_TR2\ThermoFisher"
+        call :process_station TL2_dT "!TLEN2_FIDS!"
     )
 
     if "!STATION_ID!"=="ME" (
         set "MEZYK_BASE_INPUT=%BASE_SITES_PATH%\ME\dT_ME\ThermoFisher"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\ME\met_data_ME"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_ME.db"
+        set "DB_PATH=!OUTPUT_PATH!\met_data_ME.db"
 
         if not exist "!OUTPUT_PATH!\" (
             echo Tworze katalog wyjsciowy: !OUTPUT_PATH!
@@ -144,22 +134,21 @@ goto:end
 :: --- PROCEDURA PRZETWARZANIA DLA STANDARDOWEJ STACJI ---
 :process_station
     set "local_station_name=%1"
-    shift
-    set "local_fids=%*"
+    set "local_fids=%~2"
 
-    if not exist "%INPUT_PATH%\" (
-        echo Ostrzezenie: Katalog dla stacji %local_station_name% nie istnieje: %INPUT_PATH%. Pomijam.
+    if not exist "!INPUT_PATH!\" (
+        echo Ostrzezenie: Katalog dla stacji !local_station_name! nie istnieje: !INPUT_PATH!. Pomijam.
         goto:eof
     )
 
-    if not exist "%OUTPUT_PATH%\" (
-        echo Tworze katalog wyjsciowy: %OUTPUT_PATH%
-        mkdir "%OUTPUT_PATH%"
+    if not exist "!OUTPUT_PATH!\" (
+        echo Tworze katalog wyjsciowy: !OUTPUT_PATH!
+        mkdir "!OUTPUT_PATH!"
     )
 
     for %%F in (%local_fids%) do (
         echo. & echo --- Przetwarzam grupe: %%F ---
-        python "%PYTHON_SCRIPT_PATH%" -i "%INPUT_PATH%" -o "%OUTPUT_PATH%" -fid "%%F" --log-level DEBUG --db-path "%DB_PATH%" --output-format both
+        python "!PYTHON_SCRIPT_PATH!" -i "!INPUT_PATH!" -o "!OUTPUT_PATH!" -fid "%%F" --log-level DEBUG --db-path "!DB_PATH!" --output-format both
     )
 goto:eof
 
@@ -169,4 +158,4 @@ echo.
 echo =======================================================
 echo Wszystkie zdefiniowane zadania zostaly zakonczone.
 echo =======================================================
-pause
+@REM pause

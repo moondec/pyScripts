@@ -1,41 +1,41 @@
 @ECHO OFF
 CHCP 65001 > NUL
-TITLE Generator Raportow PDF v4
+TITLE PDF Report Generator v4
 
 :: =================================================================================
-:: Plik wsadowy do seryjnego generowania raportow wizualizacyjnych.
-:: Wersja 4.0 - Dostosowany do odczytu z rozproszonych baz danych.
+:: Batch file for serial generation of visualization reports.
+:: Version 4.0 - Adapted for reading from distributed databases.
 :: =================================================================================
 
-:: --- SEKCJA KONFIGURACJI ---
+:: --- CONFIGURATION SECTION ---
 
-:: 1. Sciezka do skryptu Python
+:: 1. Path to Python script
 SET "PYTHON_SCRIPT=C:\Users\marek.urbaniak\DokumentsMacBookPro\pyScripts\view_splitSQ.py"
 
-:: 2. Główny katalog, w którym znajdują się dane (zgodnie z runSplit4.bat)
+:: 2. Main directory where the data is located (according to runSplit4.bat)
 set "BASE_SITES_PATH=D:\sites"
 
-:: 3. Lista prefiksow stacji do przetworzenia
-::    (Musi byc zgodna ze stacjami przetworzonymi przez runSplit4.bat)
+:: 3. List of station prefixes to process
+::    (Must be consistent with the stations processed by runSplit4.bat)
 SET STATIONS=SA TL1 TL1a TL2 ME
 
-:: 4. Lista zmiennych do zwizualizowania (uzyj wzorcow z '*' na koncu)
+:: 4. List of variables to visualize (use patterns with '*' at the end)
 SET "VARS_TO_PLOT="SW_IN_*" "PPFD_IN_*" "PPFD_BC_IN_*" "TA_*" "TS_*""
 
-:: --- SEKCJA WYKONAWCZA ---
+:: --- EXECUTION SECTION ---
 
 SETLOCAL EnableDelayedExpansion
 
 ECHO.
-ECHO Rozpoczynanie procesu generowania raportow v4...
+ECHO Starting the report generation process v4...
 ECHO =================================================
 
-:: Petla przechodzaca przez kazdy prefiks stacji z listy STATIONS
+:: Loop through each station prefix from the STATIONS list
 FOR %%s IN (%STATIONS%) DO (
     ECHO.
-    ECHO [---] Rozpoczynam przetwarzanie stacji: %%s [---]
+    ECHO [---] Starting processing for station: %%s [---]
 
-    :: Dynamiczne definiowanie ścieżek na podstawie ID stacji
+    :: Dynamic definition of paths based on station ID
     SET "STATION_ID=%%s"
     SET "OUTPUT_DIR="
     SET "DB_PATH="
@@ -61,30 +61,29 @@ FOR %%s IN (%STATIONS%) DO (
         SET "DB_PATH=!OUTPUT_DIR!\met_data_ME.db"
     )
 
-    :: Sprawdzenie, czy zdefiniowano ścieżki dla danej stacji
+    :: Check if paths are defined for the given station
     IF NOT DEFINED DB_PATH (
-        ECHO [!!!] Ostrzezenie: Brak konfiguracji sciezek dla stacji '!STATION_ID!'. Pomijam.
+        ECHO [!!!] Warning: No path configuration for station '!STATION_ID!'. Skipping.
     ) ELSE (
-        :: Sprawdzenie, czy baza danych istnieje
+        :: Check if the database exists
         IF NOT EXIST "!DB_PATH!" (
-            ECHO [!!!] Blad: Baza danych dla stacji '!STATION_ID!' nie zostala znaleziona w '!DB_PATH!'. Pomijam.
+            ECHO [!!!] Error: Database for station '!STATION_ID!' not found in '!DB_PATH!'. Skipping.
         ) ELSE (
-            ECHO Baza danych: !DB_PATH!
-            ECHO Katalog wyjsciowy: !OUTPUT_DIR!
+            ECHO Database: !DB_PATH!
+            ECHO Output directory: !OUTPUT_DIR!
 
-            :: Uruchomienie skryptu Pythona z odpowiednimi argumentami
-            ECHO Uruchamiam skrypt dla grup pasujacych do wzorca "!STATION_ID!_*"...
-            ECHO Wybrane zmienne: %VARS_TO_PLOT%
+            :: Running the Python script with the appropriate arguments
+            ECHO Running script for groups matching the pattern "!STATION_ID!_*"...
+            ECHO Selected variables: %VARS_TO_PLOT%
             
             python %PYTHON_SCRIPT% --db_path "!DB_PATH!" --output_dir "!OUTPUT_DIR!" --groups "!STATION_ID!_*" --vars %VARS_TO_PLOT%
             
-            ECHO [OK] Zakonczono przetwarzanie stacji: !STATION_ID!
+            ECHO [OK] Finished processing station: !STATION_ID!
         )
     )
 )
 
 ECHO.
 ECHO =================================================
-ECHO Wszystkie stacje zostaly przetworzone.
+ECHO All stations have been processed.
 ECHO.
-PAUSE
