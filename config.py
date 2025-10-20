@@ -966,8 +966,9 @@ QUALITY_FLAGS = {
         ],
 	#Air temperature and humidity
         'TA_1_1_1':[
-            {'start': '2013-04-25 17:30:00', 'end': '2013-05-17 12:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
-			{'start': '2013-12-06 5:00:00', 'end': '2014-01-13 13:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2013-01-00 00:00:00', 'end': '2013-04-25 17:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+            {'start': '2013-04-25 17:30:00', 'end': '2013-05-17 12:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2013-12-06 4:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-02-25 14:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-06-24 03:00:00', 'end': '2014-06-24 03:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-01-04 16:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
@@ -978,8 +979,9 @@ QUALITY_FLAGS = {
             #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'RH_1_1_1':[
-            {'start': '2013-04-25 17:30:00', 'end': '2013-05-17 12:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
-			{'start': '2013-12-06 5:00:00', 'end': '2014-01-13 13:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
+			{'start': '2013-01-00 00:00:00', 'end': '2013-04-25 17:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+           # {'start': '2013-04-25 17:30:00', 'end': '2013-05-17 12:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+			{'start': '2013-12-06 4:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-02-25 14:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-06-24 03:00:00', 'end': '2014-06-24 03:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-01-04 16:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
@@ -990,19 +992,22 @@ QUALITY_FLAGS = {
             #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'TA_1_2_1':[
+			{'start': '2013-01-00 00:00:00', 'end': '2013-04-25 17:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
             {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
 			{'start': '2014-01-23 02:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '22015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
+			{'start': '2015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
 			{'start': '2021-02-23 14:30:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
             #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
         'RH_1_2_1':[
-            {'start': '2013-04-25 17:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+			{'start': '2013-01-00 00:00:00', 'end': '2013-04-25 17:00:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+            {'start': '2013-04-26T13:00:00', 'end': '2013-04-29 11:30:00', 'flag_value': 3, 'reason': 'sensor not installed yet'},
+			{'start': '2013-12-06 4:30:00', 'end': '2014-01-13 13:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-01-23 02:30:00', 'end': '2014-04-04 11:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2014-11-18 13:30:00', 'end': '2015-03-18 12:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
-			{'start': '22015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
+			{'start': '2015-05-17 21:00:00', 'end': '2015-05-19 10:30:00', 'flag_value': 2, 'reason': 'sensor malfunction- spike'},
 			{'start': '2021-02-23 14:30:00', 'end': '2021-04-28 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction- not reasonable data'},
 			{'start': '2021-04-28 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},
             #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
@@ -1730,6 +1735,7 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
 
 
 
