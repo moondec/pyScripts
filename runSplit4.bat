@@ -12,7 +12,8 @@ echo Rozpoczynam przetwarzanie wsadowe...
 
 :: 1. Lista stacji do przetworzenia (oddzielone spacjami).
 ::    Dostepne opcje: TU SA RZ ME_TOP ME_DOWN TL1 TL1a TL1anew TL2 BR
-set "STATIONS=SA TL1 TL1a TL2 ME"
+@REM set "STATIONS=SA TL1 TL1a TL2 ME"
+set "STATIONS=TL1 TL1a TL1anew TL2"
 
 :: 2. Pełna ścieżka do Twojego skryptu Pythona
 set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\DokumentsMacBookPro\pyScripts\unified_script.py"
@@ -148,7 +149,7 @@ goto:end
 
     for %%F in (%local_fids%) do (
         echo. & echo --- Przetwarzam grupe: %%F ---
-        python "!PYTHON_SCRIPT_PATH!" -i "!INPUT_PATH!" -o "!OUTPUT_PATH!" -fid "%%F" --log-level DEBUG --db-path "!DB_PATH!" --output-format both
+        python "!PYTHON_SCRIPT_PATH!" -i "!INPUT_PATH!" -o "!OUTPUT_PATH!" -fid "%%F" --log-level DEBUG --db-path "!DB_PATH!" --output-format both --no-cache --overwrite
     )
 goto:eof
 
