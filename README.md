@@ -11,6 +11,8 @@
 ├── config.py
 ├── environment.yml
 ├── generate_all_reports.bat
+├── generate_all_reports4.bat
+├── generate_all_reports4.sh
 ├── logs
 │   ├── debug_files_after_sort_ME_CalPlates.txt
 │   ├── debug_files_after_sort_ME_DOWN_MET_1min.txt
@@ -31,6 +33,8 @@
 ├── pom1m_example.csv
 ├── README.md
 ├── runSplit3.bat
+├── runSplit4.bat
+├── runSplit4.sh
 ├── unified_script.py
 └── view_splitSQ.py
 ```
@@ -44,8 +48,10 @@
     -   Use `conda env create -f environment.yml` to create isolated python env
     -   and `conda activate pyScripts` to activate
 
--   `generate_all_reports.bat` edit path inside and plot diagnostic reports
+-   `generate_all_reports4.bat` or `generate_all_reports4.sh` edit path inside and plot diagnostic reports
 -   `logs` folder for logs
--   `runSplit3.bat` main batch file for Windows. It use:
+-   `runSplit3.bat` main batch file for Windows (old)
+-   `runSplit4.bat` main batch file for Windows. 
+-   `runSplit4.sh` main batch file for unix-like os. It use:
 -   `unified_script.py` main python script. Reads raw meteo data and processes it.
 
