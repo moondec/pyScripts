@@ -1026,9 +1026,8 @@ QUALITY_FLAGS = {
             #{'start': '2022-11-14 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'EC measurement terminated, mast demounted, only soil sensors and rain gauges left'},
         ],
     },  
+
 #Tlen1a – DataTacker datalogger
-    ## Tlen1a site - dataTacker measurements (03.08.2018- 12.06.2024)
-	#Tlen1a – DataTacker datalogger
     'TL1adT_QF': {
     '*': [
      {'start': '2018-07-01 00:00:00', 'end': '2018-07-31 16:00:00', 'flag_value': 3, 'reason': 'DataTacker not operating yet'},
@@ -1040,6 +1039,12 @@ QUALITY_FLAGS = {
 {'start': '2018-08-21 22:54:00', 'end': '2018-08-22 13:45:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
 {'start': '2019-01-04 16:00:00', 'end': '2019-01-19 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-10-15 00:00:00', 'end': '2019-11-01 13:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start':  '2022-09-26 05:00:00', 'end': '2022-10-23 23:00:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
 {'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents'},
 ],
@@ -1048,6 +1053,12 @@ QUALITY_FLAGS = {
 {'start': '2020-05-27 17:00:00', 'end': '2021-08-21 13:30:00', 'flag_value': 2, 'reason': 'sensor malfunction'},#CHECK AGAIN!
 {'start': '2019-01-04 16:00:00', 'end': '2019-01-19 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2019-10-15 00:00:00', 'end': '2019-11-01 13:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
+{'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
 ],
     },
@@ -1769,6 +1780,7 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
 
 
 
