@@ -13,7 +13,8 @@ echo Rozpoczynam przetwarzanie wsadowe...
 :: 1. Lista stacji do przetworzenia (oddzielone spacjami).
 ::    Dostepne opcje: TU SA RZ ME_TOP ME_DOWN TL1 TL1a TL1anew TL2 BR
 @REM set "STATIONS=SA TL1 TL1a TL2 ME"
-set "STATIONS=TL1 TL1a TL1anew TL2"
+@REM set "STATIONS=TL1 TL1a TL1anew TL2"
+set "STATIONS=TL1anew TL2 TL1 TL1a"
 
 :: 2. Pełna ścieżka do Twojego skryptu Pythona
 set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\DokumentsMacBookPro\pyScripts\unified_script.py"
@@ -69,7 +70,7 @@ for %%S in (%STATIONS%) do (
     if "!STATION_ID!"=="TL1anew" (
         set "INPUT_PATH=%BASE_SITES_PATH%\TR\dT_TR\Campbell"
         set "OUTPUT_PATH=%BASE_SITES_PATH%\TR\met_data_TL1"
-        set "DB_PATH=%OUTPUT_PATH%\met_data_TL1.db"
+        set "DB_PATH=!OUTPUT_PATH!\met_data_TL1.db"
         call :process_station TL1anew "!TLEN1anew_FIDS!"
     )
 
@@ -149,7 +150,7 @@ goto:end
 
     for %%F in (%local_fids%) do (
         echo. & echo --- Przetwarzam grupe: %%F ---
-        python "!PYTHON_SCRIPT_PATH!" -i "!INPUT_PATH!" -o "!OUTPUT_PATH!" -fid "%%F" --log-level DEBUG --db-path "!DB_PATH!" --output-format both --no-cache --overwrite
+        python "!PYTHON_SCRIPT_PATH!" -i "!INPUT_PATH!" -o "!OUTPUT_PATH!" -fid "%%F" --log-level DEBUG --db-path "!DB_PATH!" --output-format both
     )
 goto:eof
 
