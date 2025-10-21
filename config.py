@@ -662,10 +662,10 @@ CALIBRATION_RULES_BY_STATION = {
             }
         ],
         'LW_IN_1_1_1': [
-        {'start': '2014-07-09 14:31:00', 'end' : '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_IN_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
+        {'start': '2014-07-09 14:31:00', 'end': '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_IN_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
         ],
         'LW_OUT_1_1_1': [
-        {'start': '2014-07-09 14:31:00', 'end' : '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_OUT_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
+        {'start': '2014-07-09 14:31:00', 'end': '2118-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_OUT_1_1_1 * @multiplier + 5.67e-8 * ((TA_1_1_2 + 273.15)**4)','constants': {'multiplier': 1}, 'reason': 'NR01 (data in W/m2)'}
         ],
     },
     'TL1_SOIL_CAL': {
@@ -1018,17 +1018,40 @@ QUALITY_FLAGS = {
         ],
     },  
 #Tlen1a – DataTacker datalogger
-    'TL1adT_QF': {
-     '*': [
-		 {'start': '2018-07-01 00:00:00', 'end': '2018-07-31 16:00:00', 'flag_value': 3, 'reason': 'DataTacker not operating yet'},
-		 {'start': '2024-07-14 14:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'DataTacker demonted'},
-		 ],
-	#Radiation fluxes
-		'SW_IN_1_1_1':[
-			{'start': '2018-07-31 16:00:00', 'end': '2018-08-02 15:30:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
-			{'start': '2018-08-21 22:54:00', 'end': '2018-08-22 13:45:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
-			
-			 ],
+    ## Tlen1a site - dataTacker measurements (03.08.2018- 12.06.2024)
+    'TL1adT_CAL': {
+        'SW_IN_2_1_1' : [
+            {'start':  '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 77.101, 'addend': 8, 'reason': 'CNR4 (data in W/m2)'},
+            {'start':  '2018-11-13 09:31:00', 'end': '2048-11-13 09:30:00', 'multiplier': 1, 'addend': 8, 'reason': 'CNR4 (data in W/m2)'},
+            # {'start':  '2018-11-13 09:31:00', 'end': '2018-11-13 09:30:00', 'multiplier': 1, 'addend': 8, 'reason': 'CNR4 (data in W/m2)'},
+        ],
+        'SW_OUT_2_1_1' : [
+            {'start':  '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 70.423, 'addend': 8, 'reason': 'CNR4 (data in W/m2)'},
+            {'start':  '2018-11-13 09:31:00', 'end': '2048-11-13 09:30:00', 'multiplier': 1, 'addend': 8, 'reason': 'CNR4 (data in W/m2)'},
+        ],
+        'LW_IN_2_1_1': [
+        {'start': '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_IN_2_1_1 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)', 'constants': {'multiplier': 70.522}, 'reason': 'NR01 (data in W/m2)'}
+        ],
+        'LW_OUT_2_1_1': [
+        {'start': '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'type': 'formula', 'expression': 'LW_OUT_2_1_1 * @multiplier + 5.67e-8 * ((TA_2_1_2 + 273.15)**4)', 'constants': {'multiplier': 68.446}, 'reason': 'NR01 (data in W/m2)'}
+        ],
+        'PPFD_IN_2_1_1' : [
+        #    {'start':  '2018-08-02 15:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 210.970, 'addend': 0, 'reason': 'PQS1 (data in umol/m2/s)'},
+             {'start': '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 210.970, 'addend': 0, 'reason': 'PQS1 (data in umol/m2/s)'},
+
+		],
+        'PPFD_OUT_2_1_1' : [
+        #    {'start':  '2018-08-02 15:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 200.4008, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
+            {'start':  ''2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 200.4008, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
+		],
+        'PPFD_BC_IN_2_1_1': [
+            #{'start': '2014-07-08 09:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 2685, 'addend': 0, 'reason': 'LQA3016, (data in umol/m2/s1)'},
+            {'start': '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 2763.4, 'addend': 0, 'reason': 'LQA3016, (data in umol/m2/s1)'},
+		],
+        'PPFD_BC_IN_2_1_2': [
+            #{'start': '2014-07-08 09:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 3618.75, 'addend': 0, 'reason': 'LQA3013, (data in umol/m2/s1)'},
+        {'start': '2018-11-13 09:30:00', 'end': '2019-08-14 12:30:00', 'multiplier': 3724.4, 'addend': 0, 'reason': 'LQA3016, (data in umol/m2/s1)'},
+		],
 },
 
  # Tlen2 "old" tower added by Klaudia- 19.07.2025
@@ -1753,6 +1776,7 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
 
 
 
