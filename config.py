@@ -1041,7 +1041,7 @@ QUALITY_FLAGS = {
 {'start': '2019-01-04 16:00:00', 'end': '2019-01-19 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
 {'start':  '2022-09-26 05:00:00', 'end': '2022-10-23 23:00:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
-{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00' , 'flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents'},
+{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents'},
 ],
 
 'PPFD_IN_2_1_1':[
@@ -1769,6 +1769,7 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
 
 
 
