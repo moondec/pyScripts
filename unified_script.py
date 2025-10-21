@@ -2395,18 +2395,18 @@ def main():
         group_id = args.file_id
         parts = group_id.split('_', 1)
         station_code, _folder_name = parts
-        if 'ME' not in station_code:
-            # Wersja 1: (Sortuj pliki CSV według czasu ich modyfikacji)
-            logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
-            unique_files.sort(key=lambda p: p.stat().st_mtime)
-        else:
-            # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
-            logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
-            unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
+        # if 'ME' not in station_code:
+        #     # Wersja 1: (Sortuj pliki CSV według czasu ich modyfikacji)
+        #     logging.info(f"Sortowanie {len(csv_files)} plików CSV według czasu modyfikacji...")
+        #     unique_files.sort(key=lambda p: p.stat().st_mtime)
+        # else:
+        #     # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
+        #     logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
+        #     unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
 
-        # # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
-        # logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
-        # unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
+        # Wersja 2: (sortowanie alfabetyczne po nazwie pliku)
+        logging.info(f"Sortowanie {len(unique_files)} plików CSV alfabetycznie (po samej nazwie, bez ścieżki, case-insensitive)...")
+        unique_files.sort(key=lambda p: int(re.sub(r'[^0-9]', '', p.name)))
                    
         # --- FILTRACJA: usuń pliki puste # oraz większe niż 0.4 MB --- (opcjonalne)
         filtered_files = []
