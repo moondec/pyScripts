@@ -86,7 +86,7 @@ import multiprocessing
 import os
 import re
 import sqlite3
-import sqlalchemy
+import sqlalchemy  # pyright: ignore[reportMissingImports]
 import struct
 import tempfile
 from collections import defaultdict
@@ -94,11 +94,11 @@ from datetime import datetime, timedelta, UTC
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import numpy as np
-import pandas as pd
-import pytest
-from scipy.io import loadmat
-from tqdm import tqdm
+import numpy as np  # pyright: ignore[reportMissingImports]
+import pandas as pd  # pyright: ignore[reportMissingImports]
+import pytest  # pyright: ignore[reportMissingImports]
+from scipy.io import loadmat  # pyright: ignore[reportMissingImports]
+from tqdm import tqdm  # pyright: ignore[reportMissingModuleSource]
 
 # import słowników config
 from config import *
@@ -2213,7 +2213,7 @@ def _run_tests(config: dict):
 
     logging.info("="*20 + " ZAKOŃCZONO TRYB TESTOWY " + "="*20)
 
-import pandas as pd
+import pandas as pd  # pyright: ignore[reportMissingImports]
 import logging
 from pathlib import Path
 
@@ -2240,7 +2240,7 @@ def is_approx_24h_monotonic(filename, col='Timestamp', tolerance_hours=1):
         logging.error(f"Nie udało się sprawdzić {filename}: {e}")
         return False
 
-import pandas as pd
+import pandas as pd  # pyright: ignore[reportMissingImports]
 import logging
 from pathlib import Path
 

@@ -1042,7 +1042,7 @@ QUALITY_FLAGS = {
 		],
         'PPFD_OUT_2_1_1' : [
         #    {'start':  '2018-08-02 15:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 200.4008, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
-            {'start':  ''2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 200.4008, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
+            {'start':  '2018-08-02 15:30:00', 'end': '2018-11-13 09:30:00', 'multiplier': 200.4008, 'addend': 0, 'reason': 'PQ1 (data in umol/m2/s)'},
 		],
         'PPFD_BC_IN_2_1_1': [
             #{'start': '2014-07-08 09:30:00', 'end': '2019-08-06 09:30:00', 'multiplier': 2685, 'addend': 0, 'reason': 'LQA3016, (data in umol/m2/s1)'},
