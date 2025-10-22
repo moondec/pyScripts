@@ -516,7 +516,7 @@ MANUAL_TIME_SHIFTS = {
     'TL2_MET_30m' : 'TL2_MTSHIFT', # 'TL2_MET_1m' : 'TL2_MTSHIFT',
     
     'TL2dt_MTSHIFT': [
-        { "start": "2021-01-04 22:46:00", "end": "2021-04-28 13:44:00", "offset_hours": 1189.03},
+        # { "start": "2021-01-04 22:46:00", "end": "2021-04-28 13:44:00", "offset_hours": 1189.03},
     ],
     'TL2_CalPlates_dT' : 'TL2dt_MTSHIFT', 'TL2_MET_1_dT' : 'TL2dt_MTSHIFT', 'TL2_MET_30_dT' : 'TL2dt_MTSHIFT',
     
@@ -530,9 +530,9 @@ MANUAL_TIME_SHIFTS = {
     'TL1_dT_MTSHIFT': [
         # { "start": "2021-11-03 01:00:00", "end": "2055-01-26 21:00", "offset_hours": 0},
         # { "start": "2021-01-01 00:00:00", "end": "2021-02-20 00:00", "offset_hours": -1},
-        { "start": "2018-08-01 22:46:00", "end": "2018-08-22 13:44:00", "offset_hours": -14.8166666667},
-        { "start": "2018-09-18 00:00:00", "end": "2018-11-18 00:00", "offset_hours": 0.5},
-        { "start": "2021-10-25 00:00:00", "end": "2022-04-08 00:00", "offset_hours": 1},
+        # { "start": "2018-08-01 22:46:00", "end": "2018-08-22 13:44:00", "offset_hours": -14.8166666667},
+        # { "start": "2018-09-18 00:00:00", "end": "2018-11-18 00:00", "offset_hours": 0.5},
+        # { "start": "2021-10-25 00:00:00", "end": "2022-04-08 00:00", "offset_hours": 1},
         # { "start": "2022-07-02 12:59:00", "end": "2051-09-23 11:49", "offset_hours": -1}, # godzina bez - znaczenia braki w danych
     ],
     'TL1a_MET_30_dT' : 'TL1_dT_MTSHIFT', 'TL1a_MET_1_dT' : 'TL1_dT_MTSHIFT', 'TL1a_Rain_down_dT' : 'TL1_dT_MTSHIFT', 'TL1a_CalPlates_1min' : 'TL1_dT_MTSHIFT',

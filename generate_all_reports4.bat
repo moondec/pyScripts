@@ -18,7 +18,7 @@ set "BASE_SITES_PATH=D:\sites"
 :: 3. List of station prefixes to process
 ::    (Must be consistent with the stations processed by runSplit4.bat)
 @REM SET STATIONS=SA TL1 TL1a TL2 ME
-SET STATIONS= TL2
+SET STATIONS= TL1 TL1a TL2
 
 :: 4. List of variables to visualize (use patterns with '*' at the end)
 SET "VARS_TO_PLOT="SW_IN_*" "PPFD_IN_*" "PPFD_BC_IN_*" "TA_*" "TS_*""
