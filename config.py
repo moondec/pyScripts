@@ -1192,10 +1192,10 @@ STATION_MAPPING_FOR_QC = {
     'TL1_RAD_30': 'TL1_QF',
     'TL1_SOIL_30': 'TL1_QF',
     'TL1_RAD_1': 'TL1_QF',
-    'TL1a_MET_30_dT': 'TL1dt_QF',
-    'TL1a_Rain_down_dT': 'TL1dt_QF',
-    'TL1a_MET_1_dT': 'TL1dt_QF',
-    'TL1a_CalPlates_dT': 'TL1dt_QF',
+    'TL1a_MET_30_dT': 'TL1adT_QF',
+    'TL1a_Rain_down_dT': 'TL1adT_QF',
+    'TL1a_MET_1_dT': 'TL1adT_QF',
+    'TL1a_CalPlates_dT': 'TL1adT_QF',
     # # Tlen2
     'TL2_MET_30m': 'TL2_QF',
     'TL2_CalPlates_dT': 'TL2dt_QF',
@@ -1708,6 +1708,8 @@ STATION_MAPPING_FOR_COLUMNS = {
     'TL2_MET_30m': 'TLEN2_MAP',
     'TL2_MET_1_dT': 'TLEN2_MAP',
     'TL2_MET_30_dT': 'TLEN2_MAP',
+    'TL2_MET_30_csi': 'TLEN2_MAP',
+    'TL2_MET_1_csi': 'TLEN2_MAP',
 }
 # 11. Automatyczne przypisanie flag jakości na podstawie zakresów (działa po kalibracji i zmianie nazw)
 VALUE_RANGE_FLAGS = {
