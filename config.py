@@ -1708,6 +1708,8 @@ STATION_MAPPING_FOR_COLUMNS = {
     'TL2_MET_30m': 'TLEN2_MAP',
     'TL2_MET_1_dT': 'TLEN2_MAP',
     'TL2_MET_30_dT': 'TLEN2_MAP',
+    'TL2_MET_30_csi': 'TLEN2_MAP',
+    'TL2_MET_1_csi': 'TLEN2_MAP',
 }
 # 11. Automatyczne przypisanie flag jakości na podstawie zakresów (działa po kalibracji i zmianie nazw)
 VALUE_RANGE_FLAGS = {
