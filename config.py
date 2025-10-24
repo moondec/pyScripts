@@ -1041,7 +1041,7 @@ QUALITY_FLAGS = {
             {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2019-10-15 00:00:00', 'end': '2019-11-09 19:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2019-10-15 00:00:00', 'end': '2019-11-03 12:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
@@ -1051,27 +1051,27 @@ QUALITY_FLAGS = {
             {'start': '2020-12-22 06:16:00', 'end': '2021-01-26 21:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-02-19 05:40:00', 'end': '2021-04-28 15:03:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-05-06 12:28:00', 'end': '2021-07-12 16:29:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2021-07-13 13:23:00', 'end': '2021-08-05 13:46:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2021-07-13 23:59:00', 'end': '2021-08-05 13:46:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-08-26 22:20:00', 'end': '2021-08-28 11:50:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2021-09-09 23:46:00', 'end': '2021-09-29 10:46:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2021-09-19 00:00:00', 'end': '2021-09-29 10:46:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-10-01 01:42:00', 'end': '2021-10-17 16:07:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-10-25 00:23:00', 'end': '2021-10-27 11:43:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-10-28 04:36:00', 'end': '2021-11-04 09:12:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2021-11-15 08:27:00', 'end': '2021-12-07 14:34:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2022-09-26 05:00:00', 'end': '2022-10-23 23:00:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
             {'start': '2022-10-23 23:46:00', 'end': '2023-04-25 00:56:00', 'flag_value': 3, 'reason': 'no raw data'},
-            #{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00','flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents?'},
-            {'start':  '2024-06-08 17:00:00', 'end': '2099-01-01 00:00:00','flag_value': 3, 'reason': 'sensor demounted'},#Check the exact date!
+            #{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents?'},
+            {'start':  '2024-06-08 17:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},#Check the exact date!
         ],
 
         'PPFD_IN_2_1_1':[
             #{'start': '2020-05-27 17:00:00', 'end': '2021-08-21 13:30:00', 'flag_value': 2, 'reason': 'sensor malfunction'},#CHECK AGAIN!
-            {'start': '2020-05-27 17:00:00', 'end': '2021-08-05 13:30:00', 'flag_value': 2, 'reason': 'sensor malfunction'},#CHECK AGAIN!
+            {'start': '2018-07-01 00:00:00', 'end': '2018-08-03 00:30:00', 'flag_value': 2, 'reason': 'sensor malfunction'},#CHECK AGAIN!
             {'start': '2019-01-04 16:00:00', 'end': '2019-01-19 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2019-10-15 00:00:00', 'end': '2019-11-09 19:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2019-10-15 00:00:00', 'end': '2019-11-03 12:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
@@ -1098,7 +1098,7 @@ QUALITY_FLAGS = {
             {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2019-10-15 00:00:00', 'end': '2019-11-09 19:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2019-10-15 00:00:00', 'end': '2019-11-03 12:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
@@ -1122,7 +1122,7 @@ QUALITY_FLAGS = {
             {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2019-10-15 00:00:00', 'end': '2019-11-09 19:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2019-10-15 00:00:00', 'end': '2019-11-03 12:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
@@ -1141,7 +1141,7 @@ QUALITY_FLAGS = {
             {'start': '2019-06-17 00:25:00', 'end': '2019-06-27 13:58:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-07-11 02:30:00', 'end': '2019-07-24 08:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2019-08-06 00:00:00', 'end': '2019-08-28 16:30:00', 'flag_value': 3, 'reason': 'no raw data'},
-            {'start': '2019-10-15 00:00:00', 'end': '2019-11-09 19:00:00', 'flag_value': 3, 'reason': 'no raw data'},
+            {'start': '2019-10-15 00:00:00', 'end': '2019-11-03 12:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-02-05 19:00:00', 'end': '2020-03-09 10:00:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-04-29 18:00:00', 'end': '2020-05-05 18:30:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2020-05-27 18:00:00', 'end': '2020-06-18 14:00:00', 'flag_value': 3, 'reason': 'no raw data'},
@@ -1160,8 +1160,8 @@ QUALITY_FLAGS = {
             {'start': '2021-11-15 08:27:00', 'end': '2021-12-07 14:34:00', 'flag_value': 3, 'reason': 'no raw data'},
             {'start': '2022-09-26 05:00:00', 'end': '2022-10-23 23:00:00', 'flag_value': 2, 'reason': 'sensor malfunction'},
             {'start': '2022-10-23 23:46:00', 'end': '2023-04-25 00:56:00', 'flag_value': 3, 'reason': 'no raw data'},
-            #{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00','flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents?'},
-            {'start':  '2024-06-08 17:00:00', 'end': '2099-01-01 00:00:00','flag_value': 3, 'reason': 'sensor demounted'},#Check the exact date!
+            #{'start':  '2024-05-20 00:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 2, 'reason': 'sensor malfunction - cable damage by rodents?'},
+            {'start':  '2024-06-08 17:00:00', 'end': '2099-01-01 00:00:00', 'flag_value': 3, 'reason': 'sensor demounted'},#Check the exact date!
         ],
     },
 
@@ -1941,6 +1941,7 @@ STATION_MAPPING_FOR_OVERRIDES = {
 }
 
 # --- KONIEC SEKCJI KONFIGURACJI ---
+
 
 
 
