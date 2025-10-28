@@ -1568,7 +1568,16 @@ COLUMN_MAPPING_RULES = {
         # 'RTD_8_AV (degC)': 'TS_9_2_1',
         # 'RTD_9_AV (degC)': 'TS_10_1_1',
         # 'RTD_10_AV (degC)': 'TS_10_2_1',
-        # SWC, G i TS zdefiniowane poprawnie w loggerze - bez mapowania nazw
+        'G_1_1_1': 'G_1_1_1',
+        'G_2_1_1': 'G_1_1_2',
+        'G_3_1_1': 'G_1_1_3',
+        'G_4_1_1': 'G_1_1_4',
+        'G_5_1_1': 'G_1_1_5',
+        'G_6_1_1': 'G_1_1_6',
+        'G_7_1_1': 'G_1_1_7',
+        'G_8_1_1': 'G_1_1_8',
+        'G_9_1_1': 'G_1_1_9',
+        'G_10_1_1': 'G_1_1_10',
     },
     'MEZYK_Prec_down_MAP': {
         'Precipitationamountmm': 'P_1_2_1', # Dolny
