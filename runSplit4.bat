@@ -14,8 +14,8 @@ echo Rozpoczynam przetwarzanie wsadowe...
 ::    Dostepne opcje: TU SA RZ ME_TOP ME_DOWN TL1 TL1a TL1anew TL2 BR
 @REM set "STATIONS=SA TL1 TL1a TL2 ME"
 @REM set "STATIONS=TL1 TL1a TL1anew TL2"
-set "STATIONS=TL1anew TL1 TL1a TL2"
-
+@REM set "STATIONS=TL1anew TL1 TL1a TL2"
+set "STATIONS=ME"
 :: 2. Pełna ścieżka do Twojego skryptu Pythona
 set "PYTHON_SCRIPT_PATH=C:\Users\marek.urbaniak\DokumentsMacBookPro\pyScripts\unified_script.py"
 
