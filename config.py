@@ -501,6 +501,7 @@ MANUAL_TIME_SHIFTS = {
         # {'start': '2024-11-19 13:41:00', 'end': '2024-11-20 17:01:00', "offset_hours": 50.72 },
         # {'start': '2024-12-10T04:09:00', 'end': '2024-12-10T05:08:00', "offset_hours": 9.42 },
         {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.10 },
+        {'start': '2025-01-08 02:47:00', 'end': '2025-01-08 16:08:00', "offset_hours": 41.10 },
         # {'start': '2025-05-15 05:26:00', 'end': '2025-05-20 08:53:00', "offset_hours": 28.38 },
     ],
     'ME_DOWN_MET_30min' : 'ME_MTSHIFT', 'ME_DOWN_MET_1min' : 'ME_MTSHIFT',
@@ -1527,6 +1528,10 @@ COLUMN_MAPPING_RULES = {
         # 'PPFD_BC_IN_1_1_1': 'PPFD_BC_IN_1_1_1', #
         # 'PPFD_BC_IN_1_1_2': 'PPFD_BC_IN_1_1_2', #
         'TA_2_2_1': 'TA_1_1_2', # CNR4
+        'TA_1_2_1': 'TA_1_1_1', # rotronic
+        'RH_1_2_1': 'RH_1_1_1', # rotronic
+        'TA_1_1_1': 'TA_1_2_1', # rotronic
+        'RH_1_1_1': 'RH_1_2_1', # rotronic
         'TA_1_2_1': 'TA_1_1_1', # rotronic
         'RH_1_2_1': 'RH_1_1_1', # rotronic
         'TA_1_1_1': 'TA_1_2_1', # rotronic
